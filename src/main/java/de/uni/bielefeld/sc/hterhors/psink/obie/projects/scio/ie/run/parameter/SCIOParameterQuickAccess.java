@@ -1,4 +1,4 @@
-package de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie;
+package de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.run.parameter;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -9,40 +9,49 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
+import de.hterhors.obie.core.ontology.InvestigationRestriction;
+import de.hterhors.obie.core.ontology.InvestigationRestriction.RestrictedField;
 import de.hterhors.obie.core.ontology.interfaces.IOBIEThing;
 import de.hterhors.obie.core.projects.AbstractProjectEnvironment;
 import de.hterhors.obie.ml.corpus.distributor.AbstractCorpusDistributor;
 import de.hterhors.obie.ml.corpus.distributor.ActiveLearningDistributor;
+import de.hterhors.obie.ml.corpus.distributor.ActiveLearningDistributor.Builder.EMode;
 import de.hterhors.obie.ml.corpus.distributor.FoldCrossCorpusDistributor;
 import de.hterhors.obie.ml.corpus.distributor.ShuffleCorpusDistributor;
-import de.hterhors.obie.ml.corpus.distributor.ActiveLearningDistributor.Builder.EMode;
-import de.hterhors.obie.ml.evaluation.DatatypeOrListConditon;
 import de.hterhors.obie.ml.evaluation.evaluator.BeamSearchEvaluator;
 import de.hterhors.obie.ml.evaluation.evaluator.CartesianSearchEvaluator;
 import de.hterhors.obie.ml.evaluation.evaluator.IOBIEEvaluator;
 import de.hterhors.obie.ml.evaluation.evaluator.StrictNamedEntityLinkingEvaluator;
 import de.hterhors.obie.ml.explorer.AbstractOBIEExplorer;
-import de.hterhors.obie.ml.explorer.EntityRecognitionAndLinkingExplorer;
+import de.hterhors.obie.ml.explorer.EntityRecognitionExplorer;
 import de.hterhors.obie.ml.explorer.IExplorationCondition;
 import de.hterhors.obie.ml.explorer.SlotCardinalityExplorer;
 import de.hterhors.obie.ml.explorer.SlotFillerExplorer;
-import de.hterhors.obie.ml.run.InvestigationRestriction;
-import de.hterhors.obie.ml.run.InvestigationRestriction.RestrictedField;
 import de.hterhors.obie.ml.run.param.EInstantiationType;
 import de.hterhors.obie.ml.run.param.EScorerType;
 import de.hterhors.obie.ml.run.param.IInitializeNumberOfObjects;
 import de.hterhors.obie.ml.run.param.RunParameter.Builder;
 import de.hterhors.obie.ml.templates.AbstractOBIETemplate;
+import de.hterhors.obie.ml.templates.CooccurrenceTemplate;
+import de.hterhors.obie.ml.templates.EmptyRootClassCardinalityTemplate;
+import de.hterhors.obie.ml.templates.FrequencyTemplate;
+import de.hterhors.obie.ml.templates.GenericMainTemplatePriorTemplate;
 import de.hterhors.obie.ml.templates.InBetweenContextTemplate;
 import de.hterhors.obie.ml.templates.InterTokenTemplate;
 import de.hterhors.obie.ml.templates.LocalTemplate;
+import de.hterhors.obie.ml.templates.MainSlotVarietyTemplate;
+import de.hterhors.obie.ml.templates.RootClassCardinalityTemplate;
 import de.hterhors.obie.ml.templates.TokenContextTemplate;
-import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.templates.AnimalModelConditionTemplate;
-import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.templates.CoRefChainTemplate;
-import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.templates.SemanticNumericDataTypeTemplate;
-import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.templates.VertebralLocationConditionTemplate;
+import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.SCIOExplorationConditions;
+import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.environments.OntologyEnvironment;
+import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.environments.SlotFillingProjectEnvironment;
+import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.templates.slotfilling.CoRefResolutionTemplate;
+import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.templates.slotfilling.SemanticNumericDataTypeTemplate;
+import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.templates.slotfilling.animal.AnimalModelConditionTemplate;
+import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.templates.slotfilling.injury.VertebralLocationConditionTemplate;
 import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ontology.classes.AnimalModel;
 import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ontology.classes.PostsurgicalMedication;
+import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ontology.classes.VertebralArea;
 import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ontology.interfaces.IExperimentalGroup;
 import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ontology.interfaces.IGroupName;
 import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ontology.interfaces.IInjury;
@@ -53,15 +62,16 @@ import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ontology.interfaces
 import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ontology.interfaces.IVertebralLocation;
 import learning.optimizer.Optimizer;
 import learning.optimizer.SGD;
+import learning.regularizer.L2;
 import learning.regularizer.Regularizer;
 import libsvm.svm_parameter;
 
 public class SCIOParameterQuickAccess {
 
-	public final static IInjury keepOnAutoImport_I = null;
-	public final static IInvestigationMethod keepOnAutoImport_IM = null;
 	public final static IOrganismModel keepOnAutoImport_AM = null;
+	public final static IInjury keepOnAutoImport_I = null;
 	public final static ITreatment keepOnAutoImport_T = null;
+	public final static IInvestigationMethod keepOnAutoImport_IM = null;
 	public final static IExperimentalGroup keepOnAutoImport_E = null;
 	public final static IGroupName keepOnAutoImport_GN = null;
 	public final static Random keepOnAutoImport = null;
@@ -86,13 +96,13 @@ public class SCIOParameterQuickAccess {
 	 * However, usually the search type is the same as the corpus type.
 	 *
 	 */
-	final private static Class<? extends ISCIOThing> searchType = corpusType;
+	private static Class<? extends ISCIOThing> searchType = corpusType;
 
 	/***
 	 * The runID. This serves as an identifier for locating and saving the model.If*
 	 * anything was changed during the development the runID should be reset.
 	 */
-//	public final static String runID = "1";
+//	public final static String runID = "980598915";
 	private static final String runID = String.valueOf(new Random().nextInt());
 
 	public static Builder getDevelopmentNERParameter() {
@@ -129,18 +139,17 @@ public class SCIOParameterQuickAccess {
 		// InvestigationRestriction(searchType, restrictFields, true);
 
 		/**
-		 * HACK: REMOVE THIS HACK With the correct number of entities!
+		 * HACK: Set to the correct number of entities!
 		 */
-		// IInitializeNumberOfObjects numberOfInitializedObjects = instance ->
-		// instance.getGoldAnnotation().entities
-		// .size();
-		IInitializeNumberOfObjects numberOfInitializedObjects = instance -> 1;
+		IInitializeNumberOfObjects numberOfInitializedObjects = instance -> instance.getGoldAnnotation()
+				.getAnnotations().size();
+//		IInitializeNumberOfObjects numberOfInitializedObjects = instance -> 1;
 		Random rndForSampling = new Random(100L);
 
 		int numberOfMaxSamplingSteps = 100;
 		Regularizer regularizer = null;
 //		Regularizer regularizer = new L2(0.01);
-		AbstractProjectEnvironment scioEnvironment = SCIOProjectEnvironment.getInstance();
+		AbstractProjectEnvironment<ISCIOThing> scioEnvironment = SlotFillingProjectEnvironment.getInstance();
 
 		final int maxEvaluationDepth = Integer.MAX_VALUE;
 		final boolean penalizeCardinality = true;
@@ -153,7 +162,7 @@ public class SCIOParameterQuickAccess {
 
 		Set<Class<? extends AbstractOBIEExplorer>> explorerTypes = new HashSet<>();
 
-		explorerTypes.add(EntityRecognitionAndLinkingExplorer.class);
+		explorerTypes.add(EntityRecognitionExplorer.class);
 
 		Set<Class<? extends AbstractOBIETemplate<?>>> templates = new HashSet<>();
 
@@ -205,7 +214,7 @@ public class SCIOParameterQuickAccess {
 				.setManualExploreClassesWithoutEvidence(explorationClasses)
 				.setExploreExistingTemplates(exploreExistingTemplates).setExploreOnOntologyLevel(exploreOnOntologyLevel)
 				.setExplorationCondition(explorationCondition).setExplorers(explorerTypes)
-				.setInvestigationRestriction(sampleRestrictions).setMultiThreading(multiThreading)
+				.setDefaultTrainInvestigationRestriction(sampleRestrictions).setMultiThreading(multiThreading)
 				.setNumberOfInitializedObjects(numberOfInitializedObjects)
 				.setNumberOfMaxSamplingSteps(numberOfMaxSamplingSteps).setPersonalNotes(personalNote)
 				.setRegularizer(regularizer).setRootDirectory(rootDirectory).addRootSearchType(searchType)
@@ -217,9 +226,13 @@ public class SCIOParameterQuickAccess {
 	}
 
 	public static Builder getREParameter() {
+		return getREParameter(runID, false, searchType, false);
+	}
+
+	public static Builder getREParameter(String runID_param, boolean singleSlot, Class<? extends ISCIOThing> corpusType,
+			boolean full) {
 		final String personalNote = "UNDER DEVELOPMENT";
 		final Class<? extends IOBIEThing>[] explorationClasses = new Class[] { PostsurgicalMedication.class };
-
 		svm_parameter SVMParam = new svm_parameter();
 		SVMParam.eps = 0.01;
 		SVMParam.p = 0.1;
@@ -231,66 +244,95 @@ public class SCIOParameterQuickAccess {
 
 		final File rootDirectory = new File(".");
 
-		final int epochs = 5;
+		final int epochs = 10;
 
-		final Optimizer optimizer = new SGD(0.0001, 0, 0.00001, false);
+		final boolean penalizeCardinality = false;
+
+		final Optimizer optimizer = new SGD(0.001, 0, 0.0001, false);
 		final EScorerType scorerType = EScorerType.EXP;
 
 		final boolean multiThreading = true;
 
 		final boolean exploreExistingTemplates = false;
+
 		final boolean exploreOnOntologyLevel = true;
+
+		final boolean restrictExplorationToFoundConcepts = false;
+
 		final boolean enableDiscourseProgression = false;
 
 		IExplorationCondition explorationCondition = new SCIOExplorationConditions();
 
 		final EInstantiationType initializer = EInstantiationType.EMPTY;
 
-//		 Set<RestrictedField> restrictFields = new HashSet<>();
-//		 restrictFields.add(new RestrictedField("gender", true));
-//		 restrictFields.add(new RestrictedField("age", true));
-//		 restrictFields.add(new RestrictedField("ageCategory", true));
-//		 restrictFields.add(new RestrictedField("weight", true));
-//		 restrictFields.add(new RestrictedField("organismSpecies", true));
+		InvestigationRestriction restrictions = null;
+		Set<RestrictedField> restrictFields = new HashSet<>();
+		if (IOrganismModel.class.isAssignableFrom(corpusType)) {
+			restrictFields.add(new RestrictedField("gender", true));
+			restrictFields.add(new RestrictedField("age", true));
+			restrictFields.add(new RestrictedField("ageCategory", true));
+			restrictFields.add(new RestrictedField("weight", true));
+			restrictFields.add(new RestrictedField("organismSpecies", true));
+			restrictions = new InvestigationRestriction(restrictFields, true);
+		}
 
-//		Set<RestrictedField> restrictFields = new HashSet<>();
-//		restrictFields.add(new RestrictedField("injuryVertebralLocation", true));
-//		restrictFields.add(new RestrictedField("injuryDevice", true));
-//		restrictFields.add(new RestrictedField("injuryArea", true));
-//		restrictFields.add(new RestrictedField("force", true));
-//		restrictFields.add(new RestrictedField("weight", true));
-//		restrictFields.add(new RestrictedField("volume", true));
-//		restrictFields.add(new RestrictedField("pressure", true));
-//		restrictFields.add(new RestrictedField("distance", true));
-//		restrictFields.add(new RestrictedField("duration", true));
+		if (IInjury.class.isAssignableFrom(corpusType)) {
+			restrictFields.add(new RestrictedField("injuryVertebralLocation", true));
+			restrictFields.add(new RestrictedField("injuryDevice", true));
+			restrictFields.add(new RestrictedField("injuryArea", true));
+			restrictFields.add(new RestrictedField("force", true));
+			restrictFields.add(new RestrictedField("weight", true));
+			restrictFields.add(new RestrictedField("volume", true));
+			restrictFields.add(new RestrictedField("pressure", true));
+			restrictFields.add(new RestrictedField("distance", true));
+			restrictFields.add(new RestrictedField("duration", true));
+			restrictFields.add(new RestrictedField("upperVertebrae", true));
+			restrictFields.add(new RestrictedField("lowerVertebrae", true));
+			restrictions = new InvestigationRestriction(restrictFields, true);
+		}
 
-		InvestigationRestriction sampleRestrictions =
-//				 new InvestigationRestriction(searchType, restrictFields);
+		if (ITreatment.class.isAssignableFrom(corpusType)) {
+			restrictFields.add(new RestrictedField("duration", true));
+			restrictFields.add(new RestrictedField("deliveryMethod", true));
+			restrictFields.add(new RestrictedField("location", true));
+			restrictFields.add(new RestrictedField("dosage", true));
+			restrictFields.add(new RestrictedField("compound", true));
+			restrictions = new InvestigationRestriction(restrictFields, true);
+		}
+		if (IInvestigationMethod.class.isAssignableFrom(corpusType)) {
 
-				InvestigationRestriction.noRestrictionInstance;
+			restrictions = InvestigationRestriction.noRestrictionInstance;
+		}
 
-		// InvestigationRestriction sampleRestrictions = new
-		// InvestigationRestriction(searchType, restrictFields, true);
+//		restrictFieldsTreatment.add(new RestrictedField("weight", true));
+//		restrictFieldsTreatment.add(new RestrictedField("volume", true));
+//		restrictFieldsTreatment.add(new RestrictedField("pressure", true));
+//		restrictFieldsTreatment.add(new RestrictedField("distance", true));
+//		restrictFieldsTreatment.add(new RestrictedField("upperVertebrae", true));
+//		restrictFieldsTreatment.add(new RestrictedField("lowerVertebrae", true));
 
+//		InvestigationRestriction sampleRestrictions = new InvestigationRestriction(searchType, restrictFieldsTreatment);
+
+//				InvestigationRestriction.noRestrictionInstance;
 		/**
 		 * HACK: REMOVE THIS HACK With the correct number of entities!
 		 */
-		// IInitializeNumberOfObjects numberOfInitializedObjects = instance ->
-		// instance.getGoldAnnotation().getEntities()
-		// .size();
-		IInitializeNumberOfObjects numberOfInitializedObjects = instance -> 1;
+		IInitializeNumberOfObjects numberOfInitializedObjects;
+//		if (full)
+//			numberOfInitializedObjects = instance -> instance.getGoldAnnotation().getTemplateAnnotations().size();
+//		else
+		numberOfInitializedObjects = instance -> 1;
 
 		int numberOfMaxSamplingSteps = 100;
-		Regularizer regularizer = null;
-//		Regularizer regularizer = new L2(0.01);
-		AbstractProjectEnvironment scioEnvironment = SCIOProjectEnvironment.getInstance();
+//		Regularizer regularizer = null;
+		Regularizer regularizer = new L2(0.01);
+		AbstractProjectEnvironment<?> scioEnvironment = SlotFillingProjectEnvironment.getInstance();
 
 		// AbstractConfigBuilder<?> config = getQuickNFoldSCIOConfigFull();
 
 		// AbstractConfigBuilder<?> config = getQuickActiveLearningConfigFull();
 
 		final int maxEvaluationDepth = Integer.MAX_VALUE;
-		final boolean penalizeCardinality = true;
 		final boolean enableCaching = true;
 
 		int maxNumberOfEntityElements = 7;
@@ -306,15 +348,14 @@ public class SCIOParameterQuickAccess {
 		// ignoreEmptyInstancesOnEvaluation);
 
 		IOBIEEvaluator evaluator = new CartesianSearchEvaluator(enableCaching, maxEvaluationDepth, penalizeCardinality,
-				sampleRestrictions, new DatatypeOrListConditon(), maxNumberOfEntityElements,
-				ignoreEmptyInstancesOnEvaluation);
+				field -> false, maxNumberOfEntityElements, ignoreEmptyInstancesOnEvaluation);
 
 		Map<Class<? extends IOBIEThing>, List<IOBIEThing>> initializationObjects = new HashMap<>();
 
 		List<IOBIEThing> initObjectList = new ArrayList<>();
 		AnimalModel initObject = new AnimalModel();
 		initObjectList.add(initObject);
-		initializationObjects.put(searchType, initObjectList);
+		initializationObjects.put(corpusType, initObjectList);
 
 		Set<Class<? extends AbstractOBIEExplorer>> explorerTypes = new HashSet<>();
 
@@ -323,26 +364,31 @@ public class SCIOParameterQuickAccess {
 //		explorerTypes.add(DependentCardinalityExplorer.class);
 
 		explorerTypes.add(SlotCardinalityExplorer.class);
-		// explorerTypes.add(TemplateCardinalityExplorer.class);
+//		explorerTypes.add(TemplateCardinalityExplorer.class);
 
 		Set<Class<? extends AbstractOBIETemplate<?>>> templates = new HashSet<>();
 
-		// templates.add(HeterogeneousSlotTemplate.class);
-		// templates.add(FrequencyTemplate.class);
+//		templates.add(HeterogeneousSlotTemplate.class);
+		templates.add(FrequencyTemplate.class);
 
+		if (singleSlot)
+			templates.add(GenericMainTemplatePriorTemplate.class);
 		// templates.add(StringSimilarityTemplate.class);
 		//
-		// templates.add(CooccurrenceTemplate.class);
+		if (!singleSlot)
+			templates.add(CooccurrenceTemplate.class);
 
 		templates.add(SemanticNumericDataTypeTemplate.class);
 
-		templates.add(TokenContextTemplate.class);
+		if (!singleSlot)
+			templates.add(TokenContextTemplate.class);
+
 		templates.add(InterTokenTemplate.class);
 
-		if (IOrganismModel.class.isAssignableFrom(searchType))
+		if (IOrganismModel.class.isAssignableFrom(corpusType))
 			templates.add(AnimalModelConditionTemplate.class);
 
-		if (IVertebralLocation.class.isAssignableFrom(searchType) || IInjury.class.isAssignableFrom(searchType))
+		if (IVertebralLocation.class.isAssignableFrom(corpusType) || IInjury.class.isAssignableFrom(corpusType))
 			templates.add(VertebralLocationConditionTemplate.class);
 
 		// templates.add(DocumentClassificationTemplate.class);
@@ -356,8 +402,11 @@ public class SCIOParameterQuickAccess {
 
 		// templates.add(PropertyEvidenceForClassTemplate.class);
 
-		templates.add(InBetweenContextTemplate.class);
-		templates.add(LocalTemplate.class);
+		if (!singleSlot)
+			templates.add(InBetweenContextTemplate.class);
+
+		if (!singleSlot)
+			templates.add(LocalTemplate.class);
 
 		// templates.add(LocalLocalityTemplate.class);
 		// templates.add(GlobalLocalityTemplate.class);
@@ -367,30 +416,34 @@ public class SCIOParameterQuickAccess {
 		/*
 		 * Cardinality
 		 */
-
-		// templates.add(EmptyRootClassCardinalityTemplate.class);
-		// templates.add(RootClassCardinalityTemplate.class);
-//		 templates.add(MainSlotVarietyTemplate.class);
-
-		String corpusNamePrefix = "annodb_27082018";
-
+		if (full) {
+			templates.add(EmptyRootClassCardinalityTemplate.class);
+			templates.add(RootClassCardinalityTemplate.class);
+			templates.add(MainSlotVarietyTemplate.class);
+		}
+//		AbstractCorpusDistributor corpusConfiguration = foldCrossDist();
 		AbstractCorpusDistributor corpusConfiguration = shuffleDist();
 
+		Class<? extends IOBIEThing>[] exploreClassesWithoutEvidence = new Class[] { VertebralArea.class };
+
 		return new Builder().setOptimizer(optimizer).setCorpusDistributor(corpusConfiguration)
+				.setOntologyEnvironment(OntologyEnvironment.getInstance())
 				.setEnableDiscourseProgression(enableDiscourseProgression).setEpochs(epochs)
 				.setManualExploreClassesWithoutEvidence(explorationClasses)
 				.setExploreExistingTemplates(exploreExistingTemplates).setExploreOnOntologyLevel(exploreOnOntologyLevel)
+				.setRestrictExplorationToFoundConcepts(restrictExplorationToFoundConcepts)
 				.setExplorationCondition(explorationCondition).setExplorers(explorerTypes)
 				.setInitializationObjects(initializationObjects).setInstantiationType(initializer)
-				.setInvestigationRestriction(sampleRestrictions).setMultiThreading(multiThreading)
+				.setDefaultTestInvestigationRestriction(restrictions)
+				.setDefaultTrainInvestigationRestriction(restrictions).setMultiThreading(multiThreading)
 				.setNumberOfInitializedObjects(numberOfInitializedObjects)
 				.setNumberOfMaxSamplingSteps(numberOfMaxSamplingSteps).setPersonalNotes(personalNote)
-				.setRegularizer(regularizer).setRootDirectory(rootDirectory).addRootSearchType(searchType)
+				.setRegularizer(regularizer).setRootDirectory(rootDirectory).addRootSearchType(corpusType)
 				.setProjectEnvironment(scioEnvironment).setScorerType(scorerType).setSvmParam(SVMParam)
-				.setTemplates(templates).setRunID(runID).setEvaluator(evaluator)
+				.setTemplates(templates).setRunID(runID_param).setEvaluator(evaluator)
 				.setMaxNumberOfEntityElements(maxNumberOfEntityElements)
-				.setMaxNumberOfDataTypeElements(maxNumberOfDataTypeElements).setRandomForSampling(rndForSampling);
-
+				.setMaxNumberOfDataTypeElements(maxNumberOfDataTypeElements).setRandomForSampling(rndForSampling)
+				.setManualExploreClassesWithoutEvidence(exploreClassesWithoutEvidence);
 	}
 
 	public static Builder getDevelopmentCoRefChainParameter() {
@@ -427,7 +480,7 @@ public class SCIOParameterQuickAccess {
 		Set<RestrictedField> restrictFields = new HashSet<>();
 		restrictFields.add(new RestrictedField("groupNames", true));
 
-		InvestigationRestriction sampleRestrictions = new InvestigationRestriction(searchType, restrictFields, true);
+		InvestigationRestriction sampleRestrictions = new InvestigationRestriction(restrictFields, true);
 
 		final int maxEvaluationDepth = Integer.MAX_VALUE;
 		final boolean penalizeCardinality = true;
@@ -464,7 +517,7 @@ public class SCIOParameterQuickAccess {
 		Regularizer regularizer = null;
 //		Regularizer regularizer = new L2(0.01);
 
-		AbstractProjectEnvironment scioEnvironment = SCIOProjectEnvironment.getInstance();
+		AbstractProjectEnvironment scioEnvironment = SlotFillingProjectEnvironment.getInstance();
 
 		Set<Class<? extends AbstractOBIEExplorer>> explorerTypes = new HashSet<>();
 
@@ -479,13 +532,13 @@ public class SCIOParameterQuickAccess {
 		 * Co-Reference Chain Resolution
 		 */
 
-		templates.add(CoRefChainTemplate.class);
+		templates.add(CoRefResolutionTemplate.class);
 
 		return new Builder().setOptimizer(optimizer).setEnableDiscourseProgression(enableDiscourseProgression)
 				.setEpochs(epochs).setManualExploreClassesWithoutEvidence(explorationClasses)
 				.setExploreExistingTemplates(exploreExistingTemplates).setExploreOnOntologyLevel(exploreOnOntologyLevel)
 				.setExplorationCondition(explorationCondition).setExplorers(explorerTypes)
-				.setInstantiationType(initializer).setInvestigationRestriction(sampleRestrictions)
+				.setInstantiationType(initializer).setDefaultTrainInvestigationRestriction(sampleRestrictions)
 				.setMultiThreading(multiThreading).setNumberOfInitializedObjects(numberOfInitializedObjects)
 				.setNumberOfMaxSamplingSteps(numberOfMaxSamplingSteps).setPersonalNotes(personalNote)
 				.setRegularizer(regularizer).setRootDirectory(rootDirectory).addRootSearchType(searchType)
@@ -496,12 +549,12 @@ public class SCIOParameterQuickAccess {
 	}
 
 	public static AbstractCorpusDistributor shuffleDist() {
-		return new ShuffleCorpusDistributor.Builder().setTrainingProportion(80).setDevelopmentProportion(0)
-				.setTestProportion(20).build();
+		return new ShuffleCorpusDistributor.Builder().setSeed(5000L).setTrainingProportion(80)
+				.setDevelopmentProportion(0).setTestProportion(20).build();
 	}
 
 	public static AbstractCorpusDistributor foldCrossDist() {
-		return new FoldCrossCorpusDistributor.Builder().setN(6).setSeed(12345L).build();
+		return new FoldCrossCorpusDistributor.Builder().setN(10).setSeed(12345L).build();
 	}
 
 	public static AbstractCorpusDistributor activeLearnigDist() {

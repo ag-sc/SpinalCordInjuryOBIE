@@ -15,6 +15,7 @@ import org.apache.jena.rdf.model.Resource;
 import java.util.Map;
 import java.lang.InstantiationException;
 import java.lang.SecurityException;
+import de.hterhors.obie.core.ontology.InvestigationRestriction;
 import de.hterhors.obie.core.ontology.annotations.DirectSiblings;
 import java.lang.IllegalAccessException;
 import de.hterhors.obie.core.ontology.annotations.AssignableSubClasses;
@@ -44,16 +45,16 @@ import de.hterhors.obie.core.ontology.AbstractIndividual;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
 @DirectInterface(get=IInjuryByAccident.class)
 
 @AssignableSubClasses(get={})
 
-@DirectSiblings(get={CompleteTransection.class, Compression.class, Contusion.class, Laminectomy.class, ElectrolyticLesion.class, PhotochemicalInjury.class, Dislocation.class, InjuryByAccident.class, PartialTransection.class, Distraction.class, AspirationLesion.class, ChemicalInjury.class, HeatLesion.class, })
-
 @SuperRootClasses(get={Injury.class, })
+
+@DirectSiblings(get={CompleteTransection.class, Compression.class, Contusion.class, Laminectomy.class, ElectrolyticLesion.class, PhotochemicalInjury.class, Dislocation.class, InjuryByAccident.class, PartialTransection.class, Distraction.class, AspirationLesion.class, ChemicalInjury.class, HeatLesion.class, })
  public class InjuryByAccident implements IInjuryByAccident{
 
 final public static IndividualFactory<InjuryByAccidentIndividual> individualFactory = new IndividualFactory<>();
@@ -78,14 +79,22 @@ static class InjuryByAccidentIndividual extends AbstractIndividual {
 	@Override
 	public AbstractIndividual getIndividual() {
 		return individual;
-	}	final static public String ONTOLOGY_NAME = "http://psink.de/scio/InjuryByAccident";
+	}
+	@Override
+	public InvestigationRestriction getInvestigationRestriction() {
+		return investigationRestriction;
+	}
+	@Override
+	public InjuryByAccident setInvestigationRestriction(InvestigationRestriction investigationRestriction ) {
+		this.investigationRestriction = investigationRestriction;
+ return this;	}public InvestigationRestriction investigationRestriction;	final static public String ONTOLOGY_NAME = "http://psink.de/scio/InjuryByAccident";
 	@OntologyModelContent(ontologyName="http://psink.de/scio/hasAnimalCareCondition")
 @RelationTypeCollection
 private List<IAnimalCareCondition> animalCareConditions = new ArrayList<>();
 	private Integer characterOffset;
 	private Integer characterOnset;
-	@RelationTypeCollection
-@OntologyModelContent(ontologyName="http://psink.de/scio/hasInjuryAnaesthesia")
+	@OntologyModelContent(ontologyName="http://psink.de/scio/hasInjuryAnaesthesia")
+@RelationTypeCollection
 private List<IAnaesthetic> injuryAnaesthesiaAnaesthetics = new ArrayList<>();
 	@OntologyModelContent(ontologyName="http://psink.de/scio/hasInjuryArea")
 private IInjuryArea injuryArea;
@@ -101,24 +110,32 @@ private IInjuryIntensity injuryIntensity;
 private List<IAnimalCareCondition> injuryPostsurgicalCareAnimalCareConditions = new ArrayList<>();
 	@OntologyModelContent(ontologyName="http://psink.de/scio/hasInjuryLocation")
 private IVertebralLocation injuryVertebralLocation;
-	@RelationTypeCollection
-@OntologyModelContent(ontologyName="http://psink.de/scio/hasMedication")
+	@OntologyModelContent(ontologyName="http://psink.de/scio/hasMedication")
+@RelationTypeCollection
 private List<IMedicationDuringSurgery> medicationDuringSurgeries = new ArrayList<>();
 	final static private Map<IOBIEThing, String> resourceFactory = new HashMap<>();
 	final static private long serialVersionUID = 64L;
-	@RelationTypeCollection
-@OntologyModelContent(ontologyName="http://psink.de/scio/hasTemporalInterval")
+	@OntologyModelContent(ontologyName="http://psink.de/scio/hasTemporalInterval")
+@RelationTypeCollection
 private List<ITemporalInterval> temporalIntervals = new ArrayList<>();
 	@TextMention
 final private String textMention;
 
 
+	public InjuryByAccident(String individualURI, InvestigationRestriction investigationRestriction, String textMention){
+this.individual = 
+				InjuryByAccident.individualFactory.getIndividualByURI(individualURI);
+this.investigationRestriction = investigationRestriction==null?InvestigationRestriction.noRestrictionInstance:investigationRestriction;
+this.textMention = textMention;
+}
 	public InjuryByAccident(){
 this.individual = null;
+this.investigationRestriction = InvestigationRestriction.noRestrictionInstance;
 this.textMention = null;
 }
 	public InjuryByAccident(InjuryByAccident injuryByAccident)throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,NoSuchMethodException, SecurityException{
 this.individual = injuryByAccident.individual;
+this.investigationRestriction = injuryByAccident.investigationRestriction;
 for (int j = 0; j < injuryByAccident.getAnimalCareConditions().size(); j++) {if (injuryByAccident.getAnimalCareConditions().get(j) != null) {animalCareConditions.add((IAnimalCareCondition) IOBIEThing.getCloneConstructor(injuryByAccident.getAnimalCareConditions().get(j).getClass()).newInstance(injuryByAccident.getAnimalCareConditions().get(j)));} else {animalCareConditions.add(null);}}
 this.characterOffset = injuryByAccident.getCharacterOffset();
 this.characterOnset = injuryByAccident.getCharacterOnset();
@@ -132,11 +149,6 @@ if(injuryByAccident.getInjuryVertebralLocation()!=null)this.injuryVertebralLocat
 for (int j = 0; j < injuryByAccident.getMedicationDuringSurgeries().size(); j++) {if (injuryByAccident.getMedicationDuringSurgeries().get(j) != null) {medicationDuringSurgeries.add((IMedicationDuringSurgery) IOBIEThing.getCloneConstructor(injuryByAccident.getMedicationDuringSurgeries().get(j).getClass()).newInstance(injuryByAccident.getMedicationDuringSurgeries().get(j)));} else {medicationDuringSurgeries.add(null);}}
 for (int j = 0; j < injuryByAccident.getTemporalIntervals().size(); j++) {if (injuryByAccident.getTemporalIntervals().get(j) != null) {temporalIntervals.add((ITemporalInterval) IOBIEThing.getCloneConstructor(injuryByAccident.getTemporalIntervals().get(j).getClass()).newInstance(injuryByAccident.getTemporalIntervals().get(j)));} else {temporalIntervals.add(null);}}
 this.textMention = injuryByAccident.getTextMention();
-}
-	public InjuryByAccident(String individualURI, String textMention){
-this.individual = 
-				InjuryByAccident.individualFactory.getIndividualByURI(individualURI);
-this.textMention = textMention;
 }
 
 
@@ -225,70 +237,75 @@ if (other.individual!= null)
 return false;
 } else if (!individual.equals(other.individual))
 return false;
+if (investigationRestriction == null) {
+if (other.investigationRestriction!= null)
+return false;
+} else if (!investigationRestriction.equals(other.investigationRestriction))
+return false;
 if (temporalIntervals == null) {
 if (other.temporalIntervals!= null)
 return false;
 } else if (!temporalIntervals.equals(other.temporalIntervals))
-return false;
-if (injuryArea == null) {
-if (other.injuryArea!= null)
-return false;
-} else if (!injuryArea.equals(other.injuryArea))
-return false;
-if (injuryAnaesthesiaAnaesthetics == null) {
-if (other.injuryAnaesthesiaAnaesthetics!= null)
-return false;
-} else if (!injuryAnaesthesiaAnaesthetics.equals(other.injuryAnaesthesiaAnaesthetics))
-return false;
-if (injuryIntensity == null) {
-if (other.injuryIntensity!= null)
-return false;
-} else if (!injuryIntensity.equals(other.injuryIntensity))
-return false;
-if (injuryVertebralLocation == null) {
-if (other.injuryVertebralLocation!= null)
-return false;
-} else if (!injuryVertebralLocation.equals(other.injuryVertebralLocation))
-return false;
-if (characterOnset == null) {
-if (other.characterOnset!= null)
-return false;
-} else if (!characterOnset.equals(other.characterOnset))
-return false;
-if (animalCareConditions == null) {
-if (other.animalCareConditions!= null)
-return false;
-} else if (!animalCareConditions.equals(other.animalCareConditions))
-return false;
-if (injuryByAccidentTypes == null) {
-if (other.injuryByAccidentTypes!= null)
-return false;
-} else if (!injuryByAccidentTypes.equals(other.injuryByAccidentTypes))
-return false;
-if (injuryDevice == null) {
-if (other.injuryDevice!= null)
-return false;
-} else if (!injuryDevice.equals(other.injuryDevice))
-return false;
-if (medicationDuringSurgeries == null) {
-if (other.medicationDuringSurgeries!= null)
-return false;
-} else if (!medicationDuringSurgeries.equals(other.medicationDuringSurgeries))
-return false;
-if (textMention == null) {
-if (other.textMention!= null)
-return false;
-} else if (!textMention.equals(other.textMention))
 return false;
 if (characterOffset == null) {
 if (other.characterOffset!= null)
 return false;
 } else if (!characterOffset.equals(other.characterOffset))
 return false;
+if (injuryVertebralLocation == null) {
+if (other.injuryVertebralLocation!= null)
+return false;
+} else if (!injuryVertebralLocation.equals(other.injuryVertebralLocation))
+return false;
 if (injuryPostsurgicalCareAnimalCareConditions == null) {
 if (other.injuryPostsurgicalCareAnimalCareConditions!= null)
 return false;
 } else if (!injuryPostsurgicalCareAnimalCareConditions.equals(other.injuryPostsurgicalCareAnimalCareConditions))
+return false;
+if (injuryIntensity == null) {
+if (other.injuryIntensity!= null)
+return false;
+} else if (!injuryIntensity.equals(other.injuryIntensity))
+return false;
+if (injuryDevice == null) {
+if (other.injuryDevice!= null)
+return false;
+} else if (!injuryDevice.equals(other.injuryDevice))
+return false;
+if (injuryByAccidentTypes == null) {
+if (other.injuryByAccidentTypes!= null)
+return false;
+} else if (!injuryByAccidentTypes.equals(other.injuryByAccidentTypes))
+return false;
+if (injuryAnaesthesiaAnaesthetics == null) {
+if (other.injuryAnaesthesiaAnaesthetics!= null)
+return false;
+} else if (!injuryAnaesthesiaAnaesthetics.equals(other.injuryAnaesthesiaAnaesthetics))
+return false;
+if (animalCareConditions == null) {
+if (other.animalCareConditions!= null)
+return false;
+} else if (!animalCareConditions.equals(other.animalCareConditions))
+return false;
+if (characterOnset == null) {
+if (other.characterOnset!= null)
+return false;
+} else if (!characterOnset.equals(other.characterOnset))
+return false;
+if (medicationDuringSurgeries == null) {
+if (other.medicationDuringSurgeries!= null)
+return false;
+} else if (!medicationDuringSurgeries.equals(other.medicationDuringSurgeries))
+return false;
+if (injuryArea == null) {
+if (other.injuryArea!= null)
+return false;
+} else if (!injuryArea.equals(other.injuryArea))
+return false;
+if (textMention == null) {
+if (other.textMention!= null)
+return false;
+} else if (!textMention.equals(other.textMention))
 return false;
 return true;
 }
@@ -445,23 +462,28 @@ return ISCIOThing.RDF_MODEL_NAMESPACE + resourceName;}
 		return textMention;}
 	/***/
 @Override
+	public IOBIEThing getThis(){
+		return this;}
+	/***/
+@Override
 	public int hashCode(){
 		final int prime = 31;
 int result = 1;
 result = prime * result + ((this.individual == null) ? 0 : this.individual.hashCode());
+result = prime * result + ((this.investigationRestriction == null) ? 0 : this.investigationRestriction.hashCode());
 result = prime * result + ((this.temporalIntervals == null) ? 0 : this.temporalIntervals.hashCode());
-result = prime * result + ((this.injuryArea == null) ? 0 : this.injuryArea.hashCode());
-result = prime * result + ((this.injuryAnaesthesiaAnaesthetics == null) ? 0 : this.injuryAnaesthesiaAnaesthetics.hashCode());
-result = prime * result + ((this.injuryIntensity == null) ? 0 : this.injuryIntensity.hashCode());
-result = prime * result + ((this.injuryVertebralLocation == null) ? 0 : this.injuryVertebralLocation.hashCode());
-result = prime * result + ((this.characterOnset == null) ? 0 : this.characterOnset.hashCode());
-result = prime * result + ((this.animalCareConditions == null) ? 0 : this.animalCareConditions.hashCode());
-result = prime * result + ((this.injuryByAccidentTypes == null) ? 0 : this.injuryByAccidentTypes.hashCode());
-result = prime * result + ((this.injuryDevice == null) ? 0 : this.injuryDevice.hashCode());
-result = prime * result + ((this.medicationDuringSurgeries == null) ? 0 : this.medicationDuringSurgeries.hashCode());
-result = prime * result + ((this.textMention == null) ? 0 : this.textMention.hashCode());
 result = prime * result + ((this.characterOffset == null) ? 0 : this.characterOffset.hashCode());
+result = prime * result + ((this.injuryVertebralLocation == null) ? 0 : this.injuryVertebralLocation.hashCode());
 result = prime * result + ((this.injuryPostsurgicalCareAnimalCareConditions == null) ? 0 : this.injuryPostsurgicalCareAnimalCareConditions.hashCode());
+result = prime * result + ((this.injuryIntensity == null) ? 0 : this.injuryIntensity.hashCode());
+result = prime * result + ((this.injuryDevice == null) ? 0 : this.injuryDevice.hashCode());
+result = prime * result + ((this.injuryByAccidentTypes == null) ? 0 : this.injuryByAccidentTypes.hashCode());
+result = prime * result + ((this.injuryAnaesthesiaAnaesthetics == null) ? 0 : this.injuryAnaesthesiaAnaesthetics.hashCode());
+result = prime * result + ((this.animalCareConditions == null) ? 0 : this.animalCareConditions.hashCode());
+result = prime * result + ((this.characterOnset == null) ? 0 : this.characterOnset.hashCode());
+result = prime * result + ((this.medicationDuringSurgeries == null) ? 0 : this.medicationDuringSurgeries.hashCode());
+result = prime * result + ((this.injuryArea == null) ? 0 : this.injuryArea.hashCode());
+result = prime * result + ((this.textMention == null) ? 0 : this.textMention.hashCode());
 return result;}
 	/***/
 @Override
@@ -604,7 +626,7 @@ return this;}
 
 @Override
 public String toString(){
-return "InjuryByAccident [individual="+individual+",animalCareConditions="+animalCareConditions+",characterOffset="+characterOffset+",characterOnset="+characterOnset+",injuryAnaesthesiaAnaesthetics="+injuryAnaesthesiaAnaesthetics+",injuryArea="+injuryArea+",injuryByAccidentTypes="+injuryByAccidentTypes+",injuryDevice="+injuryDevice+",injuryIntensity="+injuryIntensity+",injuryPostsurgicalCareAnimalCareConditions="+injuryPostsurgicalCareAnimalCareConditions+",injuryVertebralLocation="+injuryVertebralLocation+",medicationDuringSurgeries="+medicationDuringSurgeries+",serialVersionUID="+serialVersionUID+",temporalIntervals="+temporalIntervals+",textMention="+textMention+"]";}
+return "InjuryByAccident [individual="+individual+",investigationRestriction="+investigationRestriction.summarize()+",animalCareConditions="+animalCareConditions+",characterOffset="+characterOffset+",characterOnset="+characterOnset+",injuryAnaesthesiaAnaesthetics="+injuryAnaesthesiaAnaesthetics+",injuryArea="+injuryArea+",injuryByAccidentTypes="+injuryByAccidentTypes+",injuryDevice="+injuryDevice+",injuryIntensity="+injuryIntensity+",injuryPostsurgicalCareAnimalCareConditions="+injuryPostsurgicalCareAnimalCareConditions+",injuryVertebralLocation="+injuryVertebralLocation+",medicationDuringSurgeries="+medicationDuringSurgeries+",serialVersionUID="+serialVersionUID+",temporalIntervals="+temporalIntervals+",textMention="+textMention+"]";}
 
 
 }

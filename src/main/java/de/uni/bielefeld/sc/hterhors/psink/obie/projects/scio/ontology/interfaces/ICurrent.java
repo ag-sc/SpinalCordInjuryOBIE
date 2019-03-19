@@ -32,14 +32,14 @@ import java.util.stream.Collectors;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
 @ImplementationClass(get=Current.class)
 
-@DatatypeProperty
 @AssignableSubInterfaces(get={})
- public interface ICurrent
+
+@DatatypeProperty public interface ICurrent
  extends IDatatype, IQudt_Quantity{
 
 }

@@ -29,12 +29,12 @@ import java.util.stream.Collectors;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
-@ImplementationClass(get=AntibioticMedication.class)
-
 @AssignableSubInterfaces(get={})
+
+@ImplementationClass(get=AntibioticMedication.class)
  public interface IAntibioticMedication
  extends IPostsurgicalMedication{
 

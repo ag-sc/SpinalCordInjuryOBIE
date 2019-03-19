@@ -16,6 +16,9 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import corpus.SampledInstance;
+import de.hterhors.obie.core.ontology.InvestigationRestriction;
+import de.hterhors.obie.core.ontology.InvestigationRestriction.RestrictedField;
+import de.hterhors.obie.core.ontology.OntologyInitializer;
 import de.hterhors.obie.core.ontology.annotations.AssignableSubClasses;
 import de.hterhors.obie.core.ontology.annotations.DatatypeProperty;
 import de.hterhors.obie.core.ontology.annotations.ImplementationClass;
@@ -23,26 +26,24 @@ import de.hterhors.obie.core.ontology.annotations.RelationTypeCollection;
 import de.hterhors.obie.core.ontology.interfaces.IDatatype;
 import de.hterhors.obie.core.ontology.interfaces.IOBIEThing;
 import de.hterhors.obie.ml.explorer.utils.ExplorationUtils;
-import de.hterhors.obie.ml.run.AbstractRunner;
-import de.hterhors.obie.ml.run.InvestigationRestriction;
-import de.hterhors.obie.ml.run.InvestigationRestriction.RestrictedField;
-import de.hterhors.obie.ml.run.StandardRERunner;
+import de.hterhors.obie.ml.run.AbstractOBIERunner;
+import de.hterhors.obie.ml.run.DefaultSlotFillingRunner;
 import de.hterhors.obie.ml.run.param.RunParameter;
 import de.hterhors.obie.ml.run.param.RunParameter.Builder;
 import de.hterhors.obie.ml.variables.InstanceTemplateAnnotations;
 import de.hterhors.obie.ml.variables.OBIEInstance;
 import de.hterhors.obie.ml.variables.OBIEState;
-import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.SCIOParameterQuickAccess;
-import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ontology.classes.AnimalModel;
+import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.environments.OntologyEnvironment;
+import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.run.parameter.SCIOParameterQuickAccess;
 import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ontology.classes.Injury;
 import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ontology.classes.InvestigationMethod;
+import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ontology.classes.OrganismModel;
 import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ontology.classes.Treatment;
-import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ontology.interfaces.IAnimalModel;
 import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ontology.interfaces.IInjury;
 import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ontology.interfaces.IInvestigationMethod;
+import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ontology.interfaces.IOrganismModel;
 import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ontology.interfaces.ISCIOThing;
 import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ontology.interfaces.ITreatment;
-import learning.optimizer.SGD;
 
 /**
  * This class helps to calculate the probability of generated states. The
@@ -56,17 +57,20 @@ public class CalculatingScoresRunner {
 
 	public final static IInjury keepImportOnAutoImport_I = new Injury();
 	public final static IInvestigationMethod keepImportOnAutoImport_IM = new InvestigationMethod();
-	public final static IAnimalModel keepImportOnAutoImport_AM = new AnimalModel();
+	public final static IOrganismModel keepImportOnAutoImport_AM = new OrganismModel();
 	public final static ITreatment keepImportOnAutoImport_T = new Treatment();
 
-	final private static Class<? extends ISCIOThing> searchType = ITreatment.class;
+	final private static Class<? extends ISCIOThing> searchType = IOrganismModel.class;
 
 	public static final String type = searchType.getSimpleName().toLowerCase();
 
 	public static void main(String[] args) {
 		try {
-			psSingle = new PrintStream(new File("scio/baseline/probabilities/" + type + "_single_scores.csv"));
-			psDouble = new PrintStream(new File("scio/baseline/probabilities/" + type + "_double_scores.csv"));
+
+			OntologyInitializer.initializeOntology(OntologyEnvironment.getInstance());
+
+			psSingle = new PrintStream(new File("baseline/probabilities/" + type + "_single_scores.csv"));
+			psDouble = new PrintStream(new File("baseline/probabilities/" + type + "_double_scores.csv"));
 
 			Class<? extends IOBIEThing> classType = searchType.getAnnotation(ImplementationClass.class).get();
 			List<Set<RestrictedField>> restrictFieldsList = InvestigationRestriction.getFieldRestrictionCombinations(
@@ -75,7 +79,7 @@ public class CalculatingScoresRunner {
 			trainAll(restrictFieldsList);
 
 			RunParameter parameter = SCIOParameterQuickAccess.getREParameter().build();
-			AbstractRunner runner = new StandardRERunner(parameter);
+			AbstractOBIERunner runner = new DefaultSlotFillingRunner(parameter, false);
 
 			CalculatingScoresRunner.exploreClassesWithoutTextualEvidence = runner
 					.getParameter().exploreClassesWithoutTextualEvidence;
@@ -110,10 +114,11 @@ public class CalculatingScoresRunner {
 	public static RunParameter getTrainingParameter(InvestigationRestriction investigationRestrictions) {
 
 		Builder paramBuilder = SCIOParameterQuickAccess.getREParameter();
-		paramBuilder.setInvestigationRestriction(investigationRestrictions);
+		paramBuilder.setDefaultTrainInvestigationRestriction(investigationRestrictions);
+		paramBuilder.setDefaultTestInvestigationRestriction(investigationRestrictions);
 		paramBuilder.setMultiThreading(true);
-		paramBuilder.setEpochs(15);
-		paramBuilder.setOptimizer(new SGD(0.05, 0, 0.001, false));
+//		paramBuilder.setEpochs(10);
+//		paramBuilder.setOptimizer(new SGD(0.05, 0, 0.001, false));
 
 		return paramBuilder.build();
 	}
@@ -123,11 +128,12 @@ public class CalculatingScoresRunner {
 			InvestigationRestriction propertyRestrictions) {
 
 		Builder paramBuilder = SCIOParameterQuickAccess.getREParameter();
-		paramBuilder.setInvestigationRestriction(propertyRestrictions);
+		paramBuilder.setDefaultTrainInvestigationRestriction(propertyRestrictions);
+		paramBuilder.setDefaultTestInvestigationRestriction(propertyRestrictions);
 		paramBuilder.setInitializationObjects(initializationObjects);
 		paramBuilder.setMultiThreading(true);
-		paramBuilder.setEpochs(15);
-		paramBuilder.setOptimizer(new SGD(0.05, 0, 0.001, false));
+//		paramBuilder.setEpochs(15);
+//		paramBuilder.setOptimizer(new SGD(0.05, 0, 0.001, false));
 
 		return paramBuilder.build();
 	}
@@ -138,11 +144,11 @@ public class CalculatingScoresRunner {
 		/**
 		 * Train only type
 		 */
-		InvestigationRestriction typeRestrictions = new InvestigationRestriction(searchType, new HashSet<>(), true);
+		InvestigationRestriction typeRestrictions = new InvestigationRestriction(new HashSet<>(), true);
 		System.out.println("SamplingRestriction: " + typeRestrictions);
 		RunParameter p = getTrainingParameter(typeRestrictions);
 		System.out.println("Parameter: " + p);
-		AbstractRunner runner = new StandardRERunner(p);
+		AbstractOBIERunner runner = new DefaultSlotFillingRunner(p, false);
 		runner.train();
 
 		/**
@@ -154,15 +160,14 @@ public class CalculatingScoresRunner {
 				/*
 				 * Train fields and class type
 				 */
-				InvestigationRestriction propertyRestrictions = new InvestigationRestriction(searchType, restrictFields,
-						true);
+				InvestigationRestriction propertyRestrictions = new InvestigationRestriction(restrictFields, true);
 				System.out.println("SamplingRestriction: " + propertyRestrictions);
 
 				p = getTrainingParameter(propertyRestrictions);
 				System.out.println("Parameter: " + p);
 
-				runner = new StandardRERunner(p);
-
+//				runner = new DefaultSlotFillingRunner(p);
+				runner.clean(p);
 				runner.train();
 				System.out.println("##############");
 
@@ -176,8 +181,9 @@ public class CalculatingScoresRunner {
 			p = getTrainingParameter(propertyRestrictions);
 			System.out.println("Parameter: " + p);
 
-			runner = new StandardRERunner(p);
+//			runner = new DefaultSlotFillingRunner(p);
 
+			runner.clean(p);
 			runner.train();
 			System.out.println("##############");
 		}
@@ -189,12 +195,12 @@ public class CalculatingScoresRunner {
 		/*
 		 * Predict only classes
 		 */
-		InvestigationRestriction typeRestrictions = new InvestigationRestriction(searchType, new HashSet<>(), true);
+		InvestigationRestriction typeRestrictions = new InvestigationRestriction(new HashSet<>(), true);
 		System.out.println("SamplingRestriction: " + typeRestrictions);
 		Map<Class<? extends IOBIEThing>, List<IOBIEThing>> initializationObjects;
 		List<IOBIEThing> initObjectList;
 		RunParameter p;
-		AbstractRunner runner;
+		AbstractOBIERunner runner;
 
 		List<Class<? extends IOBIEThing>> listOftypes = new ArrayList<>(Arrays.asList(searchType
 				.getAnnotation(ImplementationClass.class).get().getAnnotation(AssignableSubClasses.class).get()));
@@ -214,7 +220,7 @@ public class CalculatingScoresRunner {
 
 			System.out.println(initObject);
 
-			runner = new StandardRERunner(p);
+			runner = new DefaultSlotFillingRunner(p, false);
 
 			runner.loadModel();
 
@@ -278,7 +284,7 @@ public class CalculatingScoresRunner {
 
 							String v = value == null ? "null"
 									: value.getClass().isAnnotationPresent(DatatypeProperty.class)
-											? ((IDatatype) value).getSemanticValue()
+											? ((IDatatype) value).getInterpretedValue()
 											: value.getClass().getSimpleName();
 
 							System.out.println(sampledInstance.getInstance().getName() + " -> "
@@ -331,7 +337,7 @@ public class CalculatingScoresRunner {
 
 						String v = value == null ? "null"
 								: value.getClass().isAnnotationPresent(DatatypeProperty.class)
-										? ((IDatatype) value).getSemanticValue()
+										? ((IDatatype) value).getInterpretedValue()
 										: value.getClass().getSimpleName();
 
 						System.out.println(sampledInstance.getInstance().getName() + " -> " + v + " = "
@@ -402,11 +408,11 @@ public class CalculatingScoresRunner {
 
 							String v1 = value1 == null ? "null"
 									: value1.getClass().isAnnotationPresent(DatatypeProperty.class)
-											? ((IDatatype) value1).getSemanticValue()
+											? ((IDatatype) value1).getInterpretedValue()
 											: value1.getClass().getSimpleName();
 							String v2 = value2 == null ? "null"
 									: value2.getClass().isAnnotationPresent(DatatypeProperty.class)
-											? ((IDatatype) value2).getSemanticValue()
+											? ((IDatatype) value2).getInterpretedValue()
 											: value2.getClass().getSimpleName();
 
 							System.out.println(sampledInstance.getInstance().getName() + " -> " + v1 + " + " + v2
@@ -424,20 +430,19 @@ public class CalculatingScoresRunner {
 
 	}
 
-	private static AbstractRunner evaluate(Map<Class<? extends IOBIEThing>, List<IOBIEThing>> initializationObjects,
+	private static AbstractOBIERunner evaluate(Map<Class<? extends IOBIEThing>, List<IOBIEThing>> initializationObjects,
 			Set<RestrictedField> restrictFields, IOBIEThing initObject, boolean investClasstype)
 			throws InstantiationException, IllegalAccessException, ClassNotFoundException, IOException, Exception {
 		RunParameter p;
-		AbstractRunner runner;
+		AbstractOBIERunner runner;
 		System.out.println(initObject);
-		InvestigationRestriction propertyRestrictions = new InvestigationRestriction(searchType, restrictFields,
-				investClasstype);
+		InvestigationRestriction propertyRestrictions = new InvestigationRestriction(restrictFields, investClasstype);
 		System.out.println("SamplingRestriction: " + propertyRestrictions);
 
 		p = getPredictingParameter(initializationObjects, propertyRestrictions);
 		System.out.println("Parameter: " + p);
 
-		runner = new StandardRERunner(p);
+		runner = new DefaultSlotFillingRunner(p, false);
 
 		runner.loadModel();
 		return runner;
@@ -458,9 +463,9 @@ public class CalculatingScoresRunner {
 			/*
 			 * TODO: Make this dependable from exploration style.
 			 */
-			List<IOBIEThing> l = new ArrayList<>(
-					ExplorationUtils.getCandidates(instance, (Class<? extends IOBIEThing>) fields.get(i).getType(),
-							exploreClassesWithoutTextualEvidence, true, true));
+			List<IOBIEThing> l = new ArrayList<>(ExplorationUtils.getCandidates(instance,
+					(Class<? extends IOBIEThing>) fields.get(i).getType(), exploreClassesWithoutTextualEvidence, true,
+					true, InvestigationRestriction.noRestrictionInstance));
 			l.add(null);
 
 			instances.add(l);

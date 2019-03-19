@@ -22,8 +22,8 @@ import de.hterhors.obie.core.evaluation.iob.IOBEvaluator.IOBEnum;
 import de.hterhors.obie.core.tokenizer.Token;
 import de.hterhors.obie.ml.variables.InstanceTemplateAnnotations;
 import de.hterhors.obie.ml.variables.OBIEInstance;
-import de.hterhors.obie.ml.variables.TemplateAnnotation;
-import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.SCIOOntologyEnvironment;
+import de.hterhors.obie.ml.variables.IETmplateAnnotation;
+import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.environments.OntologyEnvironment;
 import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ontology.classes.GroupName;
 import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ontology.interfaces.IGroupName;
 import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ontology.interfaces.IObservedDifference;
@@ -59,7 +59,7 @@ public class GroupNames2IOB {
 
 							@SuppressWarnings("unchecked")
 							final Class<? extends ISCIOThing> clzz = (Class<? extends ISCIOThing>) Class
-									.forName(SCIOOntologyEnvironment.getInstance().getBasePackage() + "classes."
+									.forName(OntologyEnvironment.getInstance().getBasePackage() + "classes."
 											+ line[1]);
 
 							if (!(
@@ -83,7 +83,7 @@ public class GroupNames2IOB {
 								IGroupName groupName = new GroupName(surfaceForm, surfaceForm);
 								groupName.setCharacterOnset(Integer.parseInt(line[2]));
 //								groupName.setCharacterOffset(Integer.parseInt(line[3]));
-								TemplateAnnotation ia = new TemplateAnnotation(IGroupName.class, groupName);
+								IETmplateAnnotation ia = new IETmplateAnnotation(IGroupName.class, groupName);
 								ias.addAnnotation(ia);
 							}
 
@@ -128,7 +128,7 @@ public class GroupNames2IOB {
 			final List<Token> tokens = ii.getTokens();
 
 			Set<String[]> annotations = new HashSet<>();
-			for (TemplateAnnotation ia : ii.getGoldAnnotation().getTemplateAnnotations()) {
+			for (IETmplateAnnotation ia : ii.getGoldAnnotation().getAnnotations()) {
 
 				final String text = ia.getThing().getTextMention();
 				annotations.add(text.split(" "));

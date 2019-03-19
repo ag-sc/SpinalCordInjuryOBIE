@@ -35,12 +35,12 @@ import java.util.stream.Collectors;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
-@AssignableSubInterfaces(get={IBodyWeightExamination.class, IMechanicalAllodyniaTest.class, IMotorTest.class, ILouisvilleSwimScale.class, IWalkingAnalysisTest.class, IManualDexterityTest.class, IElectrophysiologyTest.class, ILimbMuscleStrengthTest.class, IBMSTest.class, ISwimmingTest.class, IInfectionExamination.class, IHReflexTest.class, ISomatosensoryEvokedPotentialsTest.class, ISensoryTest.class, IBloodCirculationExamination.class, IBBBTest.class, IOpenFieldTest.class, IAvoidanceResponseTest.class, IHindpawSensationTest.class, IInclinedPlaneTest.class, INeurologicScalesTest.class, ISpinalCordEvokedPotentialsTest.class, ILadderRungTest.class, IFootprintAnalysisTest.class, ISinglePelletReachingTest.class, IAdhesiveRemovalTest.class, IThermalHyperalgesiaTest.class, IPhysiologyTest.class, IGaitTest.class, ISurfaceRightingReflexTest.class, ITailFlickReflexTest.class, IMotorReflexTest.class, IGaleRatingScoreTest.class, IStaircaseTest.class, IUrineVoidingTest.class, IContactPlacingResponseTest.class, IBloodBrainBarrierTest.class, IGastricUlcerogenesisTest.class, IRearingTest.class, ILocomotorTest.class, IForelimbAsymmetryTest.class, IMotorEvokedPotentialsTest.class, ICardioVascularFunctionTest.class, INarrowBeamTest.class, IPainTest.class, IForelimbStrengthTest.class, IAutomatedGaitAnalysis.class, IAutonomicDysreflexiaTest.class, IBBBSubscoreTest.class, })
-
 @ImplementationClass(get=FunctionalTest.class)
+
+@AssignableSubInterfaces(get={IBodyWeightExamination.class, IMechanicalAllodyniaTest.class, IMotorTest.class, ILouisvilleSwimScale.class, IWalkingAnalysisTest.class, IManualDexterityTest.class, IElectrophysiologyTest.class, ILimbMuscleStrengthTest.class, IBMSTest.class, ISwimmingTest.class, IInfectionExamination.class, IHReflexTest.class, ISomatosensoryEvokedPotentialsTest.class, ISensoryTest.class, IBloodCirculationExamination.class, IBBBTest.class, IOpenFieldTest.class, IAvoidanceResponseTest.class, IHindpawSensationTest.class, IInclinedPlaneTest.class, INeurologicScalesTest.class, ISpinalCordEvokedPotentialsTest.class, ILadderRungTest.class, IFootprintAnalysisTest.class, ISinglePelletReachingTest.class, IAdhesiveRemovalTest.class, IThermalHyperalgesiaTest.class, IPhysiologyTest.class, IGaitTest.class, ISurfaceRightingReflexTest.class, ITailFlickReflexTest.class, IMotorReflexTest.class, IGaleRatingScoreTest.class, IStaircaseTest.class, IUrineVoidingTest.class, IContactPlacingResponseTest.class, IBloodBrainBarrierTest.class, IGastricUlcerogenesisTest.class, IRearingTest.class, ILocomotorTest.class, IForelimbAsymmetryTest.class, IMotorEvokedPotentialsTest.class, ICardioVascularFunctionTest.class, INarrowBeamTest.class, IPainTest.class, IForelimbStrengthTest.class, IAutomatedGaitAnalysis.class, IAutonomicDysreflexiaTest.class, IBBBSubscoreTest.class, })
  public interface IFunctionalTest
  extends IInvestigationMethod{
 

@@ -32,12 +32,12 @@ import java.util.stream.Collectors;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
-@ImplementationClass(get=GuineaPigSpecies.class)
-
 @AssignableSubInterfaces(get={})
+
+@ImplementationClass(get=GuineaPigSpecies.class)
  public interface IGuineaPigSpecies
  extends IAnimalSpecies{
 

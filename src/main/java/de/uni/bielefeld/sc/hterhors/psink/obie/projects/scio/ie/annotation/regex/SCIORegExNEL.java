@@ -1,4 +1,4 @@
-package de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.nel.regex;
+package de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.annotation.regex;
 
 import java.util.Arrays;
 import java.util.Collections;

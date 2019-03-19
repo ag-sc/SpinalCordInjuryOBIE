@@ -15,6 +15,7 @@ import org.apache.jena.rdf.model.Resource;
 import java.util.Map;
 import java.lang.InstantiationException;
 import java.lang.SecurityException;
+import de.hterhors.obie.core.ontology.InvestigationRestriction;
 import de.hterhors.obie.core.ontology.annotations.DirectSiblings;
 import java.lang.IllegalAccessException;
 import de.hterhors.obie.core.ontology.annotations.AssignableSubClasses;
@@ -50,7 +51,7 @@ import de.hterhors.obie.core.ontology.AbstractIndividual;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
 @DirectInterface(get=ISchwannCellChangesTest.class)
@@ -84,11 +85,19 @@ static class SchwannCellChangesTestIndividual extends AbstractIndividual {
 	@Override
 	public AbstractIndividual getIndividual() {
 		return individual;
-	}	final static public String ONTOLOGY_NAME = "http://psink.de/scio/SchwannCellChangesTest";
+	}
+	@Override
+	public InvestigationRestriction getInvestigationRestriction() {
+		return investigationRestriction;
+	}
+	@Override
+	public SchwannCellChangesTest setInvestigationRestriction(InvestigationRestriction investigationRestriction ) {
+		this.investigationRestriction = investigationRestriction;
+ return this;	}public InvestigationRestriction investigationRestriction;	final static public String ONTOLOGY_NAME = "http://psink.de/scio/SchwannCellChangesTest";
 	private Integer characterOffset;
 	private Integer characterOnset;
-	@RelationTypeCollection
-@OntologyModelContent(ontologyName="http://psink.de/scio/hasLocation")
+	@OntologyModelContent(ontologyName="http://psink.de/scio/hasLocation")
+@RelationTypeCollection
 private List<ILocation> locations = new ArrayList<>();
 	@OntologyModelContent(ontologyName="http://psink.de/scio/makesUseOf")
 @RelationTypeCollection
@@ -99,21 +108,24 @@ private List<IApparatus> makesUseOfApparatus = new ArrayList<>();
 final private String textMention;
 
 
+	public SchwannCellChangesTest(String individualURI, InvestigationRestriction investigationRestriction, String textMention){
+this.individual = 
+				SchwannCellChangesTest.individualFactory.getIndividualByURI(individualURI);
+this.investigationRestriction = investigationRestriction==null?InvestigationRestriction.noRestrictionInstance:investigationRestriction;
+this.textMention = textMention;
+}
 	public SchwannCellChangesTest(SchwannCellChangesTest schwannCellChangesTest)throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,NoSuchMethodException, SecurityException{
 this.individual = schwannCellChangesTest.individual;
+this.investigationRestriction = schwannCellChangesTest.investigationRestriction;
 this.characterOffset = schwannCellChangesTest.getCharacterOffset();
 this.characterOnset = schwannCellChangesTest.getCharacterOnset();
 for (int j = 0; j < schwannCellChangesTest.getLocations().size(); j++) {if (schwannCellChangesTest.getLocations().get(j) != null) {locations.add((ILocation) IOBIEThing.getCloneConstructor(schwannCellChangesTest.getLocations().get(j).getClass()).newInstance(schwannCellChangesTest.getLocations().get(j)));} else {locations.add(null);}}
 for (int j = 0; j < schwannCellChangesTest.getMakesUseOfApparatus().size(); j++) {if (schwannCellChangesTest.getMakesUseOfApparatus().get(j) != null) {makesUseOfApparatus.add((IApparatus) IOBIEThing.getCloneConstructor(schwannCellChangesTest.getMakesUseOfApparatus().get(j).getClass()).newInstance(schwannCellChangesTest.getMakesUseOfApparatus().get(j)));} else {makesUseOfApparatus.add(null);}}
 this.textMention = schwannCellChangesTest.getTextMention();
 }
-	public SchwannCellChangesTest(String individualURI, String textMention){
-this.individual = 
-				SchwannCellChangesTest.individualFactory.getIndividualByURI(individualURI);
-this.textMention = textMention;
-}
 	public SchwannCellChangesTest(){
 this.individual = null;
+this.investigationRestriction = InvestigationRestriction.noRestrictionInstance;
 this.textMention = null;
 }
 
@@ -160,30 +172,35 @@ if (other.individual!= null)
 return false;
 } else if (!individual.equals(other.individual))
 return false;
-if (locations == null) {
-if (other.locations!= null)
+if (investigationRestriction == null) {
+if (other.investigationRestriction!= null)
 return false;
-} else if (!locations.equals(other.locations))
+} else if (!investigationRestriction.equals(other.investigationRestriction))
+return false;
+if (characterOnset == null) {
+if (other.characterOnset!= null)
+return false;
+} else if (!characterOnset.equals(other.characterOnset))
 return false;
 if (makesUseOfApparatus == null) {
 if (other.makesUseOfApparatus!= null)
 return false;
 } else if (!makesUseOfApparatus.equals(other.makesUseOfApparatus))
 return false;
-if (textMention == null) {
-if (other.textMention!= null)
-return false;
-} else if (!textMention.equals(other.textMention))
-return false;
 if (characterOffset == null) {
 if (other.characterOffset!= null)
 return false;
 } else if (!characterOffset.equals(other.characterOffset))
 return false;
-if (characterOnset == null) {
-if (other.characterOnset!= null)
+if (locations == null) {
+if (other.locations!= null)
 return false;
-} else if (!characterOnset.equals(other.characterOnset))
+} else if (!locations.equals(other.locations))
+return false;
+if (textMention == null) {
+if (other.textMention!= null)
+return false;
+} else if (!textMention.equals(other.textMention))
 return false;
 return true;
 }
@@ -248,15 +265,20 @@ return ISCIOThing.RDF_MODEL_NAMESPACE + resourceName;}
 		return textMention;}
 	/***/
 @Override
+	public IOBIEThing getThis(){
+		return this;}
+	/***/
+@Override
 	public int hashCode(){
 		final int prime = 31;
 int result = 1;
 result = prime * result + ((this.individual == null) ? 0 : this.individual.hashCode());
-result = prime * result + ((this.locations == null) ? 0 : this.locations.hashCode());
-result = prime * result + ((this.makesUseOfApparatus == null) ? 0 : this.makesUseOfApparatus.hashCode());
-result = prime * result + ((this.textMention == null) ? 0 : this.textMention.hashCode());
-result = prime * result + ((this.characterOffset == null) ? 0 : this.characterOffset.hashCode());
+result = prime * result + ((this.investigationRestriction == null) ? 0 : this.investigationRestriction.hashCode());
 result = prime * result + ((this.characterOnset == null) ? 0 : this.characterOnset.hashCode());
+result = prime * result + ((this.makesUseOfApparatus == null) ? 0 : this.makesUseOfApparatus.hashCode());
+result = prime * result + ((this.characterOffset == null) ? 0 : this.characterOffset.hashCode());
+result = prime * result + ((this.locations == null) ? 0 : this.locations.hashCode());
+result = prime * result + ((this.textMention == null) ? 0 : this.textMention.hashCode());
 return result;}
 	/***/
 @Override
@@ -299,7 +321,7 @@ return this;}
 
 @Override
 public String toString(){
-return "SchwannCellChangesTest [individual="+individual+",characterOffset="+characterOffset+",characterOnset="+characterOnset+",locations="+locations+",makesUseOfApparatus="+makesUseOfApparatus+",serialVersionUID="+serialVersionUID+",textMention="+textMention+"]";}
+return "SchwannCellChangesTest [individual="+individual+",investigationRestriction="+investigationRestriction.summarize()+",characterOffset="+characterOffset+",characterOnset="+characterOnset+",locations="+locations+",makesUseOfApparatus="+makesUseOfApparatus+",serialVersionUID="+serialVersionUID+",textMention="+textMention+"]";}
 
 
 }

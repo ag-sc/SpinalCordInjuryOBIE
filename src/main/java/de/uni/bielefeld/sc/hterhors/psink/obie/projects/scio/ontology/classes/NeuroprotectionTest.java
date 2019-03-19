@@ -15,6 +15,7 @@ import org.apache.jena.rdf.model.Resource;
 import java.util.Map;
 import java.lang.InstantiationException;
 import java.lang.SecurityException;
+import de.hterhors.obie.core.ontology.InvestigationRestriction;
 import de.hterhors.obie.core.ontology.annotations.DirectSiblings;
 import java.lang.IllegalAccessException;
 import de.hterhors.obie.core.ontology.annotations.AssignableSubClasses;
@@ -50,16 +51,16 @@ import de.hterhors.obie.core.ontology.AbstractIndividual;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
-
-@AssignableSubClasses(get={})
 
 @DirectInterface(get=INeuroprotectionTest.class)
 
-@SuperRootClasses(get={InvestigationMethod.class, })
+@AssignableSubClasses(get={})
 
 @DirectSiblings(get={NeuroprotectionTest.class, MyelinationTest.class, AxonalChangesTest.class, NeurogenesisTest.class, NeuronalCellLossTest.class, NeuronalActivityTest.class, })
+
+@SuperRootClasses(get={InvestigationMethod.class, })
  public class NeuroprotectionTest implements INeuroprotectionTest{
 
 final public static IndividualFactory<NeuroprotectionTestIndividual> individualFactory = new IndividualFactory<>();
@@ -84,11 +85,19 @@ static class NeuroprotectionTestIndividual extends AbstractIndividual {
 	@Override
 	public AbstractIndividual getIndividual() {
 		return individual;
-	}	final static public String ONTOLOGY_NAME = "http://psink.de/scio/NeuroprotectionTest";
+	}
+	@Override
+	public InvestigationRestriction getInvestigationRestriction() {
+		return investigationRestriction;
+	}
+	@Override
+	public NeuroprotectionTest setInvestigationRestriction(InvestigationRestriction investigationRestriction ) {
+		this.investigationRestriction = investigationRestriction;
+ return this;	}public InvestigationRestriction investigationRestriction;	final static public String ONTOLOGY_NAME = "http://psink.de/scio/NeuroprotectionTest";
 	private Integer characterOffset;
 	private Integer characterOnset;
-	@RelationTypeCollection
-@OntologyModelContent(ontologyName="http://psink.de/scio/hasLocation")
+	@OntologyModelContent(ontologyName="http://psink.de/scio/hasLocation")
+@RelationTypeCollection
 private List<ILocation> locations = new ArrayList<>();
 	@OntologyModelContent(ontologyName="http://psink.de/scio/makesUseOf")
 @RelationTypeCollection
@@ -99,22 +108,25 @@ private List<IApparatus> makesUseOfApparatus = new ArrayList<>();
 final private String textMention;
 
 
+	public NeuroprotectionTest(){
+this.individual = null;
+this.investigationRestriction = InvestigationRestriction.noRestrictionInstance;
+this.textMention = null;
+}
+	public NeuroprotectionTest(String individualURI, InvestigationRestriction investigationRestriction, String textMention){
+this.individual = 
+				NeuroprotectionTest.individualFactory.getIndividualByURI(individualURI);
+this.investigationRestriction = investigationRestriction==null?InvestigationRestriction.noRestrictionInstance:investigationRestriction;
+this.textMention = textMention;
+}
 	public NeuroprotectionTest(NeuroprotectionTest neuroprotectionTest)throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,NoSuchMethodException, SecurityException{
 this.individual = neuroprotectionTest.individual;
+this.investigationRestriction = neuroprotectionTest.investigationRestriction;
 this.characterOffset = neuroprotectionTest.getCharacterOffset();
 this.characterOnset = neuroprotectionTest.getCharacterOnset();
 for (int j = 0; j < neuroprotectionTest.getLocations().size(); j++) {if (neuroprotectionTest.getLocations().get(j) != null) {locations.add((ILocation) IOBIEThing.getCloneConstructor(neuroprotectionTest.getLocations().get(j).getClass()).newInstance(neuroprotectionTest.getLocations().get(j)));} else {locations.add(null);}}
 for (int j = 0; j < neuroprotectionTest.getMakesUseOfApparatus().size(); j++) {if (neuroprotectionTest.getMakesUseOfApparatus().get(j) != null) {makesUseOfApparatus.add((IApparatus) IOBIEThing.getCloneConstructor(neuroprotectionTest.getMakesUseOfApparatus().get(j).getClass()).newInstance(neuroprotectionTest.getMakesUseOfApparatus().get(j)));} else {makesUseOfApparatus.add(null);}}
 this.textMention = neuroprotectionTest.getTextMention();
-}
-	public NeuroprotectionTest(String individualURI, String textMention){
-this.individual = 
-				NeuroprotectionTest.individualFactory.getIndividualByURI(individualURI);
-this.textMention = textMention;
-}
-	public NeuroprotectionTest(){
-this.individual = null;
-this.textMention = null;
 }
 
 
@@ -160,30 +172,35 @@ if (other.individual!= null)
 return false;
 } else if (!individual.equals(other.individual))
 return false;
-if (locations == null) {
-if (other.locations!= null)
+if (investigationRestriction == null) {
+if (other.investigationRestriction!= null)
 return false;
-} else if (!locations.equals(other.locations))
+} else if (!investigationRestriction.equals(other.investigationRestriction))
+return false;
+if (characterOnset == null) {
+if (other.characterOnset!= null)
+return false;
+} else if (!characterOnset.equals(other.characterOnset))
 return false;
 if (makesUseOfApparatus == null) {
 if (other.makesUseOfApparatus!= null)
 return false;
 } else if (!makesUseOfApparatus.equals(other.makesUseOfApparatus))
 return false;
-if (textMention == null) {
-if (other.textMention!= null)
-return false;
-} else if (!textMention.equals(other.textMention))
-return false;
 if (characterOffset == null) {
 if (other.characterOffset!= null)
 return false;
 } else if (!characterOffset.equals(other.characterOffset))
 return false;
-if (characterOnset == null) {
-if (other.characterOnset!= null)
+if (locations == null) {
+if (other.locations!= null)
 return false;
-} else if (!characterOnset.equals(other.characterOnset))
+} else if (!locations.equals(other.locations))
+return false;
+if (textMention == null) {
+if (other.textMention!= null)
+return false;
+} else if (!textMention.equals(other.textMention))
 return false;
 return true;
 }
@@ -248,15 +265,20 @@ return ISCIOThing.RDF_MODEL_NAMESPACE + resourceName;}
 		return textMention;}
 	/***/
 @Override
+	public IOBIEThing getThis(){
+		return this;}
+	/***/
+@Override
 	public int hashCode(){
 		final int prime = 31;
 int result = 1;
 result = prime * result + ((this.individual == null) ? 0 : this.individual.hashCode());
-result = prime * result + ((this.locations == null) ? 0 : this.locations.hashCode());
-result = prime * result + ((this.makesUseOfApparatus == null) ? 0 : this.makesUseOfApparatus.hashCode());
-result = prime * result + ((this.textMention == null) ? 0 : this.textMention.hashCode());
-result = prime * result + ((this.characterOffset == null) ? 0 : this.characterOffset.hashCode());
+result = prime * result + ((this.investigationRestriction == null) ? 0 : this.investigationRestriction.hashCode());
 result = prime * result + ((this.characterOnset == null) ? 0 : this.characterOnset.hashCode());
+result = prime * result + ((this.makesUseOfApparatus == null) ? 0 : this.makesUseOfApparatus.hashCode());
+result = prime * result + ((this.characterOffset == null) ? 0 : this.characterOffset.hashCode());
+result = prime * result + ((this.locations == null) ? 0 : this.locations.hashCode());
+result = prime * result + ((this.textMention == null) ? 0 : this.textMention.hashCode());
 return result;}
 	/***/
 @Override
@@ -299,7 +321,7 @@ return this;}
 
 @Override
 public String toString(){
-return "NeuroprotectionTest [individual="+individual+",characterOffset="+characterOffset+",characterOnset="+characterOnset+",locations="+locations+",makesUseOfApparatus="+makesUseOfApparatus+",serialVersionUID="+serialVersionUID+",textMention="+textMention+"]";}
+return "NeuroprotectionTest [individual="+individual+",investigationRestriction="+investigationRestriction.summarize()+",characterOffset="+characterOffset+",characterOnset="+characterOnset+",locations="+locations+",makesUseOfApparatus="+makesUseOfApparatus+",serialVersionUID="+serialVersionUID+",textMention="+textMention+"]";}
 
 
 }

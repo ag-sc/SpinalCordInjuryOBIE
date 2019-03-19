@@ -39,12 +39,12 @@ A complementary DNA is a single-stranded complementary DNA synthesized from an R
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
-@ImplementationClass(get=VimentinAntiSenseDNA.class)
-
 @AssignableSubInterfaces(get={})
+
+@ImplementationClass(get=VimentinAntiSenseDNA.class)
  public interface IVimentinAntiSenseDNA
  extends IDNA{
 

@@ -36,12 +36,12 @@ PEG is coupled to FITC, a fluorescent probe capable of being conjugated to tissu
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
-@ImplementationClass(get=PEGFITC.class)
-
 @AssignableSubInterfaces(get={})
+
+@ImplementationClass(get=PEGFITC.class)
  public interface IPEGFITC
  extends ISubstance{
 

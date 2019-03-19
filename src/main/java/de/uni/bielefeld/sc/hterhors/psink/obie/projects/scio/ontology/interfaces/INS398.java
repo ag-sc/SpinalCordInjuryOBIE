@@ -35,12 +35,12 @@ import java.util.stream.Collectors;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
-@ImplementationClass(get=NS398.class)
-
 @AssignableSubInterfaces(get={})
+
+@ImplementationClass(get=NS398.class)
  public interface INS398
  extends IVehicle{
 

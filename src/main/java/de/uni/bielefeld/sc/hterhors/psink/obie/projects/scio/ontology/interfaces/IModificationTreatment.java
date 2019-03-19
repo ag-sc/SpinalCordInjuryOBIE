@@ -29,12 +29,12 @@ import java.util.stream.Collectors;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
-@ImplementationClass(get=ModificationTreatment.class)
-
 @AssignableSubInterfaces(get={IGeneticModificationTreatment.class, IOvariectomyTreatment.class, })
+
+@ImplementationClass(get=ModificationTreatment.class)
  public interface IModificationTreatment
  extends ITreatment{
 

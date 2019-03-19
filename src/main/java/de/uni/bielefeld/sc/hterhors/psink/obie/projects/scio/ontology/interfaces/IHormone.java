@@ -35,12 +35,12 @@ import java.util.stream.Collectors;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
-@ImplementationClass(get=Hormone.class)
-
 @AssignableSubInterfaces(get={I_17BetaEstradiolE2.class, ISteroid.class, IProgesterone.class, IPregnenolone.class, IEstradiolBenzoate.class, IP4.class, IAtorvastatinAT.class, IRecombinantEPORhEpo.class, IEstrogen.class, IMelatonin.class, IPregnenoloneS.class, IDehydroEpiandrosteroneSulfate.class, IAsialoEPO.class, IErythropoietin.class, })
+
+@ImplementationClass(get=Hormone.class)
  public interface IHormone
  extends IProtein{
 

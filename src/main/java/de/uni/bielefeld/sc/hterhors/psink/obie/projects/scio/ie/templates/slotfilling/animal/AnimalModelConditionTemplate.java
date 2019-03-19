@@ -1,4 +1,4 @@
-package de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.templates;
+package de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.templates.slotfilling.animal;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -8,11 +8,12 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import de.hterhors.obie.core.ontology.interfaces.IOBIEThing;
+import de.hterhors.obie.ml.run.AbstractOBIERunner;
 import de.hterhors.obie.ml.run.param.RunParameter;
 import de.hterhors.obie.ml.templates.AbstractOBIETemplate;
 import de.hterhors.obie.ml.variables.OBIEState;
-import de.hterhors.obie.ml.variables.TemplateAnnotation;
-import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.templates.AnimalModelConditionTemplate.Scope;
+import de.hterhors.obie.ml.variables.IETmplateAnnotation;
+import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.templates.slotfilling.animal.AnimalModelConditionTemplate.Scope;
 import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ontology.classes.CatModel;
 import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ontology.classes.CatSpecies;
 import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ontology.classes.DogModel;
@@ -47,8 +48,8 @@ import learning.Vector;
  */
 public class AnimalModelConditionTemplate extends AbstractOBIETemplate<Scope> implements Serializable {
 
-	public AnimalModelConditionTemplate(RunParameter parameter) {
-		super(parameter);
+	public AnimalModelConditionTemplate(AbstractOBIERunner runner) {
+		super(runner);
 	}
 
 	/**
@@ -76,7 +77,7 @@ public class AnimalModelConditionTemplate extends AbstractOBIETemplate<Scope> im
 	@Override
 	public List<Scope> generateFactorScopes(OBIEState state) {
 		List<Scope> factors = new ArrayList<>();
-		for (TemplateAnnotation entity : state.getCurrentTemplateAnnotations().getTemplateAnnotations()) {
+		for (IETmplateAnnotation entity : state.getCurrentIETemplateAnnotations().getAnnotations()) {
 
 			if (!IOrganismModel.class.isAssignableFrom(entity.getThing().getClass()))
 				continue;

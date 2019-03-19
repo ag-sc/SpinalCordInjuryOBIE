@@ -32,12 +32,12 @@ import java.util.stream.Collectors;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
-@ImplementationClass(get=Person.class)
-
 @AssignableSubInterfaces(get={})
+
+@ImplementationClass(get=Person.class)
  public interface IPerson
  extends ISCIOThing{
 

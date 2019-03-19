@@ -29,12 +29,12 @@ import java.util.stream.Collectors;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
-@ImplementationClass(get=ArylsulfataseB.class)
-
 @AssignableSubInterfaces(get={})
+
+@ImplementationClass(get=ArylsulfataseB.class)
  public interface IArylsulfataseB
  extends IEnzyme{
 

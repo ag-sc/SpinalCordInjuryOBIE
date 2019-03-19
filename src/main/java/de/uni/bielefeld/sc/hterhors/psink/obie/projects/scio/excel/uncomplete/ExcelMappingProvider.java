@@ -7,7 +7,7 @@ import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Map;
 
-import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.SCIOOntologyEnvironment;
+import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.environments.OntologyEnvironment;
 
 /**
  * This class provides data about mapping from Class names that were used in the
@@ -20,7 +20,7 @@ import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.SCIOOntologyEnvi
 public class ExcelMappingProvider {
 
 	private static final String EXCEL_SCIO_MAPPING_TABLE = "excel/scioMappingv"
-			+ SCIOOntologyEnvironment.getInstance().getOntologyVersion() + ".csv";
+			+ OntologyEnvironment.getInstance().getOntologyVersion() + ".csv";
 
 	private static ExcelMappingProvider instance = null;
 

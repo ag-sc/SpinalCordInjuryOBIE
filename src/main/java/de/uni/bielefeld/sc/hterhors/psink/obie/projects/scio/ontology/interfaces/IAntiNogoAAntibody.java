@@ -33,7 +33,7 @@ Nogo protein is a neurite growth inhibitor restricting the structural plasticity
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
 @ImplementationClass(get=AntiNogoAAntibody.class)

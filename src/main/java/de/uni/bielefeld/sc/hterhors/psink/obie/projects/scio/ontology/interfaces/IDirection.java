@@ -35,12 +35,12 @@ import java.util.stream.Collectors;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
-@ImplementationClass(get=Direction.class)
-
 @AssignableSubInterfaces(get={IRight.class, ICaudal.class, ILeft.class, IRostral.class, })
+
+@ImplementationClass(get=Direction.class)
  public interface IDirection
  extends ISpatialDimensions{
 

@@ -19,9 +19,7 @@ import de.hterhors.obie.core.tools.corpus.OBIECorpus.Instance;
 import de.hterhors.obie.ml.utils.OBIEClassFormatter;
 import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.annodb.corpus.rdf.AnnoDBRDFReader;
 import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.annodb.corpus.rdf.AnnoDBTextReader;
-import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.SCIOOntologyEnvironment;
-import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.SCIOProjectEnvironment;
-import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ontology.interfaces.IInjury;
+import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.environments.OntologyEnvironment;
 import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ontology.interfaces.IResult;
 
 /**
@@ -32,12 +30,12 @@ import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ontology.interfaces
  * @date Apr 16, 2018
  */
 public class AnnoDBResultCorpusConverter {
-	final static public String exportDate = "27082018";
+	final static public String exportDate = "10012019";
 
 	public static void main(String[] args) throws Exception {
-		OntologyInitializer.initializeOntology(SCIOOntologyEnvironment.getInstance());
+		OntologyInitializer.initializeOntology(OntologyEnvironment.getInstance());
 
-		String corpusName = "AnnoDBv" + SCIOOntologyEnvironment.getInstance().getOntologyVersion() + "Result";
+		String corpusName = "AnnoDBv" + OntologyEnvironment.getInstance().getOntologyVersion() + "Result";
 
 		Map<String, Instance> trainingInstances = new HashMap<>();
 		Map<String, Instance> developInstances = new HashMap<>();
@@ -45,7 +43,7 @@ public class AnnoDBResultCorpusConverter {
 
 		Map<String, Set<String>> fileNamesSortbyAnnotator = new HashMap<>();
 
-		final String dir = "annodb/rawData/annodb_" + exportDate + "/";
+		final String dir = "annodb/rawData/export_" + exportDate + "/";
 		Arrays.stream(new File(dir).list()).forEach(file -> {
 			String fileName = FilenameUtils.getBaseName(file);
 			final String annotator = fileName.split("_")[1];
@@ -84,14 +82,14 @@ public class AnnoDBResultCorpusConverter {
 		System.out.println(trainingInstances.size());
 
 		OBIECorpus corpus = new OBIECorpus(trainingInstances, developInstances, testInstances, corpusName,
-				SCIOOntologyEnvironment.getInstance().getOntologyVersion());
+				OntologyEnvironment.getInstance().getOntologyVersion());
 
 		final String corpusPrefix = "annodb_" + exportDate + "_";
-		final long ontologyVersion = SCIOOntologyEnvironment.getInstance().getOntologyVersion();
+		final long ontologyVersion = OntologyEnvironment.getInstance().getOntologyVersion();
 
-		final Set<Class<? extends IOBIEThing>> rootClassTypes = new HashSet<>(Arrays.asList(IInjury.class));
+		final Set<Class<? extends IOBIEThing>> rootClassTypes = new HashSet<>(Arrays.asList(IResult.class));
 
-		File file = CorpusFileTools.buildRawCorpusFile(new File("scio/annodb/corpus/"), corpusPrefix, rootClassTypes,
+		File file = CorpusFileTools.buildRawCorpusFile(new File("annodb/corpus/"), corpusPrefix, rootClassTypes,
 				ontologyVersion);
 
 		corpus.writeRawCorpusData(file);

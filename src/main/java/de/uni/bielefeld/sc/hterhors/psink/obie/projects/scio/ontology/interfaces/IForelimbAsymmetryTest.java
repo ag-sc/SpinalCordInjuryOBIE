@@ -38,12 +38,12 @@ import java.util.stream.Collectors;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
-@AssignableSubInterfaces(get={IRearingTest.class, })
-
 @ImplementationClass(get=ForelimbAsymmetryTest.class)
+
+@AssignableSubInterfaces(get={IRearingTest.class, })
  public interface IForelimbAsymmetryTest
  extends IMotorTest{
 

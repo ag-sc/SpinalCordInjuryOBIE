@@ -29,12 +29,12 @@ import java.util.stream.Collectors;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
-@ImplementationClass(get=UmbilicalCordBloodStemCell.class)
-
 @AssignableSubInterfaces(get={})
+
+@ImplementationClass(get=UmbilicalCordBloodStemCell.class)
  public interface IUmbilicalCordBloodStemCell
  extends IStemCell{
 

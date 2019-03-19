@@ -38,12 +38,12 @@ import java.util.stream.Collectors;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
-@AssignableSubInterfaces(get={})
-
 @ImplementationClass(get=NarrowBeamTest.class)
+
+@AssignableSubInterfaces(get={})
  public interface INarrowBeamTest
  extends IGaitTest{
 

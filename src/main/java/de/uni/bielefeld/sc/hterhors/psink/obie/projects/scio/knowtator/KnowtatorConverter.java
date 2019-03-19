@@ -39,8 +39,8 @@ import de.hterhors.obie.core.tools.corpus.OBIECorpus.Instance;
 import de.hterhors.obie.core.utils.ToStringFormatter;
 import de.hterhors.obie.ml.dtinterpreter.IDatatypeInterpretation;
 import de.hterhors.obie.ml.utils.OBIEClassFormatter;
-import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.SCIOOntologyEnvironment;
-import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.SCIOProjectEnvironment;
+import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.environments.OntologyEnvironment;
+import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.environments.SlotFillingProjectEnvironment;
 import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.semantics.SCIOSemanticInterpreter;
 import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.knowtator.container.EKnowtatorAnnotator;
 import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.knowtator.container.KnowtatorSpan;
@@ -128,7 +128,7 @@ public class KnowtatorConverter {
 		}
 		RDFDataMgr.write(new BufferedOutputStream(
 				new FileOutputStream(new File("scio/knowtator/gen/" + annotator.name().toLowerCase() + "_full25_v"
-						+ SCIOOntologyEnvironment.getInstance().getOntologyVersion() + "."
+						+ OntologyEnvironment.getInstance().getOntologyVersion() + "."
 						+ Lang.NT.getName().toLowerCase()))),
 				model, Lang.NT);
 	}
@@ -152,7 +152,7 @@ public class KnowtatorConverter {
 		}
 
 		final String corpusPrefix = "knowtator";
-		final long ontologyVersion = SCIOOntologyEnvironment.getInstance().getOntologyVersion();
+		final long ontologyVersion = OntologyEnvironment.getInstance().getOntologyVersion();
 
 		final Set<Class<? extends IOBIEThing>> rootClassTypes = new HashSet<>(Arrays.asList(IOrganismModel.class));
 
@@ -160,7 +160,7 @@ public class KnowtatorConverter {
 				rootClassTypes, ontologyVersion);
 
 		new OBIECorpus(instanceCorpus, new HashMap<>(), new HashMap<>(), annotator.name().toLowerCase(),
-				SCIOOntologyEnvironment.getInstance().getOntologyVersion()).writeRawCorpusData(file);
+				OntologyEnvironment.getInstance().getOntologyVersion()).writeRawCorpusData(file);
 
 	}
 
@@ -577,7 +577,7 @@ public class KnowtatorConverter {
 		ISCIOThing id = null;
 		try {
 			id = (ISCIOThing) Class.forName(
-					SCIOOntologyEnvironment.getInstance().OBIE_CLASSES_PACKAGE_NAME + key.classType.trim())
+					OntologyEnvironment.getInstance().OBIE_CLASSES_PACKAGE_NAME + key.classType.trim())
 					.newInstance();
 
 			/*

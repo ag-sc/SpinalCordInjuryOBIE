@@ -44,12 +44,12 @@ import java.util.stream.Collectors;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
-@ImplementationClass(get=ForelimbStrengthTest.class)
-
 @AssignableSubInterfaces(get={})
+
+@ImplementationClass(get=ForelimbStrengthTest.class)
  public interface IForelimbStrengthTest
  extends ILimbMuscleStrengthTest{
 

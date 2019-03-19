@@ -23,14 +23,14 @@ import java.util.stream.Collectors;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
-@DatatypeProperty
+@ImplementationClass(get=Frequency.class)
+
 @AssignableSubInterfaces(get={})
 
-@ImplementationClass(get=Frequency.class)
- public interface IFrequency
+@DatatypeProperty public interface IFrequency
  extends IDatatype, ISCIOThing{
 
 }

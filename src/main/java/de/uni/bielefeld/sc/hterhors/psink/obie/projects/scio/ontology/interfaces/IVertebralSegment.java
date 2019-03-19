@@ -29,12 +29,12 @@ import java.util.stream.Collectors;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
-@ImplementationClass(get=VertebralSegment.class)
-
 @AssignableSubInterfaces(get={})
+
+@ImplementationClass(get=VertebralSegment.class)
  public interface IVertebralSegment
  extends IVertebralLocation{
 

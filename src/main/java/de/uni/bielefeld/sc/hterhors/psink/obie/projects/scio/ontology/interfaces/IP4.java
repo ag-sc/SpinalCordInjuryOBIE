@@ -29,12 +29,12 @@ import java.util.stream.Collectors;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
-@ImplementationClass(get=P4.class)
-
 @AssignableSubInterfaces(get={})
+
+@ImplementationClass(get=P4.class)
  public interface IP4
  extends IHormone{
 

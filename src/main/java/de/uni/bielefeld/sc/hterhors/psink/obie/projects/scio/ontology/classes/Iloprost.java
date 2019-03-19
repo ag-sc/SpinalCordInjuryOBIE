@@ -15,6 +15,7 @@ import org.apache.jena.rdf.model.Resource;
 import java.util.Map;
 import java.lang.InstantiationException;
 import java.lang.SecurityException;
+import de.hterhors.obie.core.ontology.InvestigationRestriction;
 import de.hterhors.obie.core.ontology.annotations.DirectSiblings;
 import java.lang.IllegalAccessException;
 import de.hterhors.obie.core.ontology.annotations.AssignableSubClasses;
@@ -44,16 +45,16 @@ import de.hterhors.obie.core.ontology.AbstractIndividual;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
 @SuperRootClasses(get={Compound.class, })
 
+@DirectInterface(get=IIloprost.class)
+
 @AssignableSubClasses(get={})
 
 @DirectSiblings(get={Pregabalin.class, EvansBlue.class, MinocyclineMC.class, Riluzole.class, Vehicle.class, Ibuprofen.class, Lipopolysaccharide.class, Magnesium.class, MethylprednisoloneMP.class, PEGFITC.class, SC58125.class, Iloprost.class, AcetylsalicylicAcid.class, BW755C.class, Celebocid.class, Pioglitazone.class, MPSS.class, LithiumChloride.class, CyclosporineA.class, MagnesiumSulfate.class, PolyethyleneGlycolPEG.class, Mexiletine.class, Tetracycline.class, ICI182780.class, Rolipram.class, Ketamine.class, Methanesulfonamide.class, Darbepoetin.class, Poloxamer.class, Dipyridamol.class, Phenytoine.class, Inosine.class, Indomethacin.class, HematoxyLinEosin.class, Clodronate.class, })
-
-@DirectInterface(get=IIloprost.class)
  public class Iloprost implements IIloprost{
 
 final public static IndividualFactory<IloprostIndividual> individualFactory = new IndividualFactory<>();
@@ -78,7 +79,15 @@ static class IloprostIndividual extends AbstractIndividual {
 	@Override
 	public AbstractIndividual getIndividual() {
 		return individual;
-	}	final static public String ONTOLOGY_NAME = "http://psink.de/scio/Iloprost";
+	}
+	@Override
+	public InvestigationRestriction getInvestigationRestriction() {
+		return investigationRestriction;
+	}
+	@Override
+	public Iloprost setInvestigationRestriction(InvestigationRestriction investigationRestriction ) {
+		this.investigationRestriction = investigationRestriction;
+ return this;	}public InvestigationRestriction investigationRestriction;	final static public String ONTOLOGY_NAME = "http://psink.de/scio/Iloprost";
 	private Integer characterOffset;
 	private Integer characterOnset;
 	@OntologyModelContent(ontologyName="http://psink.de/scio/hasSupplier")
@@ -91,8 +100,15 @@ final private String textMention;
 private IAnatomicalLocation tissueSourceAnatomicalLocation;
 
 
+	public Iloprost(String individualURI, InvestigationRestriction investigationRestriction, String textMention){
+this.individual = 
+				Iloprost.individualFactory.getIndividualByURI(individualURI);
+this.investigationRestriction = investigationRestriction==null?InvestigationRestriction.noRestrictionInstance:investigationRestriction;
+this.textMention = textMention;
+}
 	public Iloprost(Iloprost iloprost)throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,NoSuchMethodException, SecurityException{
 this.individual = iloprost.individual;
+this.investigationRestriction = iloprost.investigationRestriction;
 this.characterOffset = iloprost.getCharacterOffset();
 this.characterOnset = iloprost.getCharacterOnset();
 if(iloprost.getCompoundSupplier()!=null)this.compoundSupplier = (ICompoundSupplier) IOBIEThing.getCloneConstructor(iloprost.getCompoundSupplier().getClass())	.newInstance(iloprost.getCompoundSupplier());
@@ -101,12 +117,8 @@ if(iloprost.getTissueSourceAnatomicalLocation()!=null)this.tissueSourceAnatomica
 }
 	public Iloprost(){
 this.individual = null;
+this.investigationRestriction = InvestigationRestriction.noRestrictionInstance;
 this.textMention = null;
-}
-	public Iloprost(String individualURI, String textMention){
-this.individual = 
-				Iloprost.individualFactory.getIndividualByURI(individualURI);
-this.textMention = textMention;
 }
 
 
@@ -125,6 +137,11 @@ if (other.individual!= null)
 return false;
 } else if (!individual.equals(other.individual))
 return false;
+if (investigationRestriction == null) {
+if (other.investigationRestriction!= null)
+return false;
+} else if (!investigationRestriction.equals(other.investigationRestriction))
+return false;
 if (compoundSupplier == null) {
 if (other.compoundSupplier!= null)
 return false;
@@ -135,20 +152,20 @@ if (other.tissueSourceAnatomicalLocation!= null)
 return false;
 } else if (!tissueSourceAnatomicalLocation.equals(other.tissueSourceAnatomicalLocation))
 return false;
-if (textMention == null) {
-if (other.textMention!= null)
+if (characterOnset == null) {
+if (other.characterOnset!= null)
 return false;
-} else if (!textMention.equals(other.textMention))
+} else if (!characterOnset.equals(other.characterOnset))
 return false;
 if (characterOffset == null) {
 if (other.characterOffset!= null)
 return false;
 } else if (!characterOffset.equals(other.characterOffset))
 return false;
-if (characterOnset == null) {
-if (other.characterOnset!= null)
+if (textMention == null) {
+if (other.textMention!= null)
 return false;
-} else if (!characterOnset.equals(other.characterOnset))
+} else if (!textMention.equals(other.textMention))
 return false;
 return true;
 }
@@ -199,6 +216,10 @@ return ISCIOThing.RDF_MODEL_NAMESPACE + resourceName;}
 @Override
 	public String getTextMention(){
 		return textMention;}
+	/***/
+@Override
+	public IOBIEThing getThis(){
+		return this;}
 	/**
 <p><b>rdfs:label</b>
 <p>has tissue source location
@@ -212,11 +233,12 @@ return ISCIOThing.RDF_MODEL_NAMESPACE + resourceName;}
 		final int prime = 31;
 int result = 1;
 result = prime * result + ((this.individual == null) ? 0 : this.individual.hashCode());
+result = prime * result + ((this.investigationRestriction == null) ? 0 : this.investigationRestriction.hashCode());
 result = prime * result + ((this.compoundSupplier == null) ? 0 : this.compoundSupplier.hashCode());
 result = prime * result + ((this.tissueSourceAnatomicalLocation == null) ? 0 : this.tissueSourceAnatomicalLocation.hashCode());
-result = prime * result + ((this.textMention == null) ? 0 : this.textMention.hashCode());
-result = prime * result + ((this.characterOffset == null) ? 0 : this.characterOffset.hashCode());
 result = prime * result + ((this.characterOnset == null) ? 0 : this.characterOnset.hashCode());
+result = prime * result + ((this.characterOffset == null) ? 0 : this.characterOffset.hashCode());
+result = prime * result + ((this.textMention == null) ? 0 : this.textMention.hashCode());
 return result;}
 	/***/
 @Override
@@ -254,7 +276,7 @@ return this;}
 
 @Override
 public String toString(){
-return "Iloprost [individual="+individual+",characterOffset="+characterOffset+",characterOnset="+characterOnset+",compoundSupplier="+compoundSupplier+",serialVersionUID="+serialVersionUID+",textMention="+textMention+",tissueSourceAnatomicalLocation="+tissueSourceAnatomicalLocation+"]";}
+return "Iloprost [individual="+individual+",investigationRestriction="+investigationRestriction.summarize()+",characterOffset="+characterOffset+",characterOnset="+characterOnset+",compoundSupplier="+compoundSupplier+",serialVersionUID="+serialVersionUID+",textMention="+textMention+",tissueSourceAnatomicalLocation="+tissueSourceAnatomicalLocation+"]";}
 
 
 }

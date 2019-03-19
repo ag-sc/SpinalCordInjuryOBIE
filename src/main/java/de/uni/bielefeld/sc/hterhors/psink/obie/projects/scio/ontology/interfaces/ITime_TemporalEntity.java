@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
 @AssignableSubInterfaces(get={IEvent.class, IRehabilitativeTraining.class, IEnrichedEnvironment.class, IModificationTreatment.class, IElectromagneticFieldTreatment.class, IGeneticModificationTreatment.class, IPhotochemicalInjury.class, IAspirationLesion.class, IPartialTransection.class, IInjury.class, IInjuryByAccident.class, INormothermicTreatment.class, ILateralHemisection.class, ITreadmillTraining.class, IHeatLesion.class, ICompleteTransection.class, IPhysicalTreatment.class, IInvestigation.class, IVoltageApplication.class, ISurgeryTreatment.class, ICompoundTreatment.class, IVentralHemisection.class, ILaminectomy.class, IElectrolyticLesion.class, ICurrentApplication.class, IContusion.class, IDislocation.class, ICompression.class, IDorsalHemisection.class, ITreatment.class, IPhysicalImplantTreatment.class, IHypothermicTreatment.class, IDistraction.class, ITemperatureTreatment.class, ITemporalInterval.class, IChemicalInjury.class, IMagneticFieldApplication.class, IOvariectomyTreatment.class, IObservation.class, })

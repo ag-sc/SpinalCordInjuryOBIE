@@ -43,7 +43,7 @@ the center of a round tub of water (40 cm diameter) filled to a depth of 30 cm w
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
 @ImplementationClass(get=SwimmingTest.class)

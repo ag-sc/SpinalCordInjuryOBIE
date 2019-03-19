@@ -69,4 +69,14 @@ public class RDFRelatedAnnotation {
 		return true;
 	}
 
+
+
+
+
+	@Override
+	public String toString() {
+		return "RDFRelatedAnnotation [textMention=" + textMention + ", onset=" + onset + ", offset=" + offset
+				+ ", annotationID=" + annotationID + ", linkID=" + linkID + "]";
+	}
+
 }

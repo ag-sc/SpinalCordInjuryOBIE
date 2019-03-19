@@ -32,12 +32,12 @@ import java.util.stream.Collectors;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
-@AssignableSubInterfaces(get={IRabbitModel.class, IGuineaPigModel.class, IMinipigModel.class, IAnimalModel.class, IMouseModel.class, IDogModel.class, IMonkeyModel.class, IPatient.class, IRatModel.class, ICatModel.class, })
-
 @ImplementationClass(get=OrganismModel.class)
+
+@AssignableSubInterfaces(get={IRabbitModel.class, IGuineaPigModel.class, IMinipigModel.class, IAnimalModel.class, IMouseModel.class, IDogModel.class, IMonkeyModel.class, IPatient.class, IRatModel.class, ICatModel.class, })
  public interface IOrganismModel
  extends ISCIOThing{
 

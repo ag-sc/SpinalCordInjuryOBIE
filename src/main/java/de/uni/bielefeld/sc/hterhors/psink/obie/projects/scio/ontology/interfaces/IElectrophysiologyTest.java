@@ -41,12 +41,12 @@ import java.util.stream.Collectors;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
-@AssignableSubInterfaces(get={ISpinalCordEvokedPotentialsTest.class, IHReflexTest.class, ISomatosensoryEvokedPotentialsTest.class, IMotorEvokedPotentialsTest.class, })
-
 @ImplementationClass(get=ElectrophysiologyTest.class)
+
+@AssignableSubInterfaces(get={ISpinalCordEvokedPotentialsTest.class, IHReflexTest.class, ISomatosensoryEvokedPotentialsTest.class, IMotorEvokedPotentialsTest.class, })
  public interface IElectrophysiologyTest
  extends IFunctionalTest{
 

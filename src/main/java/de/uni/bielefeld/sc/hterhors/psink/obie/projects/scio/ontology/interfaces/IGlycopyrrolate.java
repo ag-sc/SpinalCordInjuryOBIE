@@ -40,7 +40,7 @@ mg/kg, i.p.; Damitor; Novartis Animal Health) and buprenorphine (0.05 mg/kg, i.p
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
 @AssignableSubInterfaces(get={})

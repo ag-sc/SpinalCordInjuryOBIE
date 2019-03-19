@@ -32,12 +32,12 @@ import java.util.stream.Collectors;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
-@ImplementationClass(get=Intraspinal.class)
-
 @AssignableSubInterfaces(get={ISpinalLesionSite.class, IRubrospinalTract.class, ISpinalSubduralArea.class, ISpinalDorsalHalf.class, ISpinalWhiteMatter.class, IDorsalColumn.class, ICorticospinalTract.class, ISpinalCentralPart.class, IAscendingFiberTract.class, ISpinalFiberTract.class, ISpinalVentralHalf.class, ISpinalGrayMatter.class, })
+
+@ImplementationClass(get=Intraspinal.class)
  public interface IIntraspinal
  extends ISpinalCord{
 

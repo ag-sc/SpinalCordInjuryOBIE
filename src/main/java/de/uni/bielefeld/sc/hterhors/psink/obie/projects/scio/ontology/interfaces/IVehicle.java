@@ -35,12 +35,12 @@ import java.util.stream.Collectors;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
-@ImplementationClass(get=Vehicle.class)
-
 @AssignableSubInterfaces(get={IRingersSolution.class, INS398.class, IWater.class, IEthanol.class, ISaline.class, IDMSO.class, IPBS.class, IVegetableOil.class, })
+
+@ImplementationClass(get=Vehicle.class)
  public interface IVehicle
  extends ISubstance{
 

@@ -44,12 +44,12 @@ import java.util.stream.Collectors;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
-@AssignableSubInterfaces(get={IGeneExpressionAnalysis.class, IProteinLevelAnalysis.class, })
-
 @ImplementationClass(get=MolecularChangesTest.class)
+
+@AssignableSubInterfaces(get={IGeneExpressionAnalysis.class, IProteinLevelAnalysis.class, })
  public interface IMolecularChangesTest
  extends INonFunctionalTest{
 

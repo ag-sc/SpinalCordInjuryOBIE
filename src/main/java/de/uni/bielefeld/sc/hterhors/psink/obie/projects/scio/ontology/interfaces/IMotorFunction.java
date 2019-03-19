@@ -32,12 +32,12 @@ import java.util.stream.Collectors;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
-@ImplementationClass(get=MotorFunction.class)
-
 @AssignableSubInterfaces(get={})
+
+@ImplementationClass(get=MotorFunction.class)
  public interface IMotorFunction
  extends IFunction{
 

@@ -1,4 +1,4 @@
-package de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.templates;
+package de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.templates.slotfilling.injury;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -10,11 +10,12 @@ import org.apache.logging.log4j.Logger;
 
 import de.hterhors.obie.core.ontology.AbstractIndividual;
 import de.hterhors.obie.core.ontology.interfaces.IOBIEThing;
+import de.hterhors.obie.ml.run.AbstractOBIERunner;
 import de.hterhors.obie.ml.run.param.RunParameter;
 import de.hterhors.obie.ml.templates.AbstractOBIETemplate;
 import de.hterhors.obie.ml.variables.OBIEState;
-import de.hterhors.obie.ml.variables.TemplateAnnotation;
-import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.templates.VertebralLocationConditionTemplate.Scope;
+import de.hterhors.obie.ml.variables.IETmplateAnnotation;
+import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.templates.slotfilling.injury.VertebralLocationConditionTemplate.Scope;
 import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ontology.classes.Vertebrae;
 import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ontology.classes.VertebralArea;
 import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ontology.interfaces.IInjury;
@@ -36,8 +37,8 @@ import learning.Vector;
  */
 public class VertebralLocationConditionTemplate extends AbstractOBIETemplate<Scope> {
 
-	public VertebralLocationConditionTemplate(RunParameter parameter) {
-		super(parameter);
+	public VertebralLocationConditionTemplate(AbstractOBIERunner runner) {
+		super(runner);
 	}
 
 	/**
@@ -73,7 +74,7 @@ public class VertebralLocationConditionTemplate extends AbstractOBIETemplate<Sco
 	@Override
 	public List<Scope> generateFactorScopes(OBIEState state) {
 		List<Scope> factors = new ArrayList<>();
-		for (TemplateAnnotation entity : state.getCurrentTemplateAnnotations().getTemplateAnnotations()) {
+		for (IETmplateAnnotation entity : state.getCurrentIETemplateAnnotations().getAnnotations()) {
 
 			if (IVertebralLocation.class.isAssignableFrom(entity.getThing().getClass())) {
 				factors.addAll(addFactorRecursive(entity.rootClassType, (IVertebralLocation) entity.getThing()));
@@ -141,49 +142,49 @@ public class VertebralLocationConditionTemplate extends AbstractOBIETemplate<Sco
 
 	private int getOrdinal(AbstractIndividual abstractOBIEIndividual) {
 
-		if (abstractOBIEIndividual.equals(Vertebrae.individualFactory.getIndividualByURI("L1")))
+		if (abstractOBIEIndividual.equals(Vertebrae.individualFactory.getIndividualByURI("http://psink.de/scio/L1")))
 			return 0;
-		if (abstractOBIEIndividual.equals(Vertebrae.individualFactory.getIndividualByURI("L2")))
+		if (abstractOBIEIndividual.equals(Vertebrae.individualFactory.getIndividualByURI("http://psink.de/scio/L2")))
 			return 1;
-		if (abstractOBIEIndividual.equals(Vertebrae.individualFactory.getIndividualByURI("L3")))
+		if (abstractOBIEIndividual.equals(Vertebrae.individualFactory.getIndividualByURI("http://psink.de/scio/L3")))
 			return 2;
-		if (abstractOBIEIndividual.equals(Vertebrae.individualFactory.getIndividualByURI("L4")))
+		if (abstractOBIEIndividual.equals(Vertebrae.individualFactory.getIndividualByURI("http://psink.de/scio/L4")))
 			return 3;
-		if (abstractOBIEIndividual.equals(Vertebrae.individualFactory.getIndividualByURI("T1")))
+		if (abstractOBIEIndividual.equals(Vertebrae.individualFactory.getIndividualByURI("http://psink.de/scio/T1")))
 			return 4;
-		if (abstractOBIEIndividual.equals(Vertebrae.individualFactory.getIndividualByURI("T2")))
+		if (abstractOBIEIndividual.equals(Vertebrae.individualFactory.getIndividualByURI("http://psink.de/scio/T2")))
 			return 5;
-		if (abstractOBIEIndividual.equals(Vertebrae.individualFactory.getIndividualByURI("T3")))
+		if (abstractOBIEIndividual.equals(Vertebrae.individualFactory.getIndividualByURI("http://psink.de/scio/T3")))
 			return 6;
-		if (abstractOBIEIndividual.equals(Vertebrae.individualFactory.getIndividualByURI("T4")))
+		if (abstractOBIEIndividual.equals(Vertebrae.individualFactory.getIndividualByURI("http://psink.de/scio/T4")))
 			return 7;
-		if (abstractOBIEIndividual.equals(Vertebrae.individualFactory.getIndividualByURI("T5")))
+		if (abstractOBIEIndividual.equals(Vertebrae.individualFactory.getIndividualByURI("http://psink.de/scio/T5")))
 			return 8;
-		if (abstractOBIEIndividual.equals(Vertebrae.individualFactory.getIndividualByURI("T6")))
+		if (abstractOBIEIndividual.equals(Vertebrae.individualFactory.getIndividualByURI("http://psink.de/scio/T6")))
 			return 9;
-		if (abstractOBIEIndividual.equals(Vertebrae.individualFactory.getIndividualByURI("T7")))
+		if (abstractOBIEIndividual.equals(Vertebrae.individualFactory.getIndividualByURI("http://psink.de/scio/T7")))
 			return 10;
-		if (abstractOBIEIndividual.equals(Vertebrae.individualFactory.getIndividualByURI("T8")))
+		if (abstractOBIEIndividual.equals(Vertebrae.individualFactory.getIndividualByURI("http://psink.de/scio/T8")))
 			return 11;
-		if (abstractOBIEIndividual.equals(Vertebrae.individualFactory.getIndividualByURI("T9")))
+		if (abstractOBIEIndividual.equals(Vertebrae.individualFactory.getIndividualByURI("http://psink.de/scio/T9")))
 			return 12;
-		if (abstractOBIEIndividual.equals(Vertebrae.individualFactory.getIndividualByURI("T10")))
+		if (abstractOBIEIndividual.equals(Vertebrae.individualFactory.getIndividualByURI("http://psink.de/scio/T10")))
 			return 13;
-		if (abstractOBIEIndividual.equals(Vertebrae.individualFactory.getIndividualByURI("T11")))
+		if (abstractOBIEIndividual.equals(Vertebrae.individualFactory.getIndividualByURI("http://psink.de/scio/T11")))
 			return 14;
-		if (abstractOBIEIndividual.equals(Vertebrae.individualFactory.getIndividualByURI("C1")))
+		if (abstractOBIEIndividual.equals(Vertebrae.individualFactory.getIndividualByURI("http://psink.de/scio/C1")))
 			return 15;
-		if (abstractOBIEIndividual.equals(Vertebrae.individualFactory.getIndividualByURI("C2")))
+		if (abstractOBIEIndividual.equals(Vertebrae.individualFactory.getIndividualByURI("http://psink.de/scio/C2")))
 			return 16;
-		if (abstractOBIEIndividual.equals(Vertebrae.individualFactory.getIndividualByURI("C3")))
+		if (abstractOBIEIndividual.equals(Vertebrae.individualFactory.getIndividualByURI("http://psink.de/scio/C3")))
 			return 17;
-		if (abstractOBIEIndividual.equals(Vertebrae.individualFactory.getIndividualByURI("C4")))
+		if (abstractOBIEIndividual.equals(Vertebrae.individualFactory.getIndividualByURI("http://psink.de/scio/C4")))
 			return 18;
-		if (abstractOBIEIndividual.equals(Vertebrae.individualFactory.getIndividualByURI("C5")))
+		if (abstractOBIEIndividual.equals(Vertebrae.individualFactory.getIndividualByURI("http://psink.de/scio/C5")))
 			return 19;
-		if (abstractOBIEIndividual.equals(Vertebrae.individualFactory.getIndividualByURI("C6")))
+		if (abstractOBIEIndividual.equals(Vertebrae.individualFactory.getIndividualByURI("http://psink.de/scio/C6")))
 			return 20;
-		if (abstractOBIEIndividual.equals(Vertebrae.individualFactory.getIndividualByURI("C7")))
+		if (abstractOBIEIndividual.equals(Vertebrae.individualFactory.getIndividualByURI("http://psink.de/scio/C7")))
 			return 21;
 		return -1;
 	}

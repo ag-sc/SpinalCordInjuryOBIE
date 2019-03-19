@@ -35,12 +35,12 @@ import java.util.stream.Collectors;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
-@ImplementationClass(get=Diazepam.class)
-
 @AssignableSubInterfaces(get={})
+
+@ImplementationClass(get=Diazepam.class)
  public interface IDiazepam
  extends IAnaesthetic{
 

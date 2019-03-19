@@ -1,4 +1,4 @@
-package de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.templates;
+package de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.templates.slotfilling;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -14,11 +14,12 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import de.hterhors.obie.core.ontology.interfaces.IOBIEThing;
+import de.hterhors.obie.ml.run.AbstractOBIERunner;
 import de.hterhors.obie.ml.run.param.RunParameter;
 import de.hterhors.obie.ml.templates.AbstractOBIETemplate;
 import de.hterhors.obie.ml.variables.OBIEState;
-import de.hterhors.obie.ml.variables.TemplateAnnotation;
-import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.templates.VarietyTemplate.Scope;
+import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.templates.slotfilling.VarietyTemplate.Scope;
+import de.hterhors.obie.ml.variables.IETmplateAnnotation;
 import factors.Factor;
 import factors.FactorScope;
 import learning.Vector;
@@ -34,8 +35,8 @@ import learning.Vector;
  */
 public class VarietyTemplate extends AbstractOBIETemplate<Scope> {
 
-	public VarietyTemplate(RunParameter parameter) {
-		super(parameter);
+	public VarietyTemplate(AbstractOBIERunner runner) {
+		super(runner);
 	}
 
 	private static Logger log = LogManager.getFormatterLogger(VarietyTemplate.class.getName());
@@ -114,7 +115,7 @@ public class VarietyTemplate extends AbstractOBIETemplate<Scope> {
 		 * If there is only one rootClass (e.g. OrganismModel) the entry of the map for
 		 * that class should be equal to state.getPredictedResult.getEntities().size();
 		 */
-		state.getCurrentTemplateAnnotations().getTemplateAnnotations().stream().forEach(a -> {
+		state.getCurrentIETemplateAnnotations().getAnnotations().stream().forEach(a -> {
 
 			countRootClasses.put(a.getThing().getClass(),
 					1 + countRootClasses.getOrDefault(a.getThing().getClass(), 0));
@@ -133,7 +134,7 @@ public class VarietyTemplate extends AbstractOBIETemplate<Scope> {
 			influencedVariables.put(ec.getKey(), new HashSet<>());
 		}
 
-		for (TemplateAnnotation annotation : state.getCurrentTemplateAnnotations().getTemplateAnnotations()) {
+		for (IETmplateAnnotation annotation : state.getCurrentIETemplateAnnotations().getAnnotations()) {
 
 			// buildChildrenOfEntitiesRecursive(childrenOfEntities, annotation);
 
@@ -153,7 +154,7 @@ public class VarietyTemplate extends AbstractOBIETemplate<Scope> {
 	}
 
 	public void buildChildrenOfEntitiesRecursive(Map<Class<? extends IOBIEThing>, Set<Child>[]> childrenOfEntities,
-			TemplateAnnotation annotation,
+			IETmplateAnnotation annotation,
 			Map<Class<? extends IOBIEThing>, Set<Class<? extends IOBIEThing>>> indexRootClassCounter) {
 		// final IOBIEThing entityScioClass = annotation.getScioClass();
 		//

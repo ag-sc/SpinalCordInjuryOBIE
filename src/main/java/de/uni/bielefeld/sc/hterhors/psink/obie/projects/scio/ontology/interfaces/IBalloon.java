@@ -29,12 +29,12 @@ import java.util.stream.Collectors;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
-@AssignableSubInterfaces(get={IFogartyBalloonCatheter.class, })
-
 @ImplementationClass(get=Balloon.class)
+
+@AssignableSubInterfaces(get={IFogartyBalloonCatheter.class, })
  public interface IBalloon
  extends IInjuryDevice{
 

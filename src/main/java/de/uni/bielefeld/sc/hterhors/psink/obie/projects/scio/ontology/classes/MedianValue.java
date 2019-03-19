@@ -15,6 +15,7 @@ import org.apache.jena.rdf.model.Resource;
 import java.util.Map;
 import java.lang.InstantiationException;
 import java.lang.SecurityException;
+import de.hterhors.obie.core.ontology.InvestigationRestriction;
 import de.hterhors.obie.core.ontology.annotations.DirectSiblings;
 import java.lang.IllegalAccessException;
 import de.hterhors.obie.core.ontology.annotations.AssignableSubClasses;
@@ -47,7 +48,7 @@ import de.hterhors.obie.core.ontology.AbstractIndividual;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
 @SuperRootClasses(get={NumericValue.class, })
@@ -81,7 +82,15 @@ static class MedianValueIndividual extends AbstractIndividual {
 	@Override
 	public AbstractIndividual getIndividual() {
 		return individual;
-	}	final static public String ONTOLOGY_NAME = "http://psink.de/scio/MedianValue";
+	}
+	@Override
+	public InvestigationRestriction getInvestigationRestriction() {
+		return investigationRestriction;
+	}
+	@Override
+	public MedianValue setInvestigationRestriction(InvestigationRestriction investigationRestriction ) {
+		this.investigationRestriction = investigationRestriction;
+ return this;	}public InvestigationRestriction investigationRestriction;	final static public String ONTOLOGY_NAME = "http://psink.de/scio/MedianValue";
 	private Integer characterOffset;
 	private Integer characterOnset;
 	final static private Map<IOBIEThing, String> resourceFactory = new HashMap<>();
@@ -99,17 +108,20 @@ final private String textMention;
 private IValue value;
 
 
-	public MedianValue(){
-this.individual = null;
-this.textMention = null;
-}
-	public MedianValue(String individualURI, String textMention){
+	public MedianValue(String individualURI, InvestigationRestriction investigationRestriction, String textMention){
 this.individual = 
 				MedianValue.individualFactory.getIndividualByURI(individualURI);
+this.investigationRestriction = investigationRestriction==null?InvestigationRestriction.noRestrictionInstance:investigationRestriction;
 this.textMention = textMention;
+}
+	public MedianValue(){
+this.individual = null;
+this.investigationRestriction = InvestigationRestriction.noRestrictionInstance;
+this.textMention = null;
 }
 	public MedianValue(MedianValue medianValue)throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,NoSuchMethodException, SecurityException{
 this.individual = medianValue.individual;
+this.investigationRestriction = medianValue.investigationRestriction;
 this.characterOffset = medianValue.getCharacterOffset();
 this.characterOnset = medianValue.getCharacterOnset();
 if(medianValue.getStandardDeviation()!=null)this.standardDeviation = new StandardDeviation((StandardDeviation)medianValue.getStandardDeviation());
@@ -134,35 +146,40 @@ if (other.individual!= null)
 return false;
 } else if (!individual.equals(other.individual))
 return false;
+if (investigationRestriction == null) {
+if (other.investigationRestriction!= null)
+return false;
+} else if (!investigationRestriction.equals(other.investigationRestriction))
+return false;
 if (value == null) {
 if (other.value!= null)
 return false;
 } else if (!value.equals(other.value))
-return false;
-if (standardDeviation == null) {
-if (other.standardDeviation!= null)
-return false;
-} else if (!standardDeviation.equals(other.standardDeviation))
 return false;
 if (standardError == null) {
 if (other.standardError!= null)
 return false;
 } else if (!standardError.equals(other.standardError))
 return false;
-if (textMention == null) {
-if (other.textMention!= null)
+if (characterOnset == null) {
+if (other.characterOnset!= null)
 return false;
-} else if (!textMention.equals(other.textMention))
+} else if (!characterOnset.equals(other.characterOnset))
 return false;
 if (characterOffset == null) {
 if (other.characterOffset!= null)
 return false;
 } else if (!characterOffset.equals(other.characterOffset))
 return false;
-if (characterOnset == null) {
-if (other.characterOnset!= null)
+if (textMention == null) {
+if (other.textMention!= null)
 return false;
-} else if (!characterOnset.equals(other.characterOnset))
+} else if (!textMention.equals(other.textMention))
+return false;
+if (standardDeviation == null) {
+if (other.standardDeviation!= null)
+return false;
+} else if (!standardDeviation.equals(other.standardDeviation))
 return false;
 return true;
 }
@@ -234,6 +251,10 @@ Continuous frequency distribution of infinite range. Its properties are as follo
 @Override
 	public String getTextMention(){
 		return textMention;}
+	/***/
+@Override
+	public IOBIEThing getThis(){
+		return this;}
 	/**
 <p><b>rdfs:label</b>
 <p>has value
@@ -247,12 +268,13 @@ Continuous frequency distribution of infinite range. Its properties are as follo
 		final int prime = 31;
 int result = 1;
 result = prime * result + ((this.individual == null) ? 0 : this.individual.hashCode());
+result = prime * result + ((this.investigationRestriction == null) ? 0 : this.investigationRestriction.hashCode());
 result = prime * result + ((this.value == null) ? 0 : this.value.hashCode());
-result = prime * result + ((this.standardDeviation == null) ? 0 : this.standardDeviation.hashCode());
 result = prime * result + ((this.standardError == null) ? 0 : this.standardError.hashCode());
-result = prime * result + ((this.textMention == null) ? 0 : this.textMention.hashCode());
-result = prime * result + ((this.characterOffset == null) ? 0 : this.characterOffset.hashCode());
 result = prime * result + ((this.characterOnset == null) ? 0 : this.characterOnset.hashCode());
+result = prime * result + ((this.characterOffset == null) ? 0 : this.characterOffset.hashCode());
+result = prime * result + ((this.textMention == null) ? 0 : this.textMention.hashCode());
+result = prime * result + ((this.standardDeviation == null) ? 0 : this.standardDeviation.hashCode());
 return result;}
 	/***/
 @Override
@@ -312,7 +334,7 @@ return this;}
 
 @Override
 public String toString(){
-return "MedianValue [individual="+individual+",characterOffset="+characterOffset+",characterOnset="+characterOnset+",serialVersionUID="+serialVersionUID+",standardDeviation="+standardDeviation+",standardError="+standardError+",textMention="+textMention+",value="+value+"]";}
+return "MedianValue [individual="+individual+",investigationRestriction="+investigationRestriction.summarize()+",characterOffset="+characterOffset+",characterOnset="+characterOnset+",serialVersionUID="+serialVersionUID+",standardDeviation="+standardDeviation+",standardError="+standardError+",textMention="+textMention+",value="+value+"]";}
 
 
 }

@@ -15,6 +15,7 @@ import org.apache.jena.rdf.model.Resource;
 import java.util.Map;
 import java.lang.InstantiationException;
 import java.lang.SecurityException;
+import de.hterhors.obie.core.ontology.InvestigationRestriction;
 import de.hterhors.obie.core.ontology.annotations.DirectSiblings;
 import java.lang.IllegalAccessException;
 import de.hterhors.obie.core.ontology.annotations.AssignableSubClasses;
@@ -47,16 +48,16 @@ import de.hterhors.obie.core.ontology.AbstractIndividual;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
+
+@DirectInterface(get=IObservation.class)
+
+@AssignableSubClasses(get={})
 
 @SuperRootClasses(get={Observation.class, })
 
 @DirectSiblings(get={})
-
-@AssignableSubClasses(get={})
-
-@DirectInterface(get=IObservation.class)
  public class Observation implements IObservation{
 
 final public static IndividualFactory<ObservationIndividual> individualFactory = new IndividualFactory<>();
@@ -81,7 +82,15 @@ static class ObservationIndividual extends AbstractIndividual {
 	@Override
 	public AbstractIndividual getIndividual() {
 		return individual;
-	}	final static public String ONTOLOGY_NAME = "http://psink.de/scio/Observation";
+	}
+	@Override
+	public InvestigationRestriction getInvestigationRestriction() {
+		return investigationRestriction;
+	}
+	@Override
+	public Observation setInvestigationRestriction(InvestigationRestriction investigationRestriction ) {
+		this.investigationRestriction = investigationRestriction;
+ return this;	}public InvestigationRestriction investigationRestriction;	final static public String ONTOLOGY_NAME = "http://psink.de/scio/Observation";
 	@OntologyModelContent(ontologyName="http://psink.de/scio/belongsTo")
 private IExperimentalGroup belongsToExperimentalGroup;
 	private Integer characterOffset;
@@ -93,20 +102,16 @@ private INonNumericValue nonNumericValue;
 private INumericValue numericValue;
 	final static private Map<IOBIEThing, String> resourceFactory = new HashMap<>();
 	final static private long serialVersionUID = 64L;
-	@RelationTypeCollection
-@OntologyModelContent(ontologyName="http://psink.de/scio/hasTemporalInterval")
+	@OntologyModelContent(ontologyName="http://psink.de/scio/hasTemporalInterval")
+@RelationTypeCollection
 private List<ITemporalInterval> temporalIntervals = new ArrayList<>();
 	@TextMention
 final private String textMention;
 
 
-	public Observation(String individualURI, String textMention){
-this.individual = 
-				Observation.individualFactory.getIndividualByURI(individualURI);
-this.textMention = textMention;
-}
 	public Observation(Observation observation)throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,NoSuchMethodException, SecurityException{
 this.individual = observation.individual;
+this.investigationRestriction = observation.investigationRestriction;
 if(observation.getBelongsToExperimentalGroup()!=null)this.belongsToExperimentalGroup = (IExperimentalGroup) IOBIEThing.getCloneConstructor(observation.getBelongsToExperimentalGroup().getClass())	.newInstance(observation.getBelongsToExperimentalGroup());
 this.characterOffset = observation.getCharacterOffset();
 this.characterOnset = observation.getCharacterOnset();
@@ -115,8 +120,15 @@ if(observation.getNumericValue()!=null)this.numericValue = (INumericValue) IOBIE
 for (int j = 0; j < observation.getTemporalIntervals().size(); j++) {if (observation.getTemporalIntervals().get(j) != null) {temporalIntervals.add((ITemporalInterval) IOBIEThing.getCloneConstructor(observation.getTemporalIntervals().get(j).getClass()).newInstance(observation.getTemporalIntervals().get(j)));} else {temporalIntervals.add(null);}}
 this.textMention = observation.getTextMention();
 }
+	public Observation(String individualURI, InvestigationRestriction investigationRestriction, String textMention){
+this.individual = 
+				Observation.individualFactory.getIndividualByURI(individualURI);
+this.investigationRestriction = investigationRestriction==null?InvestigationRestriction.noRestrictionInstance:investigationRestriction;
+this.textMention = textMention;
+}
 	public Observation(){
 this.individual = null;
+this.investigationRestriction = InvestigationRestriction.noRestrictionInstance;
 this.textMention = null;
 }
 
@@ -144,15 +156,30 @@ if (other.individual!= null)
 return false;
 } else if (!individual.equals(other.individual))
 return false;
+if (investigationRestriction == null) {
+if (other.investigationRestriction!= null)
+return false;
+} else if (!investigationRestriction.equals(other.investigationRestriction))
+return false;
+if (belongsToExperimentalGroup == null) {
+if (other.belongsToExperimentalGroup!= null)
+return false;
+} else if (!belongsToExperimentalGroup.equals(other.belongsToExperimentalGroup))
+return false;
+if (characterOnset == null) {
+if (other.characterOnset!= null)
+return false;
+} else if (!characterOnset.equals(other.characterOnset))
+return false;
 if (temporalIntervals == null) {
 if (other.temporalIntervals!= null)
 return false;
 } else if (!temporalIntervals.equals(other.temporalIntervals))
 return false;
-if (numericValue == null) {
-if (other.numericValue!= null)
+if (characterOffset == null) {
+if (other.characterOffset!= null)
 return false;
-} else if (!numericValue.equals(other.numericValue))
+} else if (!characterOffset.equals(other.characterOffset))
 return false;
 if (nonNumericValue == null) {
 if (other.nonNumericValue!= null)
@@ -164,20 +191,10 @@ if (other.textMention!= null)
 return false;
 } else if (!textMention.equals(other.textMention))
 return false;
-if (characterOffset == null) {
-if (other.characterOffset!= null)
+if (numericValue == null) {
+if (other.numericValue!= null)
 return false;
-} else if (!characterOffset.equals(other.characterOffset))
-return false;
-if (belongsToExperimentalGroup == null) {
-if (other.belongsToExperimentalGroup!= null)
-return false;
-} else if (!belongsToExperimentalGroup.equals(other.belongsToExperimentalGroup))
-return false;
-if (characterOnset == null) {
-if (other.characterOnset!= null)
-return false;
-} else if (!characterOnset.equals(other.characterOnset))
+} else if (!numericValue.equals(other.numericValue))
 return false;
 return true;
 }
@@ -248,17 +265,22 @@ return ISCIOThing.RDF_MODEL_NAMESPACE + resourceName;}
 		return textMention;}
 	/***/
 @Override
+	public IOBIEThing getThis(){
+		return this;}
+	/***/
+@Override
 	public int hashCode(){
 		final int prime = 31;
 int result = 1;
 result = prime * result + ((this.individual == null) ? 0 : this.individual.hashCode());
-result = prime * result + ((this.temporalIntervals == null) ? 0 : this.temporalIntervals.hashCode());
-result = prime * result + ((this.numericValue == null) ? 0 : this.numericValue.hashCode());
-result = prime * result + ((this.nonNumericValue == null) ? 0 : this.nonNumericValue.hashCode());
-result = prime * result + ((this.textMention == null) ? 0 : this.textMention.hashCode());
-result = prime * result + ((this.characterOffset == null) ? 0 : this.characterOffset.hashCode());
+result = prime * result + ((this.investigationRestriction == null) ? 0 : this.investigationRestriction.hashCode());
 result = prime * result + ((this.belongsToExperimentalGroup == null) ? 0 : this.belongsToExperimentalGroup.hashCode());
 result = prime * result + ((this.characterOnset == null) ? 0 : this.characterOnset.hashCode());
+result = prime * result + ((this.temporalIntervals == null) ? 0 : this.temporalIntervals.hashCode());
+result = prime * result + ((this.characterOffset == null) ? 0 : this.characterOffset.hashCode());
+result = prime * result + ((this.nonNumericValue == null) ? 0 : this.nonNumericValue.hashCode());
+result = prime * result + ((this.textMention == null) ? 0 : this.textMention.hashCode());
+result = prime * result + ((this.numericValue == null) ? 0 : this.numericValue.hashCode());
 return result;}
 	/***/
 @Override
@@ -309,7 +331,7 @@ return this;}
 
 @Override
 public String toString(){
-return "Observation [individual="+individual+",belongsToExperimentalGroup="+belongsToExperimentalGroup+",characterOffset="+characterOffset+",characterOnset="+characterOnset+",nonNumericValue="+nonNumericValue+",numericValue="+numericValue+",serialVersionUID="+serialVersionUID+",temporalIntervals="+temporalIntervals+",textMention="+textMention+"]";}
+return "Observation [individual="+individual+",investigationRestriction="+investigationRestriction.summarize()+",belongsToExperimentalGroup="+belongsToExperimentalGroup+",characterOffset="+characterOffset+",characterOnset="+characterOnset+",nonNumericValue="+nonNumericValue+",numericValue="+numericValue+",serialVersionUID="+serialVersionUID+",temporalIntervals="+temporalIntervals+",textMention="+textMention+"]";}
 
 
 }

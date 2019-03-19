@@ -7,7 +7,7 @@ import java.util.Set;
 import de.hterhors.obie.core.ontology.interfaces.IOBIEThing;
 import de.hterhors.obie.core.tools.corpus.OBIECorpus.Instance;
 import de.hterhors.obie.core.utils.AnnotationExtractorHelper;
-import de.hterhors.obie.ml.variables.TemplateAnnotation;
+import de.hterhors.obie.ml.variables.IETmplateAnnotation;
 import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ontology.classes.AnalyzedExperimentalGroup;
 import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ontology.classes.CompoundSupplier;
 import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ontology.classes.CompoundTreatment;
@@ -27,9 +27,9 @@ public class SCIOCorpusDataExtractor {
 	private static final long serialVersionUID = 1L;
 
 //	@Override
-	protected Set<TemplateAnnotation> convertInstancesToAnnotations(Instance instance,
+	protected Set<IETmplateAnnotation> convertInstancesToAnnotations(Instance instance,
 			Class<? extends IOBIEThing> rootClassType) {
-		Set<TemplateAnnotation> annotations = null;
+		Set<IETmplateAnnotation> annotations = null;
 
 //		if (IOrganismModel.class.isAssignableFrom(rootClassType)) {
 //			annotations = extractAnimalModels(instance.annotations);
@@ -97,9 +97,9 @@ public class SCIOCorpusDataExtractor {
 	 * @param t
 	 * @return
 	 */
-	private Set<TemplateAnnotation> extractAnimalModels(List<IResult> scioAnnotationInstance) {
+	private Set<IETmplateAnnotation> extractAnimalModels(List<IResult> scioAnnotationInstance) {
 
-		Set<TemplateAnnotation> internalAnnotations = new HashSet<>();
+		Set<IETmplateAnnotation> internalAnnotations = new HashSet<>();
 
 		Set<IOrganismModel> annotations = new HashSet<>();
 
@@ -112,7 +112,7 @@ public class SCIOCorpusDataExtractor {
 		for (IOrganismModel annotation : annotations) {
 			if (annotation == null)
 				continue;
-			TemplateAnnotation entity = new TemplateAnnotation(IOrganismModel.class, annotation);
+			IETmplateAnnotation entity = new IETmplateAnnotation(IOrganismModel.class, annotation);
 			internalAnnotations.add(entity);
 		}
 		return internalAnnotations;
@@ -325,9 +325,9 @@ public class SCIOCorpusDataExtractor {
 
 	}
 
-	private Set<TemplateAnnotation> extractExperimentalGroups(List<IResult> scioAnnotationInstance) {
+	private Set<IETmplateAnnotation> extractExperimentalGroups(List<IResult> scioAnnotationInstance) {
 
-		Set<TemplateAnnotation> internalAnnotations = new HashSet<>();
+		Set<IETmplateAnnotation> internalAnnotations = new HashSet<>();
 
 		Set<IExperimentalGroup> annotations = new HashSet<>();
 
@@ -377,15 +377,15 @@ public class SCIOCorpusDataExtractor {
 			if (annotation.getGroupNames().isEmpty())
 				continue;
 
-			TemplateAnnotation entity = new TemplateAnnotation(IExperimentalGroup.class, annotation);
+			IETmplateAnnotation entity = new IETmplateAnnotation(IExperimentalGroup.class, annotation);
 			internalAnnotations.add(entity);
 		}
 		return internalAnnotations;
 	}
 
-	private Set<TemplateAnnotation> extractGroupNames(List<IResult> scioAnnotationInstance) {
+	private Set<IETmplateAnnotation> extractGroupNames(List<IResult> scioAnnotationInstance) {
 
-		Set<TemplateAnnotation> internalAnnotations = new HashSet<>();
+		Set<IETmplateAnnotation> internalAnnotations = new HashSet<>();
 
 		Set<IGroupName> annotations = new HashSet<>();
 
@@ -435,7 +435,7 @@ public class SCIOCorpusDataExtractor {
 				continue;
 			}
 
-			TemplateAnnotation entity = new TemplateAnnotation(IGroupName.class, annotation);
+			IETmplateAnnotation entity = new IETmplateAnnotation(IGroupName.class, annotation);
 			internalAnnotations.add(entity);
 		}
 		return internalAnnotations;
@@ -449,9 +449,9 @@ public class SCIOCorpusDataExtractor {
 	 * @param t
 	 * @return
 	 */
-	private Set<TemplateAnnotation> extractInvestigationMethod(List<IResult> scioAnnotationInstance) {
+	private Set<IETmplateAnnotation> extractInvestigationMethod(List<IResult> scioAnnotationInstance) {
 
-		Set<TemplateAnnotation> internalAnnotations = new HashSet<>();
+		Set<IETmplateAnnotation> internalAnnotations = new HashSet<>();
 
 		Set<IInvestigationMethod> annotations = new HashSet<>();
 
@@ -473,15 +473,15 @@ public class SCIOCorpusDataExtractor {
 			if (annotation == null)
 				continue;
 
-			TemplateAnnotation entity = new TemplateAnnotation(IInvestigationMethod.class, annotation);
+			IETmplateAnnotation entity = new IETmplateAnnotation(IInvestigationMethod.class, annotation);
 			internalAnnotations.add(entity);
 		}
 		return internalAnnotations;
 	}
 
-	private Set<TemplateAnnotation> extractInjury(List<IResult> scioAnnotationInstance) {
+	private Set<IETmplateAnnotation> extractInjury(List<IResult> scioAnnotationInstance) {
 
-		Set<TemplateAnnotation> internalAnnotations = new HashSet<>();
+		Set<IETmplateAnnotation> internalAnnotations = new HashSet<>();
 
 		Set<IInjury> annotations = new HashSet<>();
 
@@ -495,15 +495,15 @@ public class SCIOCorpusDataExtractor {
 			if (annotation == null)
 				continue;
 
-			TemplateAnnotation entity = new TemplateAnnotation(IInjury.class, annotation);
+			IETmplateAnnotation entity = new IETmplateAnnotation(IInjury.class, annotation);
 			internalAnnotations.add(entity);
 		}
 		return internalAnnotations;
 	}
 
-	private Set<TemplateAnnotation> extractTreatment(List<IResult> scioAnnotationInstance) {
+	private Set<IETmplateAnnotation> extractTreatment(List<IResult> scioAnnotationInstance) {
 
-		Set<TemplateAnnotation> internalAnnotations = new HashSet<>();
+		Set<IETmplateAnnotation> internalAnnotations = new HashSet<>();
 
 		Set<ITreatment> annotations = new HashSet<>();
 
@@ -515,7 +515,7 @@ public class SCIOCorpusDataExtractor {
 		for (ITreatment annotation : annotations) {
 			if (annotation == null)
 				continue;
-			TemplateAnnotation entity = new TemplateAnnotation(ITreatment.class, annotation);
+			IETmplateAnnotation entity = new IETmplateAnnotation(ITreatment.class, annotation);
 			internalAnnotations.add(entity);
 		}
 		return internalAnnotations;

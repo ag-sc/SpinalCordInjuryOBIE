@@ -46,12 +46,12 @@ sensory motor coordination .
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
-@ImplementationClass(get=LadderRungTest.class)
-
 @AssignableSubInterfaces(get={})
+
+@ImplementationClass(get=LadderRungTest.class)
  public interface ILadderRungTest
  extends ILocomotorTest{
 

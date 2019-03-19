@@ -10,15 +10,15 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import de.hterhors.obie.core.evaluation.PRF1;
+import de.hterhors.obie.core.ontology.InvestigationRestriction;
 import de.hterhors.obie.core.ontology.interfaces.IOBIEThing;
 import de.hterhors.obie.core.tools.corpus.CorpusFileTools;
 import de.hterhors.obie.core.tools.corpus.OBIECorpus;
 import de.hterhors.obie.core.tools.corpus.OBIECorpus.Instance;
 import de.hterhors.obie.core.utils.AnnotationExtractorHelper;
 import de.hterhors.obie.ml.evaluation.evaluator.CartesianSearchEvaluator;
-import de.hterhors.obie.ml.run.InvestigationRestriction;
-import de.hterhors.obie.ml.variables.TemplateAnnotation;
-import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.SCIOOntologyEnvironment;
+import de.hterhors.obie.ml.variables.IETmplateAnnotation;
+import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.environments.OntologyEnvironment;
 import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ontology.classes.AnalyzedExperimentalGroup;
 import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ontology.classes.CompoundSupplier;
 import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ontology.classes.CompoundTreatment;
@@ -37,7 +37,7 @@ public class KnowtatorCorpusInvestigator {
 
 	public static void main(String[] args) throws ClassNotFoundException, IOException {
 
-		final long ontologyVersion = SCIOOntologyEnvironment.getInstance().getOntologyVersion();
+		final long ontologyVersion = OntologyEnvironment.getInstance().getOntologyVersion();
 
 		final Set<Class<? extends IOBIEThing>> rootClassTypes = new HashSet<>(Arrays.asList(IInjury.class));
 
@@ -201,8 +201,7 @@ public class KnowtatorCorpusInvestigator {
 			System.out.println(docName);
 			System.out.println("brigitte: " + bR.size());
 			System.out.println("daniel: " + dR.size());
-			PRF1 result = new CartesianSearchEvaluator(true, 1000, true, InvestigationRestriction.noRestrictionInstance,
-					7, false).prf1(dR, bR);
+			PRF1 result = new CartesianSearchEvaluator(true, 1000, true, 7, false).prf1(dR, bR);
 			System.out.println(result);
 			prf1.add(result);
 			System.out.println();
@@ -375,9 +374,9 @@ public class KnowtatorCorpusInvestigator {
 	 * @param t
 	 * @return
 	 */
-	private static Set<TemplateAnnotation> extractAnimalModels(List<IResult> scioAnnotationInstance, final int limit) {
+	private static Set<IETmplateAnnotation> extractAnimalModels(List<IResult> scioAnnotationInstance, final int limit) {
 
-		Set<TemplateAnnotation> internalAnnotations = new HashSet<>();
+		Set<IETmplateAnnotation> internalAnnotations = new HashSet<>();
 
 		Set<IAnimalModel> annotations = new HashSet<>();
 
@@ -423,16 +422,16 @@ public class KnowtatorCorpusInvestigator {
 			if (!AnnotationExtractorHelper.testLimitToAnnnotationElementsRecursively(annotation, limit)) {
 				return new HashSet<>();
 			}
-			TemplateAnnotation entity = new TemplateAnnotation(IAnimalModel.class, annotation);
+			IETmplateAnnotation entity = new IETmplateAnnotation(IAnimalModel.class, annotation);
 			internalAnnotations.add(entity);
 		}
 		return internalAnnotations;
 	}
 
-	private static Set<TemplateAnnotation> extractExperimentalGroups(List<IResult> scioAnnotationInstance,
+	private static Set<IETmplateAnnotation> extractExperimentalGroups(List<IResult> scioAnnotationInstance,
 			final int limit) {
 
-		Set<TemplateAnnotation> internalAnnotations = new HashSet<>();
+		Set<IETmplateAnnotation> internalAnnotations = new HashSet<>();
 
 		Set<IExperimentalGroup> annotations = new HashSet<>();
 
@@ -478,7 +477,7 @@ public class KnowtatorCorpusInvestigator {
 			if (!AnnotationExtractorHelper.testLimitToAnnnotationElementsRecursively(annotation, limit)) {
 				return new HashSet<>();
 			}
-			TemplateAnnotation entity = new TemplateAnnotation(IExperimentalGroup.class, annotation);
+			IETmplateAnnotation entity = new IETmplateAnnotation(IExperimentalGroup.class, annotation);
 			internalAnnotations.add(entity);
 		}
 		return internalAnnotations;
@@ -492,10 +491,10 @@ public class KnowtatorCorpusInvestigator {
 	 * @param t
 	 * @return
 	 */
-	private static Set<TemplateAnnotation> extractInvestigationMethod(List<IOBIEThing> scioAnnotationInstance,
+	private static Set<IETmplateAnnotation> extractInvestigationMethod(List<IOBIEThing> scioAnnotationInstance,
 			final int limit) {
 
-		Set<TemplateAnnotation> internalAnnotations = new HashSet<>();
+		Set<IETmplateAnnotation> internalAnnotations = new HashSet<>();
 
 		Set<IInvestigationMethod> annotations = new HashSet<>();
 
@@ -523,15 +522,15 @@ public class KnowtatorCorpusInvestigator {
 			if (!AnnotationExtractorHelper.testLimitToAnnnotationElementsRecursively(annotation, limit)) {
 				return new HashSet<>();
 			}
-			TemplateAnnotation entity = new TemplateAnnotation(IInvestigationMethod.class, annotation);
+			IETmplateAnnotation entity = new IETmplateAnnotation(IInvestigationMethod.class, annotation);
 			internalAnnotations.add(entity);
 		}
 		return internalAnnotations;
 	}
 
-	private static Set<TemplateAnnotation> extractInjury(List<IResult> scioAnnotationInstance, final int limit) {
+	private static Set<IETmplateAnnotation> extractInjury(List<IResult> scioAnnotationInstance, final int limit) {
 
-		Set<TemplateAnnotation> internalAnnotations = new HashSet<>();
+		Set<IETmplateAnnotation> internalAnnotations = new HashSet<>();
 
 		Set<IInjury> annotations = new HashSet<>();
 
@@ -577,15 +576,15 @@ public class KnowtatorCorpusInvestigator {
 			if (!AnnotationExtractorHelper.testLimitToAnnnotationElementsRecursively(annotation, limit)) {
 				return new HashSet<>();
 			}
-			TemplateAnnotation entity = new TemplateAnnotation(IInjury.class, annotation);
+			IETmplateAnnotation entity = new IETmplateAnnotation(IInjury.class, annotation);
 			internalAnnotations.add(entity);
 		}
 		return internalAnnotations;
 	}
 
-	private static Set<TemplateAnnotation> extractTreatment(List<IResult> scioAnnotationInstance, final int limit) {
+	private static Set<IETmplateAnnotation> extractTreatment(List<IResult> scioAnnotationInstance, final int limit) {
 
-		Set<TemplateAnnotation> internalAnnotations = new HashSet<>();
+		Set<IETmplateAnnotation> internalAnnotations = new HashSet<>();
 
 		Set<ITreatment> annotations = new HashSet<>();
 
@@ -639,7 +638,7 @@ public class KnowtatorCorpusInvestigator {
 			if (!AnnotationExtractorHelper.testLimitToAnnnotationElementsRecursively(annotation, limit)) {
 				return new HashSet<>();
 			}
-			TemplateAnnotation entity = new TemplateAnnotation(ITreatment.class, annotation);
+			IETmplateAnnotation entity = new IETmplateAnnotation(ITreatment.class, annotation);
 			internalAnnotations.add(entity);
 		}
 		return internalAnnotations;

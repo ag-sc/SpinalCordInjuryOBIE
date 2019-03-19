@@ -15,13 +15,13 @@ import de.hterhors.obie.core.ontology.AbstractOntologyEnvironment;
 import de.hterhors.obie.core.owlreader.OWLReader;
 import de.hterhors.obie.core.owlreader.container.OntologyClass;
 import de.hterhors.obie.core.owlreader.container.OntologySlotData;
-import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.SCIOOntologyEnvironment;
-import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.SCIOProjectEnvironment;
+import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.environments.OntologyEnvironment;
+import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.environments.SlotFillingProjectEnvironment;
 
 @Deprecated
 public class WebAnnoLayerWriter {
 
-	private static AbstractOntologyEnvironment env = SCIOOntologyEnvironment.getInstance();
+	private static AbstractOntologyEnvironment env = OntologyEnvironment.getInstance();
 
 	private static OWLReader dataProvider = new OWLReader(env);
 	final int versionNumber;
@@ -43,7 +43,7 @@ public class WebAnnoLayerWriter {
 //		dataProvider.relations
 		WebAnnoLayerWriter webannoSchemaWriter = new WebAnnoLayerWriter(null, dataProvider.classes, null, null,
 				// dataProvider.domains, dataProvider.ranges,
-				SCIOOntologyEnvironment.getInstance().getOntologyVersion());
+				OntologyEnvironment.getInstance().getOntologyVersion());
 
 		webannoSchemaWriter.write("OWLSCIOConstrains", "OWL");
 	}

@@ -41,12 +41,12 @@ import java.util.stream.Collectors;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
-@ImplementationClass(get=ExperimentalGroup.class)
-
 @AssignableSubInterfaces(get={IDefinedExperimentalGroup.class, IAnalyzedExperimentalGroup.class, })
+
+@ImplementationClass(get=ExperimentalGroup.class)
  public interface IExperimentalGroup
  extends ISCIOThing{
 

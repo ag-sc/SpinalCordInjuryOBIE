@@ -23,13 +23,13 @@ import java.util.stream.Collectors;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
+
+@AssignableSubInterfaces(get={})
 
 @DatatypeProperty
 @ImplementationClass(get=PubmedID.class)
-
-@AssignableSubInterfaces(get={})
  public interface IPubmedID
  extends IDatatype, ISCIOThing{
 

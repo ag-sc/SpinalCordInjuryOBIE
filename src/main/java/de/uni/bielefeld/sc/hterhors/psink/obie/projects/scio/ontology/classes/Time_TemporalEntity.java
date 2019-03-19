@@ -15,6 +15,7 @@ import org.apache.jena.rdf.model.Resource;
 import java.util.Map;
 import java.lang.InstantiationException;
 import java.lang.SecurityException;
+import de.hterhors.obie.core.ontology.InvestigationRestriction;
 import de.hterhors.obie.core.ontology.annotations.DirectSiblings;
 import java.lang.IllegalAccessException;
 import de.hterhors.obie.core.ontology.annotations.AssignableSubClasses;
@@ -38,16 +39,16 @@ import de.hterhors.obie.core.ontology.AbstractIndividual;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
-
-@DirectInterface(get=ITime_TemporalEntity.class)
 
 @SuperRootClasses(get={Time_TemporalEntity.class, })
 
-@DirectSiblings(get={})
-
 @AssignableSubClasses(get={Compression.class, MagneticFieldApplication.class, EnrichedEnvironment.class, Injury.class, Contusion.class, Laminectomy.class, ModificationTreatment.class, ElectrolyticLesion.class, PhotochemicalInjury.class, Dislocation.class, VentralHemisection.class, InjuryByAccident.class, DorsalHemisection.class, OvariectomyTreatment.class, PhysicalImplantTreatment.class, TemperatureTreatment.class, HypothermicTreatment.class, AspirationLesion.class, ChemicalInjury.class, HeatLesion.class, CompleteTransection.class, CurrentApplication.class, CompoundTreatment.class, RehabilitativeTraining.class, NormothermicTreatment.class, PhysicalTreatment.class, TreadmillTraining.class, VoltageApplication.class, Treatment.class, Distraction.class, PartialTransection.class, Observation.class, Investigation.class, Event.class, GeneticModificationTreatment.class, ElectromagneticFieldTreatment.class, TemporalInterval.class, SurgeryTreatment.class, LateralHemisection.class, })
+
+@DirectInterface(get=ITime_TemporalEntity.class)
+
+@DirectSiblings(get={})
  public class Time_TemporalEntity implements ITime_TemporalEntity{
 
 final public static IndividualFactory<Time_TemporalEntityIndividual> individualFactory = new IndividualFactory<>();
@@ -72,7 +73,15 @@ static class Time_TemporalEntityIndividual extends AbstractIndividual {
 	@Override
 	public AbstractIndividual getIndividual() {
 		return individual;
-	}	final static public String ONTOLOGY_NAME = "http://www.w3.org/2006/time#TemporalEntity";
+	}
+	@Override
+	public InvestigationRestriction getInvestigationRestriction() {
+		return investigationRestriction;
+	}
+	@Override
+	public Time_TemporalEntity setInvestigationRestriction(InvestigationRestriction investigationRestriction ) {
+		this.investigationRestriction = investigationRestriction;
+ return this;	}public InvestigationRestriction investigationRestriction;	final static public String ONTOLOGY_NAME = "http://www.w3.org/2006/time#TemporalEntity";
 	private Integer characterOffset;
 	private Integer characterOnset;
 	final static private Map<IOBIEThing, String> resourceFactory = new HashMap<>();
@@ -81,20 +90,23 @@ static class Time_TemporalEntityIndividual extends AbstractIndividual {
 final private String textMention;
 
 
-	public Time_TemporalEntity(String individualURI, String textMention){
-this.individual = 
-				Time_TemporalEntity.individualFactory.getIndividualByURI(individualURI);
-this.textMention = textMention;
-}
 	public Time_TemporalEntity(Time_TemporalEntity time_TemporalEntity)throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,NoSuchMethodException, SecurityException{
 this.individual = time_TemporalEntity.individual;
+this.investigationRestriction = time_TemporalEntity.investigationRestriction;
 this.characterOffset = time_TemporalEntity.getCharacterOffset();
 this.characterOnset = time_TemporalEntity.getCharacterOnset();
 this.textMention = time_TemporalEntity.getTextMention();
 }
 	public Time_TemporalEntity(){
 this.individual = null;
+this.investigationRestriction = InvestigationRestriction.noRestrictionInstance;
 this.textMention = null;
+}
+	public Time_TemporalEntity(String individualURI, InvestigationRestriction investigationRestriction, String textMention){
+this.individual = 
+				Time_TemporalEntity.individualFactory.getIndividualByURI(individualURI);
+this.investigationRestriction = investigationRestriction==null?InvestigationRestriction.noRestrictionInstance:investigationRestriction;
+this.textMention = textMention;
 }
 
 
@@ -113,20 +125,25 @@ if (other.individual!= null)
 return false;
 } else if (!individual.equals(other.individual))
 return false;
-if (textMention == null) {
-if (other.textMention!= null)
+if (investigationRestriction == null) {
+if (other.investigationRestriction!= null)
 return false;
-} else if (!textMention.equals(other.textMention))
+} else if (!investigationRestriction.equals(other.investigationRestriction))
+return false;
+if (characterOnset == null) {
+if (other.characterOnset!= null)
+return false;
+} else if (!characterOnset.equals(other.characterOnset))
 return false;
 if (characterOffset == null) {
 if (other.characterOffset!= null)
 return false;
 } else if (!characterOffset.equals(other.characterOffset))
 return false;
-if (characterOnset == null) {
-if (other.characterOnset!= null)
+if (textMention == null) {
+if (other.textMention!= null)
 return false;
-} else if (!characterOnset.equals(other.characterOnset))
+} else if (!textMention.equals(other.textMention))
 return false;
 return true;
 }
@@ -166,13 +183,18 @@ return ISCIOThing.RDF_MODEL_NAMESPACE + resourceName;}
 		return textMention;}
 	/***/
 @Override
+	public IOBIEThing getThis(){
+		return this;}
+	/***/
+@Override
 	public int hashCode(){
 		final int prime = 31;
 int result = 1;
 result = prime * result + ((this.individual == null) ? 0 : this.individual.hashCode());
-result = prime * result + ((this.textMention == null) ? 0 : this.textMention.hashCode());
-result = prime * result + ((this.characterOffset == null) ? 0 : this.characterOffset.hashCode());
+result = prime * result + ((this.investigationRestriction == null) ? 0 : this.investigationRestriction.hashCode());
 result = prime * result + ((this.characterOnset == null) ? 0 : this.characterOnset.hashCode());
+result = prime * result + ((this.characterOffset == null) ? 0 : this.characterOffset.hashCode());
+result = prime * result + ((this.textMention == null) ? 0 : this.textMention.hashCode());
 return result;}
 	/***/
 @Override
@@ -188,7 +210,7 @@ return false;}
 
 @Override
 public String toString(){
-return "Time_TemporalEntity [individual="+individual+",characterOffset="+characterOffset+",characterOnset="+characterOnset+",serialVersionUID="+serialVersionUID+",textMention="+textMention+"]";}
+return "Time_TemporalEntity [individual="+individual+",investigationRestriction="+investigationRestriction.summarize()+",characterOffset="+characterOffset+",characterOnset="+characterOnset+",serialVersionUID="+serialVersionUID+",textMention="+textMention+"]";}
 
 
 }

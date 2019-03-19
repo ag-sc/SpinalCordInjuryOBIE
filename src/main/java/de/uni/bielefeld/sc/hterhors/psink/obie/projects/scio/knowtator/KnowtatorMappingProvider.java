@@ -8,18 +8,18 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.SCIOOntologyEnvironment;
-import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.SCIOProjectEnvironment;
+import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.environments.OntologyEnvironment;
+import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.environments.SlotFillingProjectEnvironment;
 import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.knowtator.container.DomainRelationRange;
 
 public class KnowtatorMappingProvider {
 
 	private static final String classMappingFileName = "scio/knowtator/res/mapping/v"
-			+ SCIOOntologyEnvironment.getInstance().getOntologyVersion() + "/knowtator_scioClassesMapping.csv";
+			+ OntologyEnvironment.getInstance().getOntologyVersion() + "/knowtator_scioClassesMapping.csv";
 	private static final String relationMappingFileName = "scio/knowtator/res/mapping/v"
-			+ SCIOOntologyEnvironment.getInstance().getOntologyVersion() + "/knowtator_scioRelationMapping.csv";
+			+ OntologyEnvironment.getInstance().getOntologyVersion() + "/knowtator_scioRelationMapping.csv";
 	private static final String complexMappingFileName = "scio/knowtator/res/mapping/v"
-			+ SCIOOntologyEnvironment.getInstance().getOntologyVersion() + "/knowtator_scioComplexMapping.csv";
+			+ OntologyEnvironment.getInstance().getOntologyVersion() + "/knowtator_scioComplexMapping.csv";
 
 	/**
 	 * OldScioEntity,NewScioEntity

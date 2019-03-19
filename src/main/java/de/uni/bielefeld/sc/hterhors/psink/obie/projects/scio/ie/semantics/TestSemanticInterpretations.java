@@ -12,10 +12,10 @@ public class TestSemanticInterpretations {
 	public static void main(String[] args) {
 
 //		age();
-		 dosage();
+//		 dosage();
 		// pressure();
-//		 weight();
-		// depth();
+		 weight();
+//		 depth();
 		// distance();
 		// volume();
 		// thickness();
@@ -238,7 +238,7 @@ public class TestSemanticInterpretations {
 		System.out.println(w1.convertTo(EWeightUnits.t));
 		System.out.println(w1.normalize());
 
-		String sampleText = " Sprague-Dawley rats (200–250 g) were us blubble 200–240 grams Adult males (285330 g) and females 3031 mg/kg asdfghj"
+		String sampleText = "Eighty-one adult Sprague Dawley rats (300–400 gm; Taconic Farms, Germantown, NY) were used in this stu Sprague-Dawley rats (200–250 gm) were us blubble 200–240 grams Adult males (285330 g) and females 3031 mg/kg asdfghj"
 				+ "kldfghjkl 40lbs hello world 100 g x cm   bjdsbg"
 				+ "vohdsago 20 g 20kilo tlongabcd 210 and 310 g jbsfkbjsf -term balb, 0.5 g between 0.05, 4mg deli"
 				+ "ver along /100g promote functiona Adult female Sprague Dawley rats (~200 kg; Harlan Laboratories"

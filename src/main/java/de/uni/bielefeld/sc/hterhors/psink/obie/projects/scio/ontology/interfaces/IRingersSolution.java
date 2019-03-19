@@ -35,12 +35,12 @@ import java.util.stream.Collectors;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
-@ImplementationClass(get=RingersSolution.class)
-
 @AssignableSubInterfaces(get={})
+
+@ImplementationClass(get=RingersSolution.class)
  public interface IRingersSolution
  extends IVehicle{
 

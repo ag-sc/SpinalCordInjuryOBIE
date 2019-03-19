@@ -15,6 +15,7 @@ import org.apache.jena.rdf.model.Resource;
 import java.util.Map;
 import java.lang.InstantiationException;
 import java.lang.SecurityException;
+import de.hterhors.obie.core.ontology.InvestigationRestriction;
 import de.hterhors.obie.core.ontology.annotations.DirectSiblings;
 import java.lang.IllegalAccessException;
 import de.hterhors.obie.core.ontology.annotations.AssignableSubClasses;
@@ -53,16 +54,16 @@ import de.hterhors.obie.core.ontology.AbstractIndividual;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
-
-@SuperRootClasses(get={AnimalCareCondition.class, })
-
-@DirectInterface(get=ISodiumPentobarbital.class)
 
 @AssignableSubClasses(get={})
 
 @DirectSiblings(get={KetamineAsAnaesthetic.class, ThiopentalSodium.class, SodiumPentobarbital.class, NitrousOxide.class, Halothane.class, Xylazine.class, Isoflurane.class, Diazepam.class, FluanisoneMidazolamMixture.class, })
+
+@DirectInterface(get=ISodiumPentobarbital.class)
+
+@SuperRootClasses(get={AnimalCareCondition.class, })
  public class SodiumPentobarbital implements ISodiumPentobarbital{
 
 final public static IndividualFactory<SodiumPentobarbitalIndividual> individualFactory = new IndividualFactory<>();
@@ -87,12 +88,21 @@ static class SodiumPentobarbitalIndividual extends AbstractIndividual {
 	@Override
 	public AbstractIndividual getIndividual() {
 		return individual;
-	}	final static public String ONTOLOGY_NAME = "http://psink.de/scio/SodiumPentobarbital";
+	}
+	@Override
+	public InvestigationRestriction getInvestigationRestriction() {
+		return investigationRestriction;
+	}
+	@Override
+	public SodiumPentobarbital setInvestigationRestriction(InvestigationRestriction investigationRestriction ) {
+		this.investigationRestriction = investigationRestriction;
+ return this;	}public InvestigationRestriction investigationRestriction;	final static public String ONTOLOGY_NAME = "http://psink.de/scio/SodiumPentobarbital";
 	private Integer characterOffset;
 	private Integer characterOnset;
 	@OntologyModelContent(ontologyName="http://psink.de/scio/hasDeliveryMethod")
 private IDeliveryMethod deliveryMethod;
-	@OntologyModelContent(ontologyName="http://psink.de/scio/hasDosage")
+	@DatatypeProperty
+@OntologyModelContent(ontologyName="http://psink.de/scio/hasDosage")
 private IDosage dosage;
 	final static private Map<IOBIEThing, String> resourceFactory = new HashMap<>();
 	final static private long serialVersionUID = 64L;
@@ -100,22 +110,25 @@ private IDosage dosage;
 final private String textMention;
 
 
-	public SodiumPentobarbital(){
-this.individual = null;
-this.textMention = null;
-}
 	public SodiumPentobarbital(SodiumPentobarbital sodiumPentobarbital)throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,NoSuchMethodException, SecurityException{
 this.individual = sodiumPentobarbital.individual;
+this.investigationRestriction = sodiumPentobarbital.investigationRestriction;
 this.characterOffset = sodiumPentobarbital.getCharacterOffset();
 this.characterOnset = sodiumPentobarbital.getCharacterOnset();
 if(sodiumPentobarbital.getDeliveryMethod()!=null)this.deliveryMethod = (IDeliveryMethod) IOBIEThing.getCloneConstructor(sodiumPentobarbital.getDeliveryMethod().getClass())	.newInstance(sodiumPentobarbital.getDeliveryMethod());
-if(sodiumPentobarbital.getDosage()!=null)this.dosage = (IDosage) IOBIEThing.getCloneConstructor(sodiumPentobarbital.getDosage().getClass())	.newInstance(sodiumPentobarbital.getDosage());
+if(sodiumPentobarbital.getDosage()!=null)this.dosage = new Dosage((Dosage)sodiumPentobarbital.getDosage());
 this.textMention = sodiumPentobarbital.getTextMention();
 }
-	public SodiumPentobarbital(String individualURI, String textMention){
+	public SodiumPentobarbital(String individualURI, InvestigationRestriction investigationRestriction, String textMention){
 this.individual = 
 				SodiumPentobarbital.individualFactory.getIndividualByURI(individualURI);
+this.investigationRestriction = investigationRestriction==null?InvestigationRestriction.noRestrictionInstance:investigationRestriction;
 this.textMention = textMention;
+}
+	public SodiumPentobarbital(){
+this.individual = null;
+this.investigationRestriction = InvestigationRestriction.noRestrictionInstance;
+this.textMention = null;
 }
 
 
@@ -134,30 +147,35 @@ if (other.individual!= null)
 return false;
 } else if (!individual.equals(other.individual))
 return false;
+if (investigationRestriction == null) {
+if (other.investigationRestriction!= null)
+return false;
+} else if (!investigationRestriction.equals(other.investigationRestriction))
+return false;
 if (dosage == null) {
 if (other.dosage!= null)
 return false;
 } else if (!dosage.equals(other.dosage))
 return false;
-if (textMention == null) {
-if (other.textMention!= null)
+if (deliveryMethod == null) {
+if (other.deliveryMethod!= null)
 return false;
-} else if (!textMention.equals(other.textMention))
-return false;
-if (characterOffset == null) {
-if (other.characterOffset!= null)
-return false;
-} else if (!characterOffset.equals(other.characterOffset))
+} else if (!deliveryMethod.equals(other.deliveryMethod))
 return false;
 if (characterOnset == null) {
 if (other.characterOnset!= null)
 return false;
 } else if (!characterOnset.equals(other.characterOnset))
 return false;
-if (deliveryMethod == null) {
-if (other.deliveryMethod!= null)
+if (characterOffset == null) {
+if (other.characterOffset!= null)
 return false;
-} else if (!deliveryMethod.equals(other.deliveryMethod))
+} else if (!characterOffset.equals(other.characterOffset))
+return false;
+if (textMention == null) {
+if (other.textMention!= null)
+return false;
+} else if (!textMention.equals(other.textMention))
 return false;
 return true;
 }
@@ -229,15 +247,20 @@ return ISCIOThing.RDF_MODEL_NAMESPACE + resourceName;}
 		return textMention;}
 	/***/
 @Override
+	public IOBIEThing getThis(){
+		return this;}
+	/***/
+@Override
 	public int hashCode(){
 		final int prime = 31;
 int result = 1;
 result = prime * result + ((this.individual == null) ? 0 : this.individual.hashCode());
+result = prime * result + ((this.investigationRestriction == null) ? 0 : this.investigationRestriction.hashCode());
 result = prime * result + ((this.dosage == null) ? 0 : this.dosage.hashCode());
-result = prime * result + ((this.textMention == null) ? 0 : this.textMention.hashCode());
-result = prime * result + ((this.characterOffset == null) ? 0 : this.characterOffset.hashCode());
-result = prime * result + ((this.characterOnset == null) ? 0 : this.characterOnset.hashCode());
 result = prime * result + ((this.deliveryMethod == null) ? 0 : this.deliveryMethod.hashCode());
+result = prime * result + ((this.characterOnset == null) ? 0 : this.characterOnset.hashCode());
+result = prime * result + ((this.characterOffset == null) ? 0 : this.characterOffset.hashCode());
+result = prime * result + ((this.textMention == null) ? 0 : this.textMention.hashCode());
 return result;}
 	/***/
 @Override
@@ -287,7 +310,7 @@ return this;}
 
 @Override
 public String toString(){
-return "SodiumPentobarbital [individual="+individual+",characterOffset="+characterOffset+",characterOnset="+characterOnset+",deliveryMethod="+deliveryMethod+",dosage="+dosage+",serialVersionUID="+serialVersionUID+",textMention="+textMention+"]";}
+return "SodiumPentobarbital [individual="+individual+",investigationRestriction="+investigationRestriction.summarize()+",characterOffset="+characterOffset+",characterOnset="+characterOnset+",deliveryMethod="+deliveryMethod+",dosage="+dosage+",serialVersionUID="+serialVersionUID+",textMention="+textMention+"]";}
 
 
 }

@@ -15,6 +15,7 @@ import org.apache.jena.rdf.model.Resource;
 import java.util.Map;
 import java.lang.InstantiationException;
 import java.lang.SecurityException;
+import de.hterhors.obie.core.ontology.InvestigationRestriction;
 import de.hterhors.obie.core.ontology.annotations.DirectSiblings;
 import java.lang.IllegalAccessException;
 import de.hterhors.obie.core.ontology.annotations.AssignableSubClasses;
@@ -50,14 +51,14 @@ import de.hterhors.obie.core.ontology.AbstractIndividual;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
 @AssignableSubClasses(get={})
 
-@SuperRootClasses(get={InvestigationMethod.class, })
-
 @DirectSiblings(get={ForelimbAsymmetryTest.class, StaircaseTest.class, SinglePelletReachingTest.class, ManualDexterityTest.class, LimbMuscleStrengthTest.class, InclinedPlaneTest.class, })
+
+@SuperRootClasses(get={InvestigationMethod.class, })
 
 @DirectInterface(get=IInclinedPlaneTest.class)
  public class InclinedPlaneTest implements IInclinedPlaneTest{
@@ -84,42 +85,54 @@ static class InclinedPlaneTestIndividual extends AbstractIndividual {
 	@Override
 	public AbstractIndividual getIndividual() {
 		return individual;
-	}	final static public String ONTOLOGY_NAME = "http://psink.de/scio/InclinedPlaneTest";
+	}
+	@Override
+	public InvestigationRestriction getInvestigationRestriction() {
+		return investigationRestriction;
+	}
+	@Override
+	public InclinedPlaneTest setInvestigationRestriction(InvestigationRestriction investigationRestriction ) {
+		this.investigationRestriction = investigationRestriction;
+ return this;	}public InvestigationRestriction investigationRestriction;	final static public String ONTOLOGY_NAME = "http://psink.de/scio/InclinedPlaneTest";
 	private Integer characterOffset;
 	private Integer characterOnset;
 	@OntologyModelContent(ontologyName="http://psink.de/scio/hasDirection")
 private IDirection direction;
 	@OntologyModelContent(ontologyName="http://psink.de/scio/hasDuration")
+@DatatypeProperty
 private IDuration duration;
 	@OntologyModelContent(ontologyName="http://psink.de/scio/makesUseOf")
 @RelationTypeCollection
 private List<IApparatus> makesUseOfApparatus = new ArrayList<>();
 	final static private Map<IOBIEThing, String> resourceFactory = new HashMap<>();
 	final static private long serialVersionUID = 64L;
-	@RelationTypeCollection
-@OntologyModelContent(ontologyName="http://psink.de/scio/testsFor")
+	@OntologyModelContent(ontologyName="http://psink.de/scio/testsFor")
+@RelationTypeCollection
 private List<IFunction> testsForFunctions = new ArrayList<>();
 	@TextMention
 final private String textMention;
 
 
+	public InclinedPlaneTest(){
+this.individual = null;
+this.investigationRestriction = InvestigationRestriction.noRestrictionInstance;
+this.textMention = null;
+}
 	public InclinedPlaneTest(InclinedPlaneTest inclinedPlaneTest)throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,NoSuchMethodException, SecurityException{
 this.individual = inclinedPlaneTest.individual;
+this.investigationRestriction = inclinedPlaneTest.investigationRestriction;
 this.characterOffset = inclinedPlaneTest.getCharacterOffset();
 this.characterOnset = inclinedPlaneTest.getCharacterOnset();
 if(inclinedPlaneTest.getDirection()!=null)this.direction = (IDirection) IOBIEThing.getCloneConstructor(inclinedPlaneTest.getDirection().getClass())	.newInstance(inclinedPlaneTest.getDirection());
-if(inclinedPlaneTest.getDuration()!=null)this.duration = (IDuration) IOBIEThing.getCloneConstructor(inclinedPlaneTest.getDuration().getClass())	.newInstance(inclinedPlaneTest.getDuration());
+if(inclinedPlaneTest.getDuration()!=null)this.duration = new Duration((Duration)inclinedPlaneTest.getDuration());
 for (int j = 0; j < inclinedPlaneTest.getMakesUseOfApparatus().size(); j++) {if (inclinedPlaneTest.getMakesUseOfApparatus().get(j) != null) {makesUseOfApparatus.add((IApparatus) IOBIEThing.getCloneConstructor(inclinedPlaneTest.getMakesUseOfApparatus().get(j).getClass()).newInstance(inclinedPlaneTest.getMakesUseOfApparatus().get(j)));} else {makesUseOfApparatus.add(null);}}
 for (int j = 0; j < inclinedPlaneTest.getTestsForFunctions().size(); j++) {if (inclinedPlaneTest.getTestsForFunctions().get(j) != null) {testsForFunctions.add((IFunction) IOBIEThing.getCloneConstructor(inclinedPlaneTest.getTestsForFunctions().get(j).getClass()).newInstance(inclinedPlaneTest.getTestsForFunctions().get(j)));} else {testsForFunctions.add(null);}}
 this.textMention = inclinedPlaneTest.getTextMention();
 }
-	public InclinedPlaneTest(){
-this.individual = null;
-this.textMention = null;
-}
-	public InclinedPlaneTest(String individualURI, String textMention){
+	public InclinedPlaneTest(String individualURI, InvestigationRestriction investigationRestriction, String textMention){
 this.individual = 
 				InclinedPlaneTest.individualFactory.getIndividualByURI(individualURI);
+this.investigationRestriction = investigationRestriction==null?InvestigationRestriction.noRestrictionInstance:investigationRestriction;
 this.textMention = textMention;
 }
 
@@ -158,40 +171,45 @@ if (other.individual!= null)
 return false;
 } else if (!individual.equals(other.individual))
 return false;
-if (direction == null) {
-if (other.direction!= null)
+if (investigationRestriction == null) {
+if (other.investigationRestriction!= null)
 return false;
-} else if (!direction.equals(other.direction))
-return false;
-if (testsForFunctions == null) {
-if (other.testsForFunctions!= null)
-return false;
-} else if (!testsForFunctions.equals(other.testsForFunctions))
-return false;
-if (makesUseOfApparatus == null) {
-if (other.makesUseOfApparatus!= null)
-return false;
-} else if (!makesUseOfApparatus.equals(other.makesUseOfApparatus))
-return false;
-if (textMention == null) {
-if (other.textMention!= null)
-return false;
-} else if (!textMention.equals(other.textMention))
-return false;
-if (characterOffset == null) {
-if (other.characterOffset!= null)
-return false;
-} else if (!characterOffset.equals(other.characterOffset))
+} else if (!investigationRestriction.equals(other.investigationRestriction))
 return false;
 if (duration == null) {
 if (other.duration!= null)
 return false;
 } else if (!duration.equals(other.duration))
 return false;
+if (direction == null) {
+if (other.direction!= null)
+return false;
+} else if (!direction.equals(other.direction))
+return false;
 if (characterOnset == null) {
 if (other.characterOnset!= null)
 return false;
 } else if (!characterOnset.equals(other.characterOnset))
+return false;
+if (makesUseOfApparatus == null) {
+if (other.makesUseOfApparatus!= null)
+return false;
+} else if (!makesUseOfApparatus.equals(other.makesUseOfApparatus))
+return false;
+if (testsForFunctions == null) {
+if (other.testsForFunctions!= null)
+return false;
+} else if (!testsForFunctions.equals(other.testsForFunctions))
+return false;
+if (characterOffset == null) {
+if (other.characterOffset!= null)
+return false;
+} else if (!characterOffset.equals(other.characterOffset))
+return false;
+if (textMention == null) {
+if (other.textMention!= null)
+return false;
+} else if (!textMention.equals(other.textMention))
 return false;
 return true;
 }
@@ -271,17 +289,22 @@ return ISCIOThing.RDF_MODEL_NAMESPACE + resourceName;}
 		return textMention;}
 	/***/
 @Override
+	public IOBIEThing getThis(){
+		return this;}
+	/***/
+@Override
 	public int hashCode(){
 		final int prime = 31;
 int result = 1;
 result = prime * result + ((this.individual == null) ? 0 : this.individual.hashCode());
-result = prime * result + ((this.direction == null) ? 0 : this.direction.hashCode());
-result = prime * result + ((this.testsForFunctions == null) ? 0 : this.testsForFunctions.hashCode());
-result = prime * result + ((this.makesUseOfApparatus == null) ? 0 : this.makesUseOfApparatus.hashCode());
-result = prime * result + ((this.textMention == null) ? 0 : this.textMention.hashCode());
-result = prime * result + ((this.characterOffset == null) ? 0 : this.characterOffset.hashCode());
+result = prime * result + ((this.investigationRestriction == null) ? 0 : this.investigationRestriction.hashCode());
 result = prime * result + ((this.duration == null) ? 0 : this.duration.hashCode());
+result = prime * result + ((this.direction == null) ? 0 : this.direction.hashCode());
 result = prime * result + ((this.characterOnset == null) ? 0 : this.characterOnset.hashCode());
+result = prime * result + ((this.makesUseOfApparatus == null) ? 0 : this.makesUseOfApparatus.hashCode());
+result = prime * result + ((this.testsForFunctions == null) ? 0 : this.testsForFunctions.hashCode());
+result = prime * result + ((this.characterOffset == null) ? 0 : this.characterOffset.hashCode());
+result = prime * result + ((this.textMention == null) ? 0 : this.textMention.hashCode());
 return result;}
 	/***/
 @Override
@@ -341,7 +364,7 @@ return this;}
 
 @Override
 public String toString(){
-return "InclinedPlaneTest [individual="+individual+",characterOffset="+characterOffset+",characterOnset="+characterOnset+",direction="+direction+",duration="+duration+",makesUseOfApparatus="+makesUseOfApparatus+",serialVersionUID="+serialVersionUID+",testsForFunctions="+testsForFunctions+",textMention="+textMention+"]";}
+return "InclinedPlaneTest [individual="+individual+",investigationRestriction="+investigationRestriction.summarize()+",characterOffset="+characterOffset+",characterOnset="+characterOnset+",direction="+direction+",duration="+duration+",makesUseOfApparatus="+makesUseOfApparatus+",serialVersionUID="+serialVersionUID+",testsForFunctions="+testsForFunctions+",textMention="+textMention+"]";}
 
 
 }

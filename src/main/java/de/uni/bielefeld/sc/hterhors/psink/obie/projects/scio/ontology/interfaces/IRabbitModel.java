@@ -35,12 +35,12 @@ import java.util.stream.Collectors;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
-@ImplementationClass(get=RabbitModel.class)
-
 @AssignableSubInterfaces(get={})
+
+@ImplementationClass(get=RabbitModel.class)
  public interface IRabbitModel
  extends IAnimalModel{
 

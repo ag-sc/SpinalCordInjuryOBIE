@@ -32,12 +32,12 @@ import java.util.stream.Collectors;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
-@ImplementationClass(get=Penicillinase.class)
-
 @AssignableSubInterfaces(get={})
+
+@ImplementationClass(get=Penicillinase.class)
  public interface IPenicillinase
  extends IEnzyme{
 

@@ -23,13 +23,13 @@ import java.util.stream.Collectors;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
-@ImplementationClass(get=StandardDeviation.class)
+@AssignableSubInterfaces(get={})
 
 @DatatypeProperty
-@AssignableSubInterfaces(get={})
+@ImplementationClass(get=StandardDeviation.class)
  public interface IStandardDeviation
  extends IDatatype, ISCIOThing{
 

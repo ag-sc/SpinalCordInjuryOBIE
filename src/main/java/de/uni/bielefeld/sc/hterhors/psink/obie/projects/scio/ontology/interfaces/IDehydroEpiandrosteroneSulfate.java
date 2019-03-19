@@ -33,12 +33,12 @@ RN given refers to (3alpha,5alpha)-isomer
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
-@ImplementationClass(get=DehydroEpiandrosteroneSulfate.class)
-
 @AssignableSubInterfaces(get={})
+
+@ImplementationClass(get=DehydroEpiandrosteroneSulfate.class)
  public interface IDehydroEpiandrosteroneSulfate
  extends IHormone{
 

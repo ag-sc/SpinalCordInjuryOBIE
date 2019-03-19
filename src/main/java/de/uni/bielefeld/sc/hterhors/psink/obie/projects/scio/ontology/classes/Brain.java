@@ -15,6 +15,7 @@ import org.apache.jena.rdf.model.Resource;
 import java.util.Map;
 import java.lang.InstantiationException;
 import java.lang.SecurityException;
+import de.hterhors.obie.core.ontology.InvestigationRestriction;
 import de.hterhors.obie.core.ontology.annotations.DirectSiblings;
 import java.lang.IllegalAccessException;
 import de.hterhors.obie.core.ontology.annotations.AssignableSubClasses;
@@ -54,14 +55,14 @@ layer V of primary somatosensory cortex projecting into the dorsal CST revealed 
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
 @SuperRootClasses(get={Location.class, })
 
-@AssignableSubClasses(get={})
-
 @DirectInterface(get=IBrain.class)
+
+@AssignableSubClasses(get={})
 
 @DirectSiblings(get={Brain.class, SpinalCord.class, })
  public class Brain implements IBrain{
@@ -88,12 +89,22 @@ static class BrainIndividual extends AbstractIndividual {
 	@Override
 	public AbstractIndividual getIndividual() {
 		return individual;
-	}	final static public String ONTOLOGY_NAME = "http://psink.de/scio/Brain";
+	}
+	@Override
+	public InvestigationRestriction getInvestigationRestriction() {
+		return investigationRestriction;
+	}
+	@Override
+	public Brain setInvestigationRestriction(InvestigationRestriction investigationRestriction ) {
+		this.investigationRestriction = investigationRestriction;
+ return this;	}public InvestigationRestriction investigationRestriction;	final static public String ONTOLOGY_NAME = "http://psink.de/scio/Brain";
 	private Integer characterOffset;
 	private Integer characterOnset;
 	@OntologyModelContent(ontologyName="http://psink.de/scio/hasDepth")
+@DatatypeProperty
 private IDepth depth;
-	@OntologyModelContent(ontologyName="http://psink.de/scio/hasDistance")
+	@DatatypeProperty
+@OntologyModelContent(ontologyName="http://psink.de/scio/hasDistance")
 private IDistance distance;
 	final static private Map<IOBIEThing, String> resourceFactory = new HashMap<>();
 	final static private long serialVersionUID = 64L;
@@ -101,22 +112,25 @@ private IDistance distance;
 final private String textMention;
 
 
-	public Brain(String individualURI, String textMention){
-this.individual = 
-				Brain.individualFactory.getIndividualByURI(individualURI);
-this.textMention = textMention;
-}
 	public Brain(Brain brain)throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,NoSuchMethodException, SecurityException{
 this.individual = brain.individual;
+this.investigationRestriction = brain.investigationRestriction;
 this.characterOffset = brain.getCharacterOffset();
 this.characterOnset = brain.getCharacterOnset();
-if(brain.getDepth()!=null)this.depth = (IDepth) IOBIEThing.getCloneConstructor(brain.getDepth().getClass())	.newInstance(brain.getDepth());
-if(brain.getDistance()!=null)this.distance = (IDistance) IOBIEThing.getCloneConstructor(brain.getDistance().getClass())	.newInstance(brain.getDistance());
+if(brain.getDepth()!=null)this.depth = new Depth((Depth)brain.getDepth());
+if(brain.getDistance()!=null)this.distance = new Distance((Distance)brain.getDistance());
 this.textMention = brain.getTextMention();
 }
 	public Brain(){
 this.individual = null;
+this.investigationRestriction = InvestigationRestriction.noRestrictionInstance;
 this.textMention = null;
+}
+	public Brain(String individualURI, InvestigationRestriction investigationRestriction, String textMention){
+this.individual = 
+				Brain.individualFactory.getIndividualByURI(individualURI);
+this.investigationRestriction = investigationRestriction==null?InvestigationRestriction.noRestrictionInstance:investigationRestriction;
+this.textMention = textMention;
 }
 
 
@@ -135,15 +149,15 @@ if (other.individual!= null)
 return false;
 } else if (!individual.equals(other.individual))
 return false;
-if (textMention == null) {
-if (other.textMention!= null)
+if (investigationRestriction == null) {
+if (other.investigationRestriction!= null)
 return false;
-} else if (!textMention.equals(other.textMention))
+} else if (!investigationRestriction.equals(other.investigationRestriction))
 return false;
-if (characterOffset == null) {
-if (other.characterOffset!= null)
+if (distance == null) {
+if (other.distance!= null)
 return false;
-} else if (!characterOffset.equals(other.characterOffset))
+} else if (!distance.equals(other.distance))
 return false;
 if (depth == null) {
 if (other.depth!= null)
@@ -155,10 +169,15 @@ if (other.characterOnset!= null)
 return false;
 } else if (!characterOnset.equals(other.characterOnset))
 return false;
-if (distance == null) {
-if (other.distance!= null)
+if (characterOffset == null) {
+if (other.characterOffset!= null)
 return false;
-} else if (!distance.equals(other.distance))
+} else if (!characterOffset.equals(other.characterOffset))
+return false;
+if (textMention == null) {
+if (other.textMention!= null)
+return false;
+} else if (!textMention.equals(other.textMention))
 return false;
 return true;
 }
@@ -231,15 +250,20 @@ return ISCIOThing.RDF_MODEL_NAMESPACE + resourceName;}
 		return textMention;}
 	/***/
 @Override
+	public IOBIEThing getThis(){
+		return this;}
+	/***/
+@Override
 	public int hashCode(){
 		final int prime = 31;
 int result = 1;
 result = prime * result + ((this.individual == null) ? 0 : this.individual.hashCode());
-result = prime * result + ((this.textMention == null) ? 0 : this.textMention.hashCode());
-result = prime * result + ((this.characterOffset == null) ? 0 : this.characterOffset.hashCode());
+result = prime * result + ((this.investigationRestriction == null) ? 0 : this.investigationRestriction.hashCode());
+result = prime * result + ((this.distance == null) ? 0 : this.distance.hashCode());
 result = prime * result + ((this.depth == null) ? 0 : this.depth.hashCode());
 result = prime * result + ((this.characterOnset == null) ? 0 : this.characterOnset.hashCode());
-result = prime * result + ((this.distance == null) ? 0 : this.distance.hashCode());
+result = prime * result + ((this.characterOffset == null) ? 0 : this.characterOffset.hashCode());
+result = prime * result + ((this.textMention == null) ? 0 : this.textMention.hashCode());
 return result;}
 	/***/
 @Override
@@ -290,7 +314,7 @@ return this;}
 
 @Override
 public String toString(){
-return "Brain [individual="+individual+",characterOffset="+characterOffset+",characterOnset="+characterOnset+",depth="+depth+",distance="+distance+",serialVersionUID="+serialVersionUID+",textMention="+textMention+"]";}
+return "Brain [individual="+individual+",investigationRestriction="+investigationRestriction.summarize()+",characterOffset="+characterOffset+",characterOnset="+characterOnset+",depth="+depth+",distance="+distance+",serialVersionUID="+serialVersionUID+",textMention="+textMention+"]";}
 
 
 }

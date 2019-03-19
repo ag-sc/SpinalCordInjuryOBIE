@@ -35,7 +35,7 @@ import java.util.stream.Collectors;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
 @AssignableSubInterfaces(get={IMesenchymalStemCell.class, IStemCell.class, ISchwannCell.class, IOlfactoryEnsheathingGliaCell.class, IImmuneCell.class, IGlialCell.class, IUmbilicalCordBloodStemCell.class, IMacrophageCell.class, IBoneMarrowStemCell.class, })

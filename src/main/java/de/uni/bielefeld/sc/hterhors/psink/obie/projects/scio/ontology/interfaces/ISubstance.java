@@ -29,12 +29,12 @@ import java.util.stream.Collectors;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
-@AssignableSubInterfaces(get={IBW755C.class, IP188.class, IMagnesiumSulfate.class, IEthanol.class, INS398.class, IWater.class, ICelebocid.class, IDarbepoetin.class, IDMSO.class, IPregabalin.class, IPEGFITC.class, ISC58125.class, IPoloxamer.class, IInosine.class, IMexiletine.class, IKetamine.class, IIbuprofen.class, IRiluzole.class, IRingersSolution.class, ICyclosporineA.class, IEvansBlue.class, IAcetylsalicylicAcid.class, IIndomethacin.class, IMethanesulfonamide.class, IPBS.class, IMagnesium.class, ILipopolysaccharide.class, IMinocyclineMC.class, IMPSS.class, ITetracycline.class, IVegetableOil.class, IPolyethyleneGlycolPEG.class, IPioglitazone.class, IRolipram.class, IIloprost.class, IClodronate.class, IVehicle.class, IHematoxyLinEosin.class, ILithiumChloride.class, IDipyridamol.class, ISaline.class, IPhenytoine.class, IMethylprednisoloneMP.class, IICI182780.class, })
-
 @ImplementationClass(get=Substance.class)
+
+@AssignableSubInterfaces(get={IBW755C.class, IP188.class, IMagnesiumSulfate.class, IEthanol.class, INS398.class, IWater.class, ICelebocid.class, IDarbepoetin.class, IDMSO.class, IPregabalin.class, IPEGFITC.class, ISC58125.class, IPoloxamer.class, IInosine.class, IMexiletine.class, IKetamine.class, IIbuprofen.class, IRiluzole.class, IRingersSolution.class, ICyclosporineA.class, IEvansBlue.class, IAcetylsalicylicAcid.class, IIndomethacin.class, IMethanesulfonamide.class, IPBS.class, IMagnesium.class, ILipopolysaccharide.class, IMinocyclineMC.class, IMPSS.class, ITetracycline.class, IVegetableOil.class, IPolyethyleneGlycolPEG.class, IPioglitazone.class, IRolipram.class, IIloprost.class, IClodronate.class, IVehicle.class, IHematoxyLinEosin.class, ILithiumChloride.class, IDipyridamol.class, ISaline.class, IPhenytoine.class, IMethylprednisoloneMP.class, IICI182780.class, })
  public interface ISubstance
  extends ICompound{
 

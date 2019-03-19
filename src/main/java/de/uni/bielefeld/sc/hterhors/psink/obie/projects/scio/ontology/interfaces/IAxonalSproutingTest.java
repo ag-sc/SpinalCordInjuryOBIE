@@ -36,12 +36,12 @@ Long distance axonal sprouting is defined as axonal regeneration.
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
-@ImplementationClass(get=AxonalSproutingTest.class)
-
 @AssignableSubInterfaces(get={})
+
+@ImplementationClass(get=AxonalSproutingTest.class)
  public interface IAxonalSproutingTest
  extends IAxonalChangesTest{
 

@@ -35,12 +35,12 @@ import java.util.stream.Collectors;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
-@ImplementationClass(get=AxonalDamageTest.class)
-
 @AssignableSubInterfaces(get={})
+
+@ImplementationClass(get=AxonalDamageTest.class)
  public interface IAxonalDamageTest
  extends IAxonalChangesTest{
 

@@ -29,14 +29,14 @@ import java.util.stream.Collectors;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
-@DatatypeProperty
 @ImplementationClass(get=ElectricFieldStrength.class)
 
 @AssignableSubInterfaces(get={})
- public interface IElectricFieldStrength
+
+@DatatypeProperty public interface IElectricFieldStrength
  extends IDatatype, IQudt_Quantity{
 
 }

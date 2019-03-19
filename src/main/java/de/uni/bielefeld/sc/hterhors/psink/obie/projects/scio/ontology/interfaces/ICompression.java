@@ -38,12 +38,12 @@ import java.util.stream.Collectors;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
-@ImplementationClass(get=Compression.class)
-
 @AssignableSubInterfaces(get={})
+
+@ImplementationClass(get=Compression.class)
  public interface ICompression
  extends IInjury{
 

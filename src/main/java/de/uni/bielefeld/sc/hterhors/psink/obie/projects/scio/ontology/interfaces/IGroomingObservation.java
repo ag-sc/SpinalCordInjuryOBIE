@@ -41,12 +41,12 @@ import java.util.stream.Collectors;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
-@ImplementationClass(get=GroomingObservation.class)
-
 @AssignableSubInterfaces(get={})
+
+@ImplementationClass(get=GroomingObservation.class)
  public interface IGroomingObservation
  extends IObservationOfAnimalBehaviour{
 

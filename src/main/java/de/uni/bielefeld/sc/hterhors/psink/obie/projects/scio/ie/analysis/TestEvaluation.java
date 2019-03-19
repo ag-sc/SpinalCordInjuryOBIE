@@ -1,4 +1,4 @@
-package de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie;
+package de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.analysis;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -6,45 +6,85 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import de.hterhors.obie.core.ontology.InvestigationRestriction;
+import de.hterhors.obie.core.ontology.InvestigationRestriction.RestrictedField;
+import de.hterhors.obie.core.ontology.OntologyInitializer;
 import de.hterhors.obie.ml.evaluation.evaluator.BeamSearchEvaluator;
 import de.hterhors.obie.ml.evaluation.evaluator.CartesianSearchEvaluator;
 import de.hterhors.obie.ml.evaluation.evaluator.IOBIEEvaluator;
-import de.hterhors.obie.ml.evaluation.evaluator.StrictNamedEntityLinkingEvaluator;
 import de.hterhors.obie.ml.evaluation.evaluator.PurityEvaluator;
-import de.hterhors.obie.ml.run.InvestigationRestriction;
-import de.hterhors.obie.ml.run.InvestigationRestriction.RestrictedField;
+import de.hterhors.obie.ml.evaluation.evaluator.StrictNamedEntityLinkingEvaluator;
+import de.hterhors.obie.ml.utils.OBIEClassFormatter;
+import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.environments.OntologyEnvironment;
 import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ontology.classes.AnimalModel;
+import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ontology.classes.CompleteTransection;
+import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ontology.classes.Distance;
 import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ontology.classes.ExperimentalGroup;
 import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ontology.classes.Gender;
 import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ontology.classes.GroupName;
+import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ontology.classes.NYUImpactor;
 import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ontology.classes.RatModel;
 import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ontology.classes.RatSpecies;
+import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ontology.classes.Vertebrae;
+import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ontology.classes.VertebralArea;
+import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ontology.classes.Weight;
 import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ontology.interfaces.IExperimentalGroup;
 
 public class TestEvaluation {
 
-	final static private IOBIEEvaluator purityREevaluator = new PurityEvaluator(true, 1000, true,
-			InvestigationRestriction.noRestrictionInstance, 10, false);
+	final static private IOBIEEvaluator purityREevaluator = new PurityEvaluator(true, 1000, true, 10, false);
 
-	final static private IOBIEEvaluator cartesianREevaluator = new CartesianSearchEvaluator(true, 1000, true,
-			InvestigationRestriction.noRestrictionInstance, 10, false);
+	final static private IOBIEEvaluator cartesianREevaluator = new CartesianSearchEvaluator(true, 1000, true, 10,
+			false);
 
 	final static private IOBIEEvaluator NERevaluator = new StrictNamedEntityLinkingEvaluator();
 
 	public static void main(String[] args)
 			throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException {
 
-		compareEvaluators();
+		OntologyInitializer.initializeOntology(OntologyEnvironment.getInstance());
+		Set<RestrictedField> restrictFields = new HashSet<>();
+		restrictFields.add(new RestrictedField("injuryVertebralLocation", true));
+		restrictFields.add(new RestrictedField("injuryDevice", true));
+		restrictFields.add(new RestrictedField("injuryArea", true));
+		restrictFields.add(new RestrictedField("force", true));
+		restrictFields.add(new RestrictedField("weight", true));
+		restrictFields.add(new RestrictedField("volume", true));
+		restrictFields.add(new RestrictedField("pressure", true));
+		restrictFields.add(new RestrictedField("distance", true));
+		restrictFields.add(new RestrictedField("duration", true));
+
+//		InvestigationRestriction sampleRestrictions = new InvestigationRestriction(searchType, restrictFields);
+
+//				InvestigationRestriction.noRestrictionInstance;
+
+		InvestigationRestriction restrictions = new InvestigationRestriction(restrictFields, true);
+
+		CompleteTransection g1 = new CompleteTransection().setInvestigationRestriction(restrictions)
+				.setInjuryDevice(new NYUImpactor())
+				.setInjuryVertebralLocation(new VertebralArea().setInvestigationRestriction(restrictions)
+						.setLowerVertebrae(new Vertebrae("http://psink.de/scio/T7", null, null))
+						.setUpperVertebrae(new Vertebrae("http://psink.de/scio/T8", null, null)));
+
+		CompleteTransection g2 = new CompleteTransection().setInvestigationRestriction(restrictions)
+				.setInjuryVertebralLocation(new VertebralArea().setInvestigationRestriction(restrictions));
+
+		System.out.println(OBIEClassFormatter.format(g1));
+		System.out.println(OBIEClassFormatter.format(g2));
+
+		System.out.println(cartesianREevaluator.prf1(g1, g2));
 
 		System.exit(1);
 
-		RatModel gold1 = new RatModel().setGender(new Gender("Male", null))
-				.setOrganismSpecies(new RatSpecies("WistarRat", null));
-		RatModel gold2 = new RatModel().setGender(new Gender("Female", null))
-				.setOrganismSpecies(new RatSpecies("WistarRat", null));
+		compareEvaluators();
 
-		RatModel pred1 = new RatModel().setGender(new Gender("Male", null))
-				.setOrganismSpecies(new RatSpecies("WistarRat", null));
+		RatModel gold1 = new RatModel().setGender(new Gender("http://psink.de/scio/Male", null, null))
+				.setOrganismSpecies(new RatSpecies("http://psink.de/scio/WistarRat", null, null));
+		RatModel gold2 = new RatModel().setGender(new Gender("http://psink.de/scio/Female", null, null))
+				.setOrganismSpecies(new RatSpecies("http://psink.de/scio/WistarRat", null, null));
+
+		RatModel pred1 = new RatModel().setGender(new Gender("http://psink.de/scio/Male", null, null))
+				.setOrganismSpecies(new RatSpecies("http://psink.de/scio/WistarRat", null, null));
 		AnimalModel pred2 = new AnimalModel();
 
 		System.out.println(cartesianREevaluator.f1(Arrays.asList(gold1), Arrays.asList(pred1)));
@@ -111,19 +151,15 @@ public class TestEvaluation {
 		final boolean includeTimeMeasurement = false;
 
 		final IOBIEEvaluator cartesianREevaluatorClustering = new CartesianSearchEvaluator(true, 1000, true,
-				new InvestigationRestriction(IExperimentalGroup.class,
-						new HashSet<>(Arrays.asList(new RestrictedField("groupNames", true))), true),
+
 				10, false);
 
-		final IOBIEEvaluator purityREevaluatorClustering = new PurityEvaluator(true, 1000, true,
-				new InvestigationRestriction(IExperimentalGroup.class,
-						new HashSet<>(Arrays.asList(new RestrictedField("groupNames", true))), true),
-				10, false);
+		final IOBIEEvaluator purityREevaluatorClustering = new PurityEvaluator(true, 1000, true, 10, false);
 
-		final IOBIEEvaluator beamREevaluatorClustering = new BeamSearchEvaluator(5, true, 1000, true,
-				new InvestigationRestriction(IExperimentalGroup.class,
-						new HashSet<>(Arrays.asList(new RestrictedField("groupNames", true))), true),
-				f -> true, 10, false);
+		final IOBIEEvaluator beamREevaluatorClustering = new BeamSearchEvaluator(5, true, 1000, true, f -> true, 10,
+				false);
+		InvestigationRestriction gR = new InvestigationRestriction(new HashSet<>(Arrays.asList(new RestrictedField("groupNames", true))),
+				true);
 
 		List<IExperimentalGroup> golds = new ArrayList<>();
 

@@ -29,12 +29,12 @@ import java.util.stream.Collectors;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
-@ImplementationClass(get=AxonalChangesTest.class)
-
 @AssignableSubInterfaces(get={IAxonalDiebackTest.class, IAxonalDamageTest.class, IAxonalRegenerationTest.class, IAxonalSproutingTest.class, })
+
+@ImplementationClass(get=AxonalChangesTest.class)
  public interface IAxonalChangesTest
  extends INeuronalChangesTest{
 

@@ -35,12 +35,12 @@ import java.util.stream.Collectors;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
-@ImplementationClass(get=Enzyme.class)
-
 @AssignableSubInterfaces(get={ITyrosineHydroxylase.class, IArylsulfataseB.class, IPenicillinase.class, IChondroitinaseABC.class, })
+
+@ImplementationClass(get=Enzyme.class)
  public interface IEnzyme
  extends IProtein{
 

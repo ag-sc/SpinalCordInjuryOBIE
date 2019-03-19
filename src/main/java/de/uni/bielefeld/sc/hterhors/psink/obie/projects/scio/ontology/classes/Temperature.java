@@ -15,6 +15,7 @@ import org.apache.jena.rdf.model.Resource;
 import java.util.Map;
 import java.lang.InstantiationException;
 import java.lang.SecurityException;
+import de.hterhors.obie.core.ontology.InvestigationRestriction;
 import de.hterhors.obie.core.ontology.annotations.DirectSiblings;
 import java.lang.IllegalAccessException;
 import de.hterhors.obie.core.ontology.annotations.AssignableSubClasses;
@@ -53,45 +54,45 @@ import de.hterhors.obie.core.ontology.AbstractIndividual;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
-@DirectInterface(get=ITemperature.class)
+@SuperRootClasses(get={Temperature.class, })
+
+@DatatypeProperty
+@AssignableSubClasses(get={})
 
 @DirectSiblings(get={})
 
-@DatatypeProperty
-@SuperRootClasses(get={Temperature.class, })
-
-@AssignableSubClasses(get={})
+@DirectInterface(get=ITemperature.class)
  public class Temperature implements ITemperature{
 
 	final static public String ONTOLOGY_NAME = "http://psink.de/scio/Temperature";
 	private Integer characterOffset;
 	private Integer characterOnset;
+	final private String interpretedValue;
 	final static private Map<IOBIEThing, String> resourceFactory = new HashMap<>();
-	final private String semanticValue;
 	final static private long serialVersionUID = 64L;
 	@TextMention
 final private String textMention;
 
 
-	public Temperature(){
-this.semanticValue = null;
-this.textMention = null;
-}
 	public Temperature(Temperature temperature){
 this.characterOffset = temperature.getCharacterOffset();
 this.characterOnset = temperature.getCharacterOnset();
-this.semanticValue = temperature.getSemanticValue();
+this.interpretedValue = temperature.getInterpretedValue();
 this.textMention = temperature.getTextMention();
 }
-	public Temperature(String semanticValue, String textMention){
-this.semanticValue = semanticValue;
+	public Temperature(){
+this.interpretedValue = null;
+this.textMention = null;
+}
+	public Temperature(String interpretedValue, String textMention){
+this.interpretedValue = interpretedValue;
 this.textMention = textMention;
 }
-	public Temperature(String semanticValue){
-this.semanticValue = semanticValue;
+	public Temperature(String interpretedValue){
+this.interpretedValue = interpretedValue;
 this.textMention = null;
 }
 
@@ -106,25 +107,25 @@ return false;
 if (getClass() != obj.getClass())
 return false;
 Temperature other = (Temperature) obj;
-if (textMention == null) {
-if (other.textMention!= null)
+if (characterOnset == null) {
+if (other.characterOnset!= null)
 return false;
-} else if (!textMention.equals(other.textMention))
+} else if (!characterOnset.equals(other.characterOnset))
 return false;
 if (characterOffset == null) {
 if (other.characterOffset!= null)
 return false;
 } else if (!characterOffset.equals(other.characterOffset))
 return false;
-if (characterOnset == null) {
-if (other.characterOnset!= null)
+if (textMention == null) {
+if (other.textMention!= null)
 return false;
-} else if (!characterOnset.equals(other.characterOnset))
+} else if (!textMention.equals(other.textMention))
 return false;
-if (semanticValue == null) {
-if (other.semanticValue!= null)
+if (interpretedValue == null) {
+if (other.interpretedValue!= null)
 return false;
-} else if (!semanticValue.equals(other.semanticValue))
+} else if (!interpretedValue.equals(other.interpretedValue))
 return false;
 return true;
 }
@@ -136,6 +137,10 @@ return true;
 @Override
 	public Integer getCharacterOnset(){
 		return characterOnset;}
+	/***/
+@Override
+	public String getInterpretedValue(){
+		return interpretedValue;}
 	/***/
 @Override
 	public String getONTOLOGY_NAME(){
@@ -160,21 +165,21 @@ return ISCIOThing.RDF_MODEL_NAMESPACE + resourceName;}
 }
 	/***/
 @Override
-	public String getSemanticValue(){
-		return semanticValue;}
-	/***/
-@Override
 	public String getTextMention(){
 		return textMention;}
+	/***/
+@Override
+	public IOBIEThing getThis(){
+		return this;}
 	/***/
 @Override
 	public int hashCode(){
 		final int prime = 31;
 int result = 1;
-result = prime * result + ((this.textMention == null) ? 0 : this.textMention.hashCode());
-result = prime * result + ((this.characterOffset == null) ? 0 : this.characterOffset.hashCode());
 result = prime * result + ((this.characterOnset == null) ? 0 : this.characterOnset.hashCode());
-result = prime * result + ((this.semanticValue == null) ? 0 : this.semanticValue.hashCode());
+result = prime * result + ((this.characterOffset == null) ? 0 : this.characterOffset.hashCode());
+result = prime * result + ((this.textMention == null) ? 0 : this.textMention.hashCode());
+result = prime * result + ((this.interpretedValue == null) ? 0 : this.interpretedValue.hashCode());
 return result;}
 	/***/
 @Override
@@ -190,7 +195,7 @@ return false;}
 
 @Override
 public String toString(){
-return "Temperature [characterOffset="+characterOffset+",characterOnset="+characterOnset+",semanticValue="+semanticValue+",serialVersionUID="+serialVersionUID+",textMention="+textMention+"]";}
+return "Temperature [characterOffset="+characterOffset+",characterOnset="+characterOnset+",interpretedValue="+interpretedValue+",serialVersionUID="+serialVersionUID+",textMention="+textMention+"]";}
 
 
 }

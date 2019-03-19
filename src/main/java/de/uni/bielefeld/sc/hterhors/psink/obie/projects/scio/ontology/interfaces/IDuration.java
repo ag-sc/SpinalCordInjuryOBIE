@@ -35,13 +35,13 @@ import java.util.stream.Collectors;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
-@ImplementationClass(get=Duration.class)
+@AssignableSubInterfaces(get={})
 
 @DatatypeProperty
-@AssignableSubInterfaces(get={})
+@ImplementationClass(get=Duration.class)
  public interface IDuration
  extends IDatatype, IQudt_Quantity{
 

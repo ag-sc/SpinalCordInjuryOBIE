@@ -15,6 +15,7 @@ import org.apache.jena.rdf.model.Resource;
 import java.util.Map;
 import java.lang.InstantiationException;
 import java.lang.SecurityException;
+import de.hterhors.obie.core.ontology.InvestigationRestriction;
 import de.hterhors.obie.core.ontology.annotations.DirectSiblings;
 import java.lang.IllegalAccessException;
 import de.hterhors.obie.core.ontology.annotations.AssignableSubClasses;
@@ -50,16 +51,16 @@ import de.hterhors.obie.core.ontology.AbstractIndividual;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
+
+@AssignableSubClasses(get={Water.class, Melatonin.class, RNA.class, VegetableOil.class, Erythropoietin.class, P188.class, NT3Lentivirus.class, DMSO.class, MacrophageCell.class, _17BetaEstradiolE2.class, Pregabalin.class, PregnenoloneS.class, MinocyclineMC.class, Riluzole.class, Pregnenolone.class, NOGOReceptorAntagonist.class, Vehicle.class, Retrovirus.class, Matrix.class, BrainDerivedNeurotrophicFactor.class, Ibuprofen.class, Lipopolysaccharide.class, AntiCD11dAntibody.class, Magnesium.class, MethylprednisoloneMP.class, Cell.class, SC58125.class, PBS.class, Hormone.class, SchwannCell.class, Ethanol.class, Antibody.class, StemCell.class, Pioglitazone.class, UmbilicalCordBloodStemCell.class, LithiumChloride.class, CyclosporineA.class, Lentivirus.class, PolyethyleneGlycolPEG.class, Protein.class, Tetracycline.class, ICI182780.class, Virus.class, GlialCell.class, ChondroitinaseABC.class, Conduit.class, OlfactoryEnsheathingGliaCell.class, ImmuneCell.class, Phenytoine.class, Indomethacin.class, HematoxyLinEosin.class, Clodronate.class, Steroid.class, NucleicAcid.class, Estrogen.class, Saline.class, VimentinAntiSenseDNA.class, EvansBlue.class, AntiNG2Antibody.class, Tissue.class, ArylsulfataseB.class, RingersSolution.class, AsialoEPO.class, Substance.class, AntiNogoAAntibody.class, Neurotrophin3.class, NS398.class, Penicillinase.class, PEGFITC.class, Iloprost.class, AcetylsalicylicAcid.class, BW755C.class, TyrosineHydroxylase.class, AtorvastatinAT.class, P4.class, Celebocid.class, Enzyme.class, MPSS.class, DehydroEpiandrosteroneSulfate.class, Albumin.class, MagnesiumSulfate.class, Mexiletine.class, RecombinantEPORhEpo.class, BoneMarrowStemCell.class, Rolipram.class, Ketamine.class, Methanesulfonamide.class, Darbepoetin.class, MesenchymalStemCell.class, DNA.class, Dipyridamol.class, Poloxamer.class, Inosine.class, EstradiolBenzoate.class, Progesterone.class, })
 
 @SuperRootClasses(get={Compound.class, })
 
 @DirectInterface(get=ICompound.class)
 
 @DirectSiblings(get={})
-
-@AssignableSubClasses(get={Water.class, Melatonin.class, RNA.class, VegetableOil.class, Erythropoietin.class, P188.class, NT3Lentivirus.class, DMSO.class, MacrophageCell.class, _17BetaEstradiolE2.class, Pregabalin.class, PregnenoloneS.class, MinocyclineMC.class, Riluzole.class, Pregnenolone.class, NOGOReceptorAntagonist.class, Vehicle.class, Retrovirus.class, Matrix.class, BrainDerivedNeurotrophicFactor.class, Ibuprofen.class, Lipopolysaccharide.class, AntiCD11dAntibody.class, Magnesium.class, MethylprednisoloneMP.class, Cell.class, SC58125.class, PBS.class, Hormone.class, SchwannCell.class, Ethanol.class, Antibody.class, StemCell.class, Pioglitazone.class, UmbilicalCordBloodStemCell.class, LithiumChloride.class, CyclosporineA.class, Lentivirus.class, PolyethyleneGlycolPEG.class, Protein.class, Tetracycline.class, ICI182780.class, Virus.class, GlialCell.class, ChondroitinaseABC.class, Conduit.class, OlfactoryEnsheathingGliaCell.class, ImmuneCell.class, Phenytoine.class, Indomethacin.class, HematoxyLinEosin.class, Clodronate.class, Steroid.class, NucleicAcid.class, Estrogen.class, Saline.class, VimentinAntiSenseDNA.class, EvansBlue.class, AntiNG2Antibody.class, Tissue.class, ArylsulfataseB.class, RingersSolution.class, AsialoEPO.class, Substance.class, AntiNogoAAntibody.class, Neurotrophin3.class, NS398.class, Penicillinase.class, PEGFITC.class, Iloprost.class, AcetylsalicylicAcid.class, BW755C.class, TyrosineHydroxylase.class, AtorvastatinAT.class, P4.class, Celebocid.class, Enzyme.class, MPSS.class, DehydroEpiandrosteroneSulfate.class, Albumin.class, MagnesiumSulfate.class, Mexiletine.class, RecombinantEPORhEpo.class, BoneMarrowStemCell.class, Rolipram.class, Ketamine.class, Methanesulfonamide.class, Darbepoetin.class, MesenchymalStemCell.class, DNA.class, Dipyridamol.class, Poloxamer.class, Inosine.class, EstradiolBenzoate.class, Progesterone.class, })
  public class Compound implements ICompound{
 
 final public static IndividualFactory<CompoundIndividual> individualFactory = new IndividualFactory<>();
@@ -84,7 +85,15 @@ static class CompoundIndividual extends AbstractIndividual {
 	@Override
 	public AbstractIndividual getIndividual() {
 		return individual;
-	}	final static public String ONTOLOGY_NAME = "http://psink.de/scio/Compound";
+	}
+	@Override
+	public InvestigationRestriction getInvestigationRestriction() {
+		return investigationRestriction;
+	}
+	@Override
+	public Compound setInvestigationRestriction(InvestigationRestriction investigationRestriction ) {
+		this.investigationRestriction = investigationRestriction;
+ return this;	}public InvestigationRestriction investigationRestriction;	final static public String ONTOLOGY_NAME = "http://psink.de/scio/Compound";
 	private Integer characterOffset;
 	private Integer characterOnset;
 	@OntologyModelContent(ontologyName="http://psink.de/scio/hasSupplier")
@@ -97,8 +106,15 @@ final private String textMention;
 private IAnatomicalLocation tissueSourceAnatomicalLocation;
 
 
+	public Compound(String individualURI, InvestigationRestriction investigationRestriction, String textMention){
+this.individual = 
+				Compound.individualFactory.getIndividualByURI(individualURI);
+this.investigationRestriction = investigationRestriction==null?InvestigationRestriction.noRestrictionInstance:investigationRestriction;
+this.textMention = textMention;
+}
 	public Compound(Compound compound)throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,NoSuchMethodException, SecurityException{
 this.individual = compound.individual;
+this.investigationRestriction = compound.investigationRestriction;
 this.characterOffset = compound.getCharacterOffset();
 this.characterOnset = compound.getCharacterOnset();
 if(compound.getCompoundSupplier()!=null)this.compoundSupplier = (ICompoundSupplier) IOBIEThing.getCloneConstructor(compound.getCompoundSupplier().getClass())	.newInstance(compound.getCompoundSupplier());
@@ -107,12 +123,8 @@ if(compound.getTissueSourceAnatomicalLocation()!=null)this.tissueSourceAnatomica
 }
 	public Compound(){
 this.individual = null;
+this.investigationRestriction = InvestigationRestriction.noRestrictionInstance;
 this.textMention = null;
-}
-	public Compound(String individualURI, String textMention){
-this.individual = 
-				Compound.individualFactory.getIndividualByURI(individualURI);
-this.textMention = textMention;
 }
 
 
@@ -131,6 +143,11 @@ if (other.individual!= null)
 return false;
 } else if (!individual.equals(other.individual))
 return false;
+if (investigationRestriction == null) {
+if (other.investigationRestriction!= null)
+return false;
+} else if (!investigationRestriction.equals(other.investigationRestriction))
+return false;
 if (compoundSupplier == null) {
 if (other.compoundSupplier!= null)
 return false;
@@ -141,20 +158,20 @@ if (other.tissueSourceAnatomicalLocation!= null)
 return false;
 } else if (!tissueSourceAnatomicalLocation.equals(other.tissueSourceAnatomicalLocation))
 return false;
-if (textMention == null) {
-if (other.textMention!= null)
+if (characterOnset == null) {
+if (other.characterOnset!= null)
 return false;
-} else if (!textMention.equals(other.textMention))
+} else if (!characterOnset.equals(other.characterOnset))
 return false;
 if (characterOffset == null) {
 if (other.characterOffset!= null)
 return false;
 } else if (!characterOffset.equals(other.characterOffset))
 return false;
-if (characterOnset == null) {
-if (other.characterOnset!= null)
+if (textMention == null) {
+if (other.textMention!= null)
 return false;
-} else if (!characterOnset.equals(other.characterOnset))
+} else if (!textMention.equals(other.textMention))
 return false;
 return true;
 }
@@ -205,6 +222,10 @@ return ISCIOThing.RDF_MODEL_NAMESPACE + resourceName;}
 @Override
 	public String getTextMention(){
 		return textMention;}
+	/***/
+@Override
+	public IOBIEThing getThis(){
+		return this;}
 	/**
 <p><b>rdfs:label</b>
 <p>has tissue source location
@@ -218,11 +239,12 @@ return ISCIOThing.RDF_MODEL_NAMESPACE + resourceName;}
 		final int prime = 31;
 int result = 1;
 result = prime * result + ((this.individual == null) ? 0 : this.individual.hashCode());
+result = prime * result + ((this.investigationRestriction == null) ? 0 : this.investigationRestriction.hashCode());
 result = prime * result + ((this.compoundSupplier == null) ? 0 : this.compoundSupplier.hashCode());
 result = prime * result + ((this.tissueSourceAnatomicalLocation == null) ? 0 : this.tissueSourceAnatomicalLocation.hashCode());
-result = prime * result + ((this.textMention == null) ? 0 : this.textMention.hashCode());
-result = prime * result + ((this.characterOffset == null) ? 0 : this.characterOffset.hashCode());
 result = prime * result + ((this.characterOnset == null) ? 0 : this.characterOnset.hashCode());
+result = prime * result + ((this.characterOffset == null) ? 0 : this.characterOffset.hashCode());
+result = prime * result + ((this.textMention == null) ? 0 : this.textMention.hashCode());
 return result;}
 	/***/
 @Override
@@ -260,7 +282,7 @@ return this;}
 
 @Override
 public String toString(){
-return "Compound [individual="+individual+",characterOffset="+characterOffset+",characterOnset="+characterOnset+",compoundSupplier="+compoundSupplier+",serialVersionUID="+serialVersionUID+",textMention="+textMention+",tissueSourceAnatomicalLocation="+tissueSourceAnatomicalLocation+"]";}
+return "Compound [individual="+individual+",investigationRestriction="+investigationRestriction.summarize()+",characterOffset="+characterOffset+",characterOnset="+characterOnset+",compoundSupplier="+compoundSupplier+",serialVersionUID="+serialVersionUID+",textMention="+textMention+",tissueSourceAnatomicalLocation="+tissueSourceAnatomicalLocation+"]";}
 
 
 }

@@ -29,12 +29,12 @@ import java.util.stream.Collectors;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
-@ImplementationClass(get=NonFunctionalTest.class)
-
 @AssignableSubInterfaces(get={ILesionVolumeTest.class, INeuronalActivityTest.class, IOligodendrogliaChangesTest.class, IMyelinationTest.class, INeurogenesisTest.class, IHistologicalInvestgationTest.class, IAxonalSproutingTest.class, IProteinLevelAnalysis.class, IAngiogenesisTest.class, IAxonalChangesTest.class, ISchwannCellChangesTest.class, IOxidativeStressTest.class, IMolecularChangesTest.class, IAxonalRegenerationTest.class, IApoptosisTest.class, IAstrogliosisTest.class, IHemorrhageTest.class, ITissueSparingTest.class, IGeneExpressionAnalysis.class, IAxonalDiebackTest.class, ISecondaryDegenerationTest.class, IToxicityTest.class, ICystVolumeTest.class, INonNeuronalCellChangesTest.class, IInflammationTest.class, INeuroprotectionTest.class, INeuronalCellLossTest.class, IAxonalDamageTest.class, IScarringTest.class, INeuronalChangesTest.class, })
+
+@ImplementationClass(get=NonFunctionalTest.class)
  public interface INonFunctionalTest
  extends IInvestigationMethod{
 

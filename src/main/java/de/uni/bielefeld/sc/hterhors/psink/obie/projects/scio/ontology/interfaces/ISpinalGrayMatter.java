@@ -44,12 +44,12 @@ occurs only in the first 24 hours after injury..
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
-@ImplementationClass(get=SpinalGrayMatter.class)
-
 @AssignableSubInterfaces(get={})
+
+@ImplementationClass(get=SpinalGrayMatter.class)
  public interface ISpinalGrayMatter
  extends IIntraspinal{
 

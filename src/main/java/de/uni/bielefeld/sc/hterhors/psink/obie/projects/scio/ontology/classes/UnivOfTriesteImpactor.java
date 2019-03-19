@@ -15,6 +15,7 @@ import org.apache.jena.rdf.model.Resource;
 import java.util.Map;
 import java.lang.InstantiationException;
 import java.lang.SecurityException;
+import de.hterhors.obie.core.ontology.InvestigationRestriction;
 import de.hterhors.obie.core.ontology.annotations.DirectSiblings;
 import java.lang.IllegalAccessException;
 import de.hterhors.obie.core.ontology.annotations.AssignableSubClasses;
@@ -47,16 +48,16 @@ import de.hterhors.obie.core.ontology.AbstractIndividual;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
-
-@SuperRootClasses(get={InjuryDevice.class, })
-
-@DirectInterface(get=IUnivOfTriesteImpactor.class)
 
 @AssignableSubClasses(get={})
 
 @DirectSiblings(get={InfiniteHorizonImpactor.class, NYUImpactor.class, AllenWeightDropDevice.class, MASCISImpactor.class, OSUImpactor.class, UnivOfTriesteImpactor.class, })
+
+@SuperRootClasses(get={InjuryDevice.class, })
+
+@DirectInterface(get=IUnivOfTriesteImpactor.class)
  public class UnivOfTriesteImpactor implements IUnivOfTriesteImpactor{
 
 final public static IndividualFactory<UnivOfTriesteImpactorIndividual> individualFactory = new IndividualFactory<>();
@@ -81,41 +82,56 @@ static class UnivOfTriesteImpactorIndividual extends AbstractIndividual {
 	@Override
 	public AbstractIndividual getIndividual() {
 		return individual;
-	}	final static public String ONTOLOGY_NAME = "http://psink.de/scio/UnivOfTriesteImpactor";
+	}
+	@Override
+	public InvestigationRestriction getInvestigationRestriction() {
+		return investigationRestriction;
+	}
+	@Override
+	public UnivOfTriesteImpactor setInvestigationRestriction(InvestigationRestriction investigationRestriction ) {
+		this.investigationRestriction = investigationRestriction;
+ return this;	}public InvestigationRestriction investigationRestriction;	final static public String ONTOLOGY_NAME = "http://psink.de/scio/UnivOfTriesteImpactor";
 	private Integer characterOffset;
 	private Integer characterOnset;
-	@OntologyModelContent(ontologyName="http://psink.de/scio/hasDistance")
+	@DatatypeProperty
+@OntologyModelContent(ontologyName="http://psink.de/scio/hasDistance")
 private IDistance distance;
 	@OntologyModelContent(ontologyName="http://psink.de/scio/hasDuration")
+@DatatypeProperty
 private IDuration duration;
-	@OntologyModelContent(ontologyName="http://psink.de/scio/hasForce")
+	@DatatypeProperty
+@OntologyModelContent(ontologyName="http://psink.de/scio/hasForce")
 private IForce force;
 	final static private Map<IOBIEThing, String> resourceFactory = new HashMap<>();
 	final static private long serialVersionUID = 64L;
 	@TextMention
 final private String textMention;
-	@OntologyModelContent(ontologyName="http://psink.de/scio/hasWeight")
+	@DatatypeProperty
+@OntologyModelContent(ontologyName="http://psink.de/scio/hasWeight")
 private IWeight weight;
 
 
-	public UnivOfTriesteImpactor(String individualURI, String textMention){
-this.individual = 
-				UnivOfTriesteImpactor.individualFactory.getIndividualByURI(individualURI);
-this.textMention = textMention;
+	public UnivOfTriesteImpactor(UnivOfTriesteImpactor univOfTriesteImpactor)throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,NoSuchMethodException, SecurityException{
+this.individual = univOfTriesteImpactor.individual;
+this.investigationRestriction = univOfTriesteImpactor.investigationRestriction;
+this.characterOffset = univOfTriesteImpactor.getCharacterOffset();
+this.characterOnset = univOfTriesteImpactor.getCharacterOnset();
+if(univOfTriesteImpactor.getDistance()!=null)this.distance = new Distance((Distance)univOfTriesteImpactor.getDistance());
+if(univOfTriesteImpactor.getDuration()!=null)this.duration = new Duration((Duration)univOfTriesteImpactor.getDuration());
+if(univOfTriesteImpactor.getForce()!=null)this.force = new Force((Force)univOfTriesteImpactor.getForce());
+this.textMention = univOfTriesteImpactor.getTextMention();
+if(univOfTriesteImpactor.getWeight()!=null)this.weight = new Weight((Weight)univOfTriesteImpactor.getWeight());
 }
 	public UnivOfTriesteImpactor(){
 this.individual = null;
+this.investigationRestriction = InvestigationRestriction.noRestrictionInstance;
 this.textMention = null;
 }
-	public UnivOfTriesteImpactor(UnivOfTriesteImpactor univOfTriesteImpactor)throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,NoSuchMethodException, SecurityException{
-this.individual = univOfTriesteImpactor.individual;
-this.characterOffset = univOfTriesteImpactor.getCharacterOffset();
-this.characterOnset = univOfTriesteImpactor.getCharacterOnset();
-if(univOfTriesteImpactor.getDistance()!=null)this.distance = (IDistance) IOBIEThing.getCloneConstructor(univOfTriesteImpactor.getDistance().getClass())	.newInstance(univOfTriesteImpactor.getDistance());
-if(univOfTriesteImpactor.getDuration()!=null)this.duration = (IDuration) IOBIEThing.getCloneConstructor(univOfTriesteImpactor.getDuration().getClass())	.newInstance(univOfTriesteImpactor.getDuration());
-if(univOfTriesteImpactor.getForce()!=null)this.force = (IForce) IOBIEThing.getCloneConstructor(univOfTriesteImpactor.getForce().getClass())	.newInstance(univOfTriesteImpactor.getForce());
-this.textMention = univOfTriesteImpactor.getTextMention();
-if(univOfTriesteImpactor.getWeight()!=null)this.weight = (IWeight) IOBIEThing.getCloneConstructor(univOfTriesteImpactor.getWeight().getClass())	.newInstance(univOfTriesteImpactor.getWeight());
+	public UnivOfTriesteImpactor(String individualURI, InvestigationRestriction investigationRestriction, String textMention){
+this.individual = 
+				UnivOfTriesteImpactor.individualFactory.getIndividualByURI(individualURI);
+this.investigationRestriction = investigationRestriction==null?InvestigationRestriction.noRestrictionInstance:investigationRestriction;
+this.textMention = textMention;
 }
 
 
@@ -134,20 +150,20 @@ if (other.individual!= null)
 return false;
 } else if (!individual.equals(other.individual))
 return false;
-if (textMention == null) {
-if (other.textMention!= null)
+if (investigationRestriction == null) {
+if (other.investigationRestriction!= null)
 return false;
-} else if (!textMention.equals(other.textMention))
-return false;
-if (characterOffset == null) {
-if (other.characterOffset!= null)
-return false;
-} else if (!characterOffset.equals(other.characterOffset))
+} else if (!investigationRestriction.equals(other.investigationRestriction))
 return false;
 if (duration == null) {
 if (other.duration!= null)
 return false;
 } else if (!duration.equals(other.duration))
+return false;
+if (distance == null) {
+if (other.distance!= null)
+return false;
+} else if (!distance.equals(other.distance))
 return false;
 if (force == null) {
 if (other.force!= null)
@@ -159,10 +175,15 @@ if (other.characterOnset!= null)
 return false;
 } else if (!characterOnset.equals(other.characterOnset))
 return false;
-if (distance == null) {
-if (other.distance!= null)
+if (characterOffset == null) {
+if (other.characterOffset!= null)
 return false;
-} else if (!distance.equals(other.distance))
+} else if (!characterOffset.equals(other.characterOffset))
+return false;
+if (textMention == null) {
+if (other.textMention!= null)
+return false;
+} else if (!textMention.equals(other.textMention))
 return false;
 if (weight == null) {
 if (other.weight!= null)
@@ -258,6 +279,10 @@ return ISCIOThing.RDF_MODEL_NAMESPACE + resourceName;}
 @Override
 	public String getTextMention(){
 		return textMention;}
+	/***/
+@Override
+	public IOBIEThing getThis(){
+		return this;}
 	/**
 <p><b>scio:example</b>
 <p>After laminectomy, the vertebral column was stabilized with clamps and a 10 g rod was dropped from a 12.5 mm height over the exposed spinal cord and the compression maintained for 5 seconds.
@@ -283,12 +308,13 @@ return ISCIOThing.RDF_MODEL_NAMESPACE + resourceName;}
 		final int prime = 31;
 int result = 1;
 result = prime * result + ((this.individual == null) ? 0 : this.individual.hashCode());
-result = prime * result + ((this.textMention == null) ? 0 : this.textMention.hashCode());
-result = prime * result + ((this.characterOffset == null) ? 0 : this.characterOffset.hashCode());
+result = prime * result + ((this.investigationRestriction == null) ? 0 : this.investigationRestriction.hashCode());
 result = prime * result + ((this.duration == null) ? 0 : this.duration.hashCode());
+result = prime * result + ((this.distance == null) ? 0 : this.distance.hashCode());
 result = prime * result + ((this.force == null) ? 0 : this.force.hashCode());
 result = prime * result + ((this.characterOnset == null) ? 0 : this.characterOnset.hashCode());
-result = prime * result + ((this.distance == null) ? 0 : this.distance.hashCode());
+result = prime * result + ((this.characterOffset == null) ? 0 : this.characterOffset.hashCode());
+result = prime * result + ((this.textMention == null) ? 0 : this.textMention.hashCode());
 result = prime * result + ((this.weight == null) ? 0 : this.weight.hashCode());
 return result;}
 	/***/
@@ -381,7 +407,7 @@ return this;}
 
 @Override
 public String toString(){
-return "UnivOfTriesteImpactor [individual="+individual+",characterOffset="+characterOffset+",characterOnset="+characterOnset+",distance="+distance+",duration="+duration+",force="+force+",serialVersionUID="+serialVersionUID+",textMention="+textMention+",weight="+weight+"]";}
+return "UnivOfTriesteImpactor [individual="+individual+",investigationRestriction="+investigationRestriction.summarize()+",characterOffset="+characterOffset+",characterOnset="+characterOnset+",distance="+distance+",duration="+duration+",force="+force+",serialVersionUID="+serialVersionUID+",textMention="+textMention+",weight="+weight+"]";}
 
 
 }

@@ -29,12 +29,12 @@ import java.util.stream.Collectors;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
-@AssignableSubInterfaces(get={IDorsalHemisection.class, IVentralHemisection.class, ILateralHemisection.class, })
-
 @ImplementationClass(get=PartialTransection.class)
+
+@AssignableSubInterfaces(get={IDorsalHemisection.class, IVentralHemisection.class, ILateralHemisection.class, })
  public interface IPartialTransection
  extends IInjury{
 

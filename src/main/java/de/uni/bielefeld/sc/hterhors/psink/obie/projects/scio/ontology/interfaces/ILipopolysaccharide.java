@@ -32,12 +32,12 @@ import java.util.stream.Collectors;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
-@ImplementationClass(get=Lipopolysaccharide.class)
-
 @AssignableSubInterfaces(get={})
+
+@ImplementationClass(get=Lipopolysaccharide.class)
  public interface ILipopolysaccharide
  extends ISubstance{
 

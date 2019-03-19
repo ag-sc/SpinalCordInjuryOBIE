@@ -15,6 +15,7 @@ import org.apache.jena.rdf.model.Resource;
 import java.util.Map;
 import java.lang.InstantiationException;
 import java.lang.SecurityException;
+import de.hterhors.obie.core.ontology.InvestigationRestriction;
 import de.hterhors.obie.core.ontology.annotations.DirectSiblings;
 import java.lang.IllegalAccessException;
 import de.hterhors.obie.core.ontology.annotations.AssignableSubClasses;
@@ -47,16 +48,16 @@ import de.hterhors.obie.core.ontology.AbstractIndividual;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
+
+@AssignableSubClasses(get={GuineaPigSpecies.class, MinipigSpecies.class, CatSpecies.class, MouseSpecies.class, DogSpecies.class, RatSpecies.class, RabbitSpecies.class, MonkeySpecies.class, })
 
 @DirectInterface(get=IAnimalSpecies.class)
 
 @SuperRootClasses(get={OrganismSpecies.class, })
 
 @DirectSiblings(get={AnimalSpecies.class, })
-
-@AssignableSubClasses(get={GuineaPigSpecies.class, MinipigSpecies.class, CatSpecies.class, MouseSpecies.class, DogSpecies.class, RatSpecies.class, RabbitSpecies.class, MonkeySpecies.class, })
  public class AnimalSpecies implements IAnimalSpecies{
 
 final public static IndividualFactory<AnimalSpeciesIndividual> individualFactory = new IndividualFactory<>();
@@ -81,7 +82,15 @@ static class AnimalSpeciesIndividual extends AbstractIndividual {
 	@Override
 	public AbstractIndividual getIndividual() {
 		return individual;
-	}	final static public String ONTOLOGY_NAME = "http://psink.de/scio/AnimalSpecies";
+	}
+	@Override
+	public InvestigationRestriction getInvestigationRestriction() {
+		return investigationRestriction;
+	}
+	@Override
+	public AnimalSpecies setInvestigationRestriction(InvestigationRestriction investigationRestriction ) {
+		this.investigationRestriction = investigationRestriction;
+ return this;	}public InvestigationRestriction investigationRestriction;	final static public String ONTOLOGY_NAME = "http://psink.de/scio/AnimalSpecies";
 	private Integer characterOffset;
 	private Integer characterOnset;
 	final static private Map<IOBIEThing, String> resourceFactory = new HashMap<>();
@@ -90,20 +99,23 @@ static class AnimalSpeciesIndividual extends AbstractIndividual {
 final private String textMention;
 
 
-	public AnimalSpecies(){
-this.individual = null;
-this.textMention = null;
-}
-	public AnimalSpecies(String individualURI, String textMention){
-this.individual = 
-				AnimalSpecies.individualFactory.getIndividualByURI(individualURI);
-this.textMention = textMention;
-}
 	public AnimalSpecies(AnimalSpecies animalSpecies)throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,NoSuchMethodException, SecurityException{
 this.individual = animalSpecies.individual;
+this.investigationRestriction = animalSpecies.investigationRestriction;
 this.characterOffset = animalSpecies.getCharacterOffset();
 this.characterOnset = animalSpecies.getCharacterOnset();
 this.textMention = animalSpecies.getTextMention();
+}
+	public AnimalSpecies(String individualURI, InvestigationRestriction investigationRestriction, String textMention){
+this.individual = 
+				AnimalSpecies.individualFactory.getIndividualByURI(individualURI);
+this.investigationRestriction = investigationRestriction==null?InvestigationRestriction.noRestrictionInstance:investigationRestriction;
+this.textMention = textMention;
+}
+	public AnimalSpecies(){
+this.individual = null;
+this.investigationRestriction = InvestigationRestriction.noRestrictionInstance;
+this.textMention = null;
 }
 
 
@@ -122,20 +134,25 @@ if (other.individual!= null)
 return false;
 } else if (!individual.equals(other.individual))
 return false;
-if (textMention == null) {
-if (other.textMention!= null)
+if (investigationRestriction == null) {
+if (other.investigationRestriction!= null)
 return false;
-} else if (!textMention.equals(other.textMention))
+} else if (!investigationRestriction.equals(other.investigationRestriction))
+return false;
+if (characterOnset == null) {
+if (other.characterOnset!= null)
+return false;
+} else if (!characterOnset.equals(other.characterOnset))
 return false;
 if (characterOffset == null) {
 if (other.characterOffset!= null)
 return false;
 } else if (!characterOffset.equals(other.characterOffset))
 return false;
-if (characterOnset == null) {
-if (other.characterOnset!= null)
+if (textMention == null) {
+if (other.textMention!= null)
 return false;
-} else if (!characterOnset.equals(other.characterOnset))
+} else if (!textMention.equals(other.textMention))
 return false;
 return true;
 }
@@ -175,13 +192,18 @@ return ISCIOThing.RDF_MODEL_NAMESPACE + resourceName;}
 		return textMention;}
 	/***/
 @Override
+	public IOBIEThing getThis(){
+		return this;}
+	/***/
+@Override
 	public int hashCode(){
 		final int prime = 31;
 int result = 1;
 result = prime * result + ((this.individual == null) ? 0 : this.individual.hashCode());
-result = prime * result + ((this.textMention == null) ? 0 : this.textMention.hashCode());
-result = prime * result + ((this.characterOffset == null) ? 0 : this.characterOffset.hashCode());
+result = prime * result + ((this.investigationRestriction == null) ? 0 : this.investigationRestriction.hashCode());
 result = prime * result + ((this.characterOnset == null) ? 0 : this.characterOnset.hashCode());
+result = prime * result + ((this.characterOffset == null) ? 0 : this.characterOffset.hashCode());
+result = prime * result + ((this.textMention == null) ? 0 : this.textMention.hashCode());
 return result;}
 	/***/
 @Override
@@ -197,7 +219,7 @@ return false;}
 
 @Override
 public String toString(){
-return "AnimalSpecies [individual="+individual+",characterOffset="+characterOffset+",characterOnset="+characterOnset+",serialVersionUID="+serialVersionUID+",textMention="+textMention+"]";}
+return "AnimalSpecies [individual="+individual+",investigationRestriction="+investigationRestriction.summarize()+",characterOffset="+characterOffset+",characterOnset="+characterOnset+",serialVersionUID="+serialVersionUID+",textMention="+textMention+"]";}
 
 
 }

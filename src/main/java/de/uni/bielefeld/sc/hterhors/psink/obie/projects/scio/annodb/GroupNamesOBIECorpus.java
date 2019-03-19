@@ -20,14 +20,15 @@ import java.util.UUID;
 import com.opencsv.CSVReader;
 
 import de.hterhors.obie.core.evaluation.iob.IOBEvaluator.IOBEnum;
+import de.hterhors.obie.core.ontology.InvestigationRestriction;
 import de.hterhors.obie.core.ontology.interfaces.IOBIEThing;
 import de.hterhors.obie.core.tokenizer.Token;
 import de.hterhors.obie.core.tools.corpus.CorpusFileTools;
 import de.hterhors.obie.core.tools.corpus.OBIECorpus;
 import de.hterhors.obie.core.tools.corpus.OBIECorpus.Instance;
 import de.hterhors.obie.ml.variables.OBIEInstance;
-import de.hterhors.obie.ml.variables.TemplateAnnotation;
-import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.SCIOOntologyEnvironment;
+import de.hterhors.obie.ml.variables.IETmplateAnnotation;
+import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.environments.OntologyEnvironment;
 import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ontology.classes.ExperimentalGroup;
 import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ontology.classes.GroupName;
 import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ontology.interfaces.IExperimentalGroup;
@@ -73,9 +74,8 @@ public class GroupNamesOBIECorpus {
 						while ((line = reader.readNext()) != null) {
 
 							@SuppressWarnings("unchecked")
-							final Class<? extends ISCIOThing> clzz = (Class<? extends ISCIOThing>) Class
-									.forName(SCIOOntologyEnvironment.getInstance().getBasePackage() + "classes."
-											+ line[1]);
+							final Class<? extends ISCIOThing> clzz = (Class<? extends ISCIOThing>) Class.forName(
+									OntologyEnvironment.getInstance().getBasePackage() + "classes." + line[1]);
 
 							if (!(IExperimentalGroup.class.isAssignableFrom(clzz)))
 								// ||
@@ -92,8 +92,8 @@ public class GroupNamesOBIECorpus {
 							for (String id : ids.split(",")) {
 								id = id.trim();
 
-								IExperimentalGroup expG = clusteredExpGroupNames.getOrDefault(id,
-										new ExperimentalGroup(UUID.randomUUID().toString(), null));
+								IExperimentalGroup expG = clusteredExpGroupNames.getOrDefault(id, new ExperimentalGroup(
+										null, InvestigationRestriction.noRestrictionInstance, null));
 
 								clusteredExpGroupNames.putIfAbsent(id, expG);
 
@@ -134,12 +134,12 @@ public class GroupNamesOBIECorpus {
 		}
 
 		OBIECorpus corpus = new OBIECorpus(trainingInstances, developInstances, testInstances, "CoRef-GroupNames",
-				SCIOOntologyEnvironment.getInstance().getOntologyVersion());
+				OntologyEnvironment.getInstance().getOntologyVersion());
 
 		System.out.println(corpus);
 
 		final String corpusPrefix = "groupnames_";
-		final long ontologyVersion = SCIOOntologyEnvironment.getInstance().getOntologyVersion();
+		final long ontologyVersion = OntologyEnvironment.getInstance().getOntologyVersion();
 
 		final Set<Class<? extends IOBIEThing>> rootClassTypes = new HashSet<>(Arrays.asList(IOrganismModel.class));
 
@@ -160,7 +160,7 @@ public class GroupNamesOBIECorpus {
 			final List<Token> tokens = ii.getTokens();
 
 			Set<String[]> annotations = new HashSet<>();
-			for (TemplateAnnotation ia : ii.getGoldAnnotation().getTemplateAnnotations()) {
+			for (IETmplateAnnotation ia : ii.getGoldAnnotation().getAnnotations()) {
 
 				final String text = ia.getThing().getTextMention();
 				annotations.add(text.split(" "));

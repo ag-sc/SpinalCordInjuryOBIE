@@ -29,12 +29,12 @@ import java.util.stream.Collectors;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
-@ImplementationClass(get=VoltageApplication.class)
-
 @AssignableSubInterfaces(get={})
+
+@ImplementationClass(get=VoltageApplication.class)
  public interface IVoltageApplication
  extends IElectromagneticFieldTreatment{
 

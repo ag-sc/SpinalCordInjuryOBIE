@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
 @AssignableSubInterfaces(get={ISpinalLesionSite.class, ISpinalDorsalHalf.class, ISpinalWhiteMatter.class, IVertebrae.class, IBrain.class, IVertebralSegment.class, IVertebralLocation.class, IIntraspinal.class, ICorticospinalTract.class, IAscendingFiberTract.class, ISpinalCord.class, ISpinalGrayMatter.class, ICentralNervousSystem.class, IRubrospinalTract.class, ISpinalSubduralArea.class, ISpinalCentralPart.class, ISpinalVentralHalf.class, ILesionAdjacentTissue.class, IIntrathecal.class, IExtremity.class, IEpidural.class, IDorsalColumn.class, ISpinalFiberTract.class, IAnatomicalLocation.class, ISubstanceApplicationLocation.class, IVertebralArea.class, })

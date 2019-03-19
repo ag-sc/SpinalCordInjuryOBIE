@@ -20,7 +20,7 @@ import de.hterhors.obie.ml.explorer.utils.ExplorationUtils;
 import de.hterhors.obie.ml.utils.OBIEClassFormatter;
 import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.annodb.corpus.rdf.AnnoDBRDFReader;
 import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.annodb.corpus.rdf.AnnoDBTextReader;
-import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.SCIOOntologyEnvironment;
+import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.environments.OntologyEnvironment;
 import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ontology.classes.AnimalModel;
 import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ontology.classes.AnimalSpecies;
 import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ontology.classes.CatModel;
@@ -49,13 +49,13 @@ import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ontology.interfaces
  * @date Apr 16, 2018
  */
 public class AnnoDBOrganismModelCorpusConverter {
-	final static public String exportDate = "24102018";
+	final static public String exportDate = "10012019";
 
 	public static void main(String[] args) throws Exception {
 
-		OntologyInitializer.initializeOntology(SCIOOntologyEnvironment.getInstance());
+		OntologyInitializer.initializeOntology(OntologyEnvironment.getInstance());
 
-		String corpusName = "AnnoDBv" + SCIOOntologyEnvironment.getInstance().getOntologyVersion() + "FullOrgModel";
+		String corpusName = "AnnoDBv" + OntologyEnvironment.getInstance().getOntologyVersion() + "FullOrgModel";
 
 		Map<String, Instance> trainingInstances = new HashMap<>();
 		Map<String, Instance> developInstances = new HashMap<>();
@@ -63,7 +63,7 @@ public class AnnoDBOrganismModelCorpusConverter {
 
 		Map<String, Set<String>> fileNamesSortbyAnnotator = new HashMap<>();
 
-		final String dir = "annodb/rawData/annodb_" + exportDate + "/";
+		final String dir = "annodb/rawData/export_" + exportDate + "/";
 		Arrays.stream(new File(dir).list()).forEach(file -> {
 			String fileName = FilenameUtils.getBaseName(file);
 			final String annotator = fileName.split("_")[1];
@@ -75,7 +75,10 @@ public class AnnoDBOrganismModelCorpusConverter {
 		final String annotator = "Jessica";
 		for (String fileName : fileNamesSortbyAnnotator.get(annotator)) {
 
-//			if (!fileName.contains("N016"))
+//			if (fileName.contains("N224"))
+//				continue;
+//
+//			if (fileName.contains("N223"))
 //				continue;
 
 			System.out.println(fileName + "...");
@@ -85,8 +88,10 @@ public class AnnoDBOrganismModelCorpusConverter {
 
 			String documentContent = new AnnoDBTextReader(dir + fileName + "_export.csv").read().getText();
 
-			List<IOrganismModel> rawData = new ArrayList<>(
-					new AnnoDBRDFReader<IOrganismModel>(IOrganismModel.class, rdfFile, annotationFile).get());
+			AnnoDBRDFReader<IOrganismModel> reader = new AnnoDBRDFReader<>(IOrganismModel.class, rdfFile,
+					annotationFile);
+
+			List<IOrganismModel> rawData = new ArrayList<>(reader.get());
 
 			final Map<Class<? extends IOBIEThing>, List<IOBIEThing>> results = new HashMap<>();
 
@@ -188,19 +193,23 @@ public class AnnoDBOrganismModelCorpusConverter {
 				results.get(IOrganismModel.class).add(orgModel);
 
 			}
+
 			if (!results.isEmpty()) {
+
 				trainingInstances.put(fileName, new Instance(fileName, documentContent, results));
+
 			} else {
 				System.out.println("Empty for: " + fileName);
 			}
+
 		}
 		System.out.println(trainingInstances.size());
 
 		OBIECorpus corpus = new OBIECorpus(trainingInstances, developInstances, testInstances, corpusName,
-				SCIOOntologyEnvironment.getInstance().getOntologyVersion());
+				OntologyEnvironment.getInstance().getOntologyVersion());
 
-		final String corpusPrefix = "annodb_" + exportDate + "_";
-		final long ontologyVersion = SCIOOntologyEnvironment.getInstance().getOntologyVersion();
+		final String corpusPrefix = "export_" + exportDate + "_";
+		final long ontologyVersion = OntologyEnvironment.getInstance().getOntologyVersion();
 
 		final Set<Class<? extends IOBIEThing>> rootClassTypes = new HashSet<>(Arrays.asList(IOrganismModel.class));
 

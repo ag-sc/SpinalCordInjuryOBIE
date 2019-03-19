@@ -30,12 +30,12 @@ Measures walking patterns and kinematics either while crossing solid surfaces or
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
-@ImplementationClass(get=AutomatedGaitAnalysis.class)
-
 @AssignableSubInterfaces(get={})
+
+@ImplementationClass(get=AutomatedGaitAnalysis.class)
  public interface IAutomatedGaitAnalysis
  extends IGaitTest{
 

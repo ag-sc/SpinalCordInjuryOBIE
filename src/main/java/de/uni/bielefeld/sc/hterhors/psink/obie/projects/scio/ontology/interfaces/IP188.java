@@ -32,12 +32,12 @@ import java.util.stream.Collectors;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
-@ImplementationClass(get=P188.class)
-
 @AssignableSubInterfaces(get={})
+
+@ImplementationClass(get=P188.class)
  public interface IP188
  extends IPoloxamer{
 

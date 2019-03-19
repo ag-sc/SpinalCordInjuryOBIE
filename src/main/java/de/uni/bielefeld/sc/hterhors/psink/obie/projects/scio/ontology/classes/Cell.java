@@ -15,6 +15,7 @@ import org.apache.jena.rdf.model.Resource;
 import java.util.Map;
 import java.lang.InstantiationException;
 import java.lang.SecurityException;
+import de.hterhors.obie.core.ontology.InvestigationRestriction;
 import de.hterhors.obie.core.ontology.annotations.DirectSiblings;
 import java.lang.IllegalAccessException;
 import de.hterhors.obie.core.ontology.annotations.AssignableSubClasses;
@@ -47,16 +48,16 @@ import de.hterhors.obie.core.ontology.AbstractIndividual;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
-
-@SuperRootClasses(get={Compound.class, })
 
 @DirectInterface(get=ICell.class)
 
-@DirectSiblings(get={Virus.class, Tissue.class, Matrix.class, NucleicAcid.class, Conduit.class, Substance.class, Cell.class, Protein.class, })
+@SuperRootClasses(get={Compound.class, })
 
 @AssignableSubClasses(get={SchwannCell.class, GlialCell.class, MesenchymalStemCell.class, StemCell.class, UmbilicalCordBloodStemCell.class, ImmuneCell.class, OlfactoryEnsheathingGliaCell.class, MacrophageCell.class, BoneMarrowStemCell.class, })
+
+@DirectSiblings(get={Virus.class, Tissue.class, Matrix.class, NucleicAcid.class, Conduit.class, Substance.class, Cell.class, Protein.class, })
  public class Cell implements ICell{
 
 final public static IndividualFactory<CellIndividual> individualFactory = new IndividualFactory<>();
@@ -81,15 +82,23 @@ static class CellIndividual extends AbstractIndividual {
 	@Override
 	public AbstractIndividual getIndividual() {
 		return individual;
-	}	final static public String ONTOLOGY_NAME = "http://psink.de/scio/Cell";
+	}
+	@Override
+	public InvestigationRestriction getInvestigationRestriction() {
+		return investigationRestriction;
+	}
+	@Override
+	public Cell setInvestigationRestriction(InvestigationRestriction investigationRestriction ) {
+		this.investigationRestriction = investigationRestriction;
+ return this;	}public InvestigationRestriction investigationRestriction;	final static public String ONTOLOGY_NAME = "http://psink.de/scio/Cell";
 	private Integer characterOffset;
 	private Integer characterOnset;
 	@OntologyModelContent(ontologyName="http://psink.de/scio/hasCompoundBiologicalRelation")
 private ICompoundBiologicalRelation compoundBiologicalRelation;
 	@OntologyModelContent(ontologyName="http://psink.de/scio/hasSupplier")
 private ICompoundSupplier compoundSupplier;
-	@RelationTypeCollection
-@OntologyModelContent(ontologyName="http://psink.de/scio/hasExperimentalProcedure")
+	@OntologyModelContent(ontologyName="http://psink.de/scio/hasExperimentalProcedure")
+@RelationTypeCollection
 private List<IExperimentalProcedure> experimentalProcedures = new ArrayList<>();
 	@OntologyModelContent(ontologyName="http://psink.de/scio/hasOrganismSpecies")
 private IOrganismSpecies organismSpecies;
@@ -101,17 +110,9 @@ final private String textMention;
 private IAnatomicalLocation tissueSourceAnatomicalLocation;
 
 
-	public Cell(String individualURI, String textMention){
-this.individual = 
-				Cell.individualFactory.getIndividualByURI(individualURI);
-this.textMention = textMention;
-}
-	public Cell(){
-this.individual = null;
-this.textMention = null;
-}
 	public Cell(Cell cell)throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,NoSuchMethodException, SecurityException{
 this.individual = cell.individual;
+this.investigationRestriction = cell.investigationRestriction;
 this.characterOffset = cell.getCharacterOffset();
 this.characterOnset = cell.getCharacterOnset();
 if(cell.getCompoundBiologicalRelation()!=null)this.compoundBiologicalRelation = (ICompoundBiologicalRelation) IOBIEThing.getCloneConstructor(cell.getCompoundBiologicalRelation().getClass())	.newInstance(cell.getCompoundBiologicalRelation());
@@ -120,6 +121,17 @@ for (int j = 0; j < cell.getExperimentalProcedures().size(); j++) {if (cell.getE
 if(cell.getOrganismSpecies()!=null)this.organismSpecies = (IOrganismSpecies) IOBIEThing.getCloneConstructor(cell.getOrganismSpecies().getClass())	.newInstance(cell.getOrganismSpecies());
 this.textMention = cell.getTextMention();
 if(cell.getTissueSourceAnatomicalLocation()!=null)this.tissueSourceAnatomicalLocation = (IAnatomicalLocation) IOBIEThing.getCloneConstructor(cell.getTissueSourceAnatomicalLocation().getClass())	.newInstance(cell.getTissueSourceAnatomicalLocation());
+}
+	public Cell(){
+this.individual = null;
+this.investigationRestriction = InvestigationRestriction.noRestrictionInstance;
+this.textMention = null;
+}
+	public Cell(String individualURI, InvestigationRestriction investigationRestriction, String textMention){
+this.individual = 
+				Cell.individualFactory.getIndividualByURI(individualURI);
+this.investigationRestriction = investigationRestriction==null?InvestigationRestriction.noRestrictionInstance:investigationRestriction;
+this.textMention = textMention;
 }
 
 
@@ -149,6 +161,16 @@ if (other.individual!= null)
 return false;
 } else if (!individual.equals(other.individual))
 return false;
+if (investigationRestriction == null) {
+if (other.investigationRestriction!= null)
+return false;
+} else if (!investigationRestriction.equals(other.investigationRestriction))
+return false;
+if (experimentalProcedures == null) {
+if (other.experimentalProcedures!= null)
+return false;
+} else if (!experimentalProcedures.equals(other.experimentalProcedures))
+return false;
 if (compoundSupplier == null) {
 if (other.compoundSupplier!= null)
 return false;
@@ -159,35 +181,30 @@ if (other.tissueSourceAnatomicalLocation!= null)
 return false;
 } else if (!tissueSourceAnatomicalLocation.equals(other.tissueSourceAnatomicalLocation))
 return false;
-if (compoundBiologicalRelation == null) {
-if (other.compoundBiologicalRelation!= null)
+if (characterOnset == null) {
+if (other.characterOnset!= null)
 return false;
-} else if (!compoundBiologicalRelation.equals(other.compoundBiologicalRelation))
-return false;
-if (experimentalProcedures == null) {
-if (other.experimentalProcedures!= null)
-return false;
-} else if (!experimentalProcedures.equals(other.experimentalProcedures))
-return false;
-if (organismSpecies == null) {
-if (other.organismSpecies!= null)
-return false;
-} else if (!organismSpecies.equals(other.organismSpecies))
-return false;
-if (textMention == null) {
-if (other.textMention!= null)
-return false;
-} else if (!textMention.equals(other.textMention))
+} else if (!characterOnset.equals(other.characterOnset))
 return false;
 if (characterOffset == null) {
 if (other.characterOffset!= null)
 return false;
 } else if (!characterOffset.equals(other.characterOffset))
 return false;
-if (characterOnset == null) {
-if (other.characterOnset!= null)
+if (compoundBiologicalRelation == null) {
+if (other.compoundBiologicalRelation!= null)
 return false;
-} else if (!characterOnset.equals(other.characterOnset))
+} else if (!compoundBiologicalRelation.equals(other.compoundBiologicalRelation))
+return false;
+if (textMention == null) {
+if (other.textMention!= null)
+return false;
+} else if (!textMention.equals(other.textMention))
+return false;
+if (organismSpecies == null) {
+if (other.organismSpecies!= null)
+return false;
+} else if (!organismSpecies.equals(other.organismSpecies))
 return false;
 return true;
 }
@@ -265,6 +282,10 @@ return ISCIOThing.RDF_MODEL_NAMESPACE + resourceName;}
 @Override
 	public String getTextMention(){
 		return textMention;}
+	/***/
+@Override
+	public IOBIEThing getThis(){
+		return this;}
 	/**
 <p><b>rdfs:label</b>
 <p>has tissue source location
@@ -278,14 +299,15 @@ return ISCIOThing.RDF_MODEL_NAMESPACE + resourceName;}
 		final int prime = 31;
 int result = 1;
 result = prime * result + ((this.individual == null) ? 0 : this.individual.hashCode());
+result = prime * result + ((this.investigationRestriction == null) ? 0 : this.investigationRestriction.hashCode());
+result = prime * result + ((this.experimentalProcedures == null) ? 0 : this.experimentalProcedures.hashCode());
 result = prime * result + ((this.compoundSupplier == null) ? 0 : this.compoundSupplier.hashCode());
 result = prime * result + ((this.tissueSourceAnatomicalLocation == null) ? 0 : this.tissueSourceAnatomicalLocation.hashCode());
-result = prime * result + ((this.compoundBiologicalRelation == null) ? 0 : this.compoundBiologicalRelation.hashCode());
-result = prime * result + ((this.experimentalProcedures == null) ? 0 : this.experimentalProcedures.hashCode());
-result = prime * result + ((this.organismSpecies == null) ? 0 : this.organismSpecies.hashCode());
-result = prime * result + ((this.textMention == null) ? 0 : this.textMention.hashCode());
-result = prime * result + ((this.characterOffset == null) ? 0 : this.characterOffset.hashCode());
 result = prime * result + ((this.characterOnset == null) ? 0 : this.characterOnset.hashCode());
+result = prime * result + ((this.characterOffset == null) ? 0 : this.characterOffset.hashCode());
+result = prime * result + ((this.compoundBiologicalRelation == null) ? 0 : this.compoundBiologicalRelation.hashCode());
+result = prime * result + ((this.textMention == null) ? 0 : this.textMention.hashCode());
+result = prime * result + ((this.organismSpecies == null) ? 0 : this.organismSpecies.hashCode());
 return result;}
 	/***/
 @Override
@@ -353,7 +375,7 @@ return this;}
 
 @Override
 public String toString(){
-return "Cell [individual="+individual+",characterOffset="+characterOffset+",characterOnset="+characterOnset+",compoundBiologicalRelation="+compoundBiologicalRelation+",compoundSupplier="+compoundSupplier+",experimentalProcedures="+experimentalProcedures+",organismSpecies="+organismSpecies+",serialVersionUID="+serialVersionUID+",textMention="+textMention+",tissueSourceAnatomicalLocation="+tissueSourceAnatomicalLocation+"]";}
+return "Cell [individual="+individual+",investigationRestriction="+investigationRestriction.summarize()+",characterOffset="+characterOffset+",characterOnset="+characterOnset+",compoundBiologicalRelation="+compoundBiologicalRelation+",compoundSupplier="+compoundSupplier+",experimentalProcedures="+experimentalProcedures+",organismSpecies="+organismSpecies+",serialVersionUID="+serialVersionUID+",textMention="+textMention+",tissueSourceAnatomicalLocation="+tissueSourceAnatomicalLocation+"]";}
 
 
 }

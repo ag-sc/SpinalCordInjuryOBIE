@@ -38,12 +38,12 @@ import java.util.stream.Collectors;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
-@AssignableSubInterfaces(get={IDorsalColumn.class, })
-
 @ImplementationClass(get=SpinalDorsalHalf.class)
+
+@AssignableSubInterfaces(get={IDorsalColumn.class, })
  public interface ISpinalDorsalHalf
  extends IIntraspinal{
 

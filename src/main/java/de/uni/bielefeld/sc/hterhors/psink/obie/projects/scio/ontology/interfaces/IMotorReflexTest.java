@@ -39,12 +39,12 @@ The single dose of NNLA (60 mg/kg) applied on the 10th day after SCI or Baclofen
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
-@ImplementationClass(get=MotorReflexTest.class)
-
 @AssignableSubInterfaces(get={IContactPlacingResponseTest.class, ISurfaceRightingReflexTest.class, })
+
+@ImplementationClass(get=MotorReflexTest.class)
  public interface IMotorReflexTest
  extends IFunctionalTest{
 

@@ -1,4 +1,4 @@
-package de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie;
+package de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.environments;
 
 import java.io.File;
 import java.util.Arrays;
@@ -11,20 +11,20 @@ import de.hterhors.obie.core.ontology.AbstractOntologyEnvironment;
 import de.hterhors.obie.core.owlreader.IClassFilter;
 import de.hterhors.obie.core.owlreader.container.OntologyClass;
 
-public class SCIOOntologyEnvironment extends AbstractOntologyEnvironment {
+public class OntologyEnvironment extends AbstractOntologyEnvironment {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private static SCIOOntologyEnvironment instance = new SCIOOntologyEnvironment();
+	private static OntologyEnvironment instance = new OntologyEnvironment();
 
 	private final String ontologyBasePackage = "de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ontology.";
 
 	final public static int version = 64;
 
-	public static final File ONTOLOGY_FILE = new File("owl/SCIO_" + version + ".owl");
+	public static final File ONTOLOGY_FILE = new File("src/main/resources/owl/SCIO_" + version + ".owl");
 	public static final String DEFAULT_DATA_NAMESPACE = "http://scio/data/";
 	public static final String ONTOLOGY_NAME = "SCIO";
 
@@ -43,7 +43,7 @@ public class SCIOOntologyEnvironment extends AbstractOntologyEnvironment {
 		return ONTOLOGY_FILE;
 	}
 
-	public static SCIOOntologyEnvironment getInstance() {
+	public static OntologyEnvironment getInstance() {
 		return instance;
 	}
 

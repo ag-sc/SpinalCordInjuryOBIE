@@ -15,6 +15,7 @@ import org.apache.jena.rdf.model.Resource;
 import java.util.Map;
 import java.lang.InstantiationException;
 import java.lang.SecurityException;
+import de.hterhors.obie.core.ontology.InvestigationRestriction;
 import de.hterhors.obie.core.ontology.annotations.DirectSiblings;
 import java.lang.IllegalAccessException;
 import de.hterhors.obie.core.ontology.annotations.AssignableSubClasses;
@@ -44,16 +45,16 @@ import de.hterhors.obie.core.ontology.AbstractIndividual;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
+
+@DirectInterface(get=IBMSTest.class)
 
 @AssignableSubClasses(get={})
 
 @SuperRootClasses(get={InvestigationMethod.class, })
 
 @DirectSiblings(get={GaleRatingScoreTest.class, BBBTest.class, BMSTest.class, OpenFieldTest.class, BBBSubscoreTest.class, })
-
-@DirectInterface(get=IBMSTest.class)
  public class BMSTest implements IBMSTest{
 
 final public static IndividualFactory<BMSTestIndividual> individualFactory = new IndividualFactory<>();
@@ -78,18 +79,27 @@ static class BMSTestIndividual extends AbstractIndividual {
 	@Override
 	public AbstractIndividual getIndividual() {
 		return individual;
-	}	final static public String ONTOLOGY_NAME = "http://psink.de/scio/BMSTest";
+	}
+	@Override
+	public InvestigationRestriction getInvestigationRestriction() {
+		return investigationRestriction;
+	}
+	@Override
+	public BMSTest setInvestigationRestriction(InvestigationRestriction investigationRestriction ) {
+		this.investigationRestriction = investigationRestriction;
+ return this;	}public InvestigationRestriction investigationRestriction;	final static public String ONTOLOGY_NAME = "http://psink.de/scio/BMSTest";
 	private Integer characterOffset;
 	private Integer characterOnset;
 	@OntologyModelContent(ontologyName="http://psink.de/scio/hasDuration")
+@DatatypeProperty
 private IDuration duration;
 	@OntologyModelContent(ontologyName="http://psink.de/scio/makesUseOf")
 @RelationTypeCollection
 private List<IApparatus> makesUseOfApparatus = new ArrayList<>();
 	final static private Map<IOBIEThing, String> resourceFactory = new HashMap<>();
 	final static private long serialVersionUID = 64L;
-	@RelationTypeCollection
-@OntologyModelContent(ontologyName="http://psink.de/scio/testsFor")
+	@OntologyModelContent(ontologyName="http://psink.de/scio/testsFor")
+@RelationTypeCollection
 private List<IFunction> testsForFunctions = new ArrayList<>();
 	@TextMention
 final private String textMention;
@@ -97,21 +107,24 @@ final private String textMention;
 
 	public BMSTest(){
 this.individual = null;
+this.investigationRestriction = InvestigationRestriction.noRestrictionInstance;
 this.textMention = null;
-}
-	public BMSTest(String individualURI, String textMention){
-this.individual = 
-				BMSTest.individualFactory.getIndividualByURI(individualURI);
-this.textMention = textMention;
 }
 	public BMSTest(BMSTest bMSTest)throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,NoSuchMethodException, SecurityException{
 this.individual = bMSTest.individual;
+this.investigationRestriction = bMSTest.investigationRestriction;
 this.characterOffset = bMSTest.getCharacterOffset();
 this.characterOnset = bMSTest.getCharacterOnset();
-if(bMSTest.getDuration()!=null)this.duration = (IDuration) IOBIEThing.getCloneConstructor(bMSTest.getDuration().getClass())	.newInstance(bMSTest.getDuration());
+if(bMSTest.getDuration()!=null)this.duration = new Duration((Duration)bMSTest.getDuration());
 for (int j = 0; j < bMSTest.getMakesUseOfApparatus().size(); j++) {if (bMSTest.getMakesUseOfApparatus().get(j) != null) {makesUseOfApparatus.add((IApparatus) IOBIEThing.getCloneConstructor(bMSTest.getMakesUseOfApparatus().get(j).getClass()).newInstance(bMSTest.getMakesUseOfApparatus().get(j)));} else {makesUseOfApparatus.add(null);}}
 for (int j = 0; j < bMSTest.getTestsForFunctions().size(); j++) {if (bMSTest.getTestsForFunctions().get(j) != null) {testsForFunctions.add((IFunction) IOBIEThing.getCloneConstructor(bMSTest.getTestsForFunctions().get(j).getClass()).newInstance(bMSTest.getTestsForFunctions().get(j)));} else {testsForFunctions.add(null);}}
 this.textMention = bMSTest.getTextMention();
+}
+	public BMSTest(String individualURI, InvestigationRestriction investigationRestriction, String textMention){
+this.individual = 
+				BMSTest.individualFactory.getIndividualByURI(individualURI);
+this.investigationRestriction = investigationRestriction==null?InvestigationRestriction.noRestrictionInstance:investigationRestriction;
+this.textMention = textMention;
 }
 
 
@@ -149,25 +162,10 @@ if (other.individual!= null)
 return false;
 } else if (!individual.equals(other.individual))
 return false;
-if (testsForFunctions == null) {
-if (other.testsForFunctions!= null)
+if (investigationRestriction == null) {
+if (other.investigationRestriction!= null)
 return false;
-} else if (!testsForFunctions.equals(other.testsForFunctions))
-return false;
-if (makesUseOfApparatus == null) {
-if (other.makesUseOfApparatus!= null)
-return false;
-} else if (!makesUseOfApparatus.equals(other.makesUseOfApparatus))
-return false;
-if (textMention == null) {
-if (other.textMention!= null)
-return false;
-} else if (!textMention.equals(other.textMention))
-return false;
-if (characterOffset == null) {
-if (other.characterOffset!= null)
-return false;
-} else if (!characterOffset.equals(other.characterOffset))
+} else if (!investigationRestriction.equals(other.investigationRestriction))
 return false;
 if (duration == null) {
 if (other.duration!= null)
@@ -178,6 +176,26 @@ if (characterOnset == null) {
 if (other.characterOnset!= null)
 return false;
 } else if (!characterOnset.equals(other.characterOnset))
+return false;
+if (makesUseOfApparatus == null) {
+if (other.makesUseOfApparatus!= null)
+return false;
+} else if (!makesUseOfApparatus.equals(other.makesUseOfApparatus))
+return false;
+if (testsForFunctions == null) {
+if (other.testsForFunctions!= null)
+return false;
+} else if (!testsForFunctions.equals(other.testsForFunctions))
+return false;
+if (characterOffset == null) {
+if (other.characterOffset!= null)
+return false;
+} else if (!characterOffset.equals(other.characterOffset))
+return false;
+if (textMention == null) {
+if (other.textMention!= null)
+return false;
+} else if (!textMention.equals(other.textMention))
 return false;
 return true;
 }
@@ -250,16 +268,21 @@ return ISCIOThing.RDF_MODEL_NAMESPACE + resourceName;}
 		return textMention;}
 	/***/
 @Override
+	public IOBIEThing getThis(){
+		return this;}
+	/***/
+@Override
 	public int hashCode(){
 		final int prime = 31;
 int result = 1;
 result = prime * result + ((this.individual == null) ? 0 : this.individual.hashCode());
-result = prime * result + ((this.testsForFunctions == null) ? 0 : this.testsForFunctions.hashCode());
-result = prime * result + ((this.makesUseOfApparatus == null) ? 0 : this.makesUseOfApparatus.hashCode());
-result = prime * result + ((this.textMention == null) ? 0 : this.textMention.hashCode());
-result = prime * result + ((this.characterOffset == null) ? 0 : this.characterOffset.hashCode());
+result = prime * result + ((this.investigationRestriction == null) ? 0 : this.investigationRestriction.hashCode());
 result = prime * result + ((this.duration == null) ? 0 : this.duration.hashCode());
 result = prime * result + ((this.characterOnset == null) ? 0 : this.characterOnset.hashCode());
+result = prime * result + ((this.makesUseOfApparatus == null) ? 0 : this.makesUseOfApparatus.hashCode());
+result = prime * result + ((this.testsForFunctions == null) ? 0 : this.testsForFunctions.hashCode());
+result = prime * result + ((this.characterOffset == null) ? 0 : this.characterOffset.hashCode());
+result = prime * result + ((this.textMention == null) ? 0 : this.textMention.hashCode());
 return result;}
 	/***/
 @Override
@@ -311,7 +334,7 @@ return this;}
 
 @Override
 public String toString(){
-return "BMSTest [individual="+individual+",characterOffset="+characterOffset+",characterOnset="+characterOnset+",duration="+duration+",makesUseOfApparatus="+makesUseOfApparatus+",serialVersionUID="+serialVersionUID+",testsForFunctions="+testsForFunctions+",textMention="+textMention+"]";}
+return "BMSTest [individual="+individual+",investigationRestriction="+investigationRestriction.summarize()+",characterOffset="+characterOffset+",characterOnset="+characterOnset+",duration="+duration+",makesUseOfApparatus="+makesUseOfApparatus+",serialVersionUID="+serialVersionUID+",testsForFunctions="+testsForFunctions+",textMention="+textMention+"]";}
 
 
 }

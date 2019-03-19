@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
 @AssignableSubInterfaces(get={IDosage.class, IForce.class, IPressure.class, ILightIntensity.class, IDosageExtracorporal.class, IDepth.class, ICurrent.class, IVoltage.class, IElectricFieldStrength.class, IDistance.class, IAge.class, ILength.class, IVolume.class, ITemperature.class, IWeight.class, IThickness.class, IDosageIntracorporal.class, IDuration.class, })

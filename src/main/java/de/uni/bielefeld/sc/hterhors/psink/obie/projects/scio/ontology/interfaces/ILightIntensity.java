@@ -29,13 +29,13 @@ import java.util.stream.Collectors;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
+
+@AssignableSubInterfaces(get={})
 
 @DatatypeProperty
 @ImplementationClass(get=LightIntensity.class)
-
-@AssignableSubInterfaces(get={})
  public interface ILightIntensity
  extends IDatatype, IQudt_Quantity{
 

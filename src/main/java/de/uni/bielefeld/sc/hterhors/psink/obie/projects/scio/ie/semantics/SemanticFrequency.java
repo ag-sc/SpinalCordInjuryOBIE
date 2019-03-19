@@ -15,7 +15,7 @@ public class SemanticFrequency extends AbstractNumericInterpreter {
 
 	static public enum EFrequencyUnits implements ISingleUnit {
 
-		undef(0), daily(1d), weekly(1 / 7d);
+		undef(0), times(1d), daily(1d), weekly(1 / 7d);
 
 		final public double factor;
 

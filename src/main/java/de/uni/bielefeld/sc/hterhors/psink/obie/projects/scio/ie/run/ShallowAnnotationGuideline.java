@@ -1,4 +1,4 @@
-package de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio;
+package de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.run;
 
 import java.io.IOException;
 import java.io.PrintStream;
@@ -7,23 +7,26 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.apache.jena.sparql.function.library.leviathan.root;
+
 import de.hterhors.obie.core.OntologyAnalyzer;
 import de.hterhors.obie.core.ontology.AbstractIndividual;
+import de.hterhors.obie.core.ontology.InvestigationRestriction;
+import de.hterhors.obie.core.ontology.InvestigationRestriction.RestrictedField;
 import de.hterhors.obie.core.ontology.OntologyInitializer;
+import de.hterhors.obie.core.ontology.ReflectionUtils;
 import de.hterhors.obie.core.ontology.annotations.AssignableSubClasses;
 import de.hterhors.obie.core.ontology.interfaces.IOBIEThing;
 import de.hterhors.obie.core.tools.corpus.OBIECorpus;
-import de.hterhors.obie.core.tools.corpus.OBIECorpus.Instance;
 import de.hterhors.obie.ml.corpus.BigramCorpusProvider;
 import de.hterhors.obie.ml.corpus.BigramInternalCorpus;
-import de.hterhors.obie.ml.ner.INamedEntitityLinker;
 import de.hterhors.obie.ml.ner.NERLClassAnnotation;
 import de.hterhors.obie.ml.ner.NERLIndividualAnnotation;
 import de.hterhors.obie.ml.ner.NamedEntityLinkingAnnotations;
-import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.SCIOOntologyEnvironment;
-import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.SCIOParameterQuickAccess;
-import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.SCIOProjectEnvironment;
-import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.nel.regex.SCIORegExNEL;
+import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.annotation.regex.SCIORegExNEL;
+import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.environments.OntologyEnvironment;
+import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.environments.SlotFillingProjectEnvironment;
+import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.run.parameter.SCIOParameterQuickAccess;
 import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ontology.classes.Compound;
 import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ontology.classes.DeliveryMethod;
 import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ontology.classes.Dosage;
@@ -37,8 +40,12 @@ import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ontology.classes.Ju
 import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ontology.classes.Location;
 import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ontology.classes.Treatment;
 import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ontology.classes.VertebralLocation;
+import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ontology.interfaces.IInjury;
+import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ontology.interfaces.IInvestigationMethod;
 import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ontology.interfaces.IOrganismModel;
 import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ontology.interfaces.IResult;
+import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ontology.interfaces.ISCIOThing;
+import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ontology.interfaces.ITreatment;
 import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ontology.interfaces.ITrend;
 
 /**
@@ -57,17 +64,17 @@ import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ontology.interfaces
  *
  * @date Aug 8, 2018
  */
-public class ShallowAnnotation {
+public class ShallowAnnotationGuideline {
 
 	public static void main(String[] args) throws IOException {
 		{
-			OntologyInitializer.initializeOntology(SCIOOntologyEnvironment.getInstance());
+			OntologyInitializer.initializeOntology(OntologyEnvironment.getInstance());
 		}
 
 		BigramCorpusProvider proivider = BigramCorpusProvider.loadCorpusFromFile(SCIOParameterQuickAccess
-				.getREParameter().setOntologyEnvironment(SCIOOntologyEnvironment.getInstance()).build());
+				.getREParameter().setOntologyEnvironment(OntologyEnvironment.getInstance()).build());
 
-		new ShallowAnnotation(proivider.getFullCorpus());
+		new ShallowAnnotationGuideline(proivider.getFullCorpus());
 	}
 
 	private Set<Class<? extends IOBIEThing>> shallowClasses;
@@ -78,13 +85,13 @@ public class ShallowAnnotation {
 
 	private OBIECorpus rawCorpus;
 
-	public ShallowAnnotation(BigramInternalCorpus corpus) throws IOException {
+	public ShallowAnnotationGuideline(BigramInternalCorpus corpus) throws IOException {
 
 		ps = new PrintStream("nerl");
 
 		buildShallowGuildeline();
 
-		SCIOProjectEnvironment env = SCIOProjectEnvironment.getInstance();
+		SlotFillingProjectEnvironment env = SlotFillingProjectEnvironment.getInstance();
 
 		this.rawCorpus = OBIECorpus.readRawCorpusData(env.getRawCorpusFile());
 
@@ -99,8 +106,8 @@ public class ShallowAnnotation {
 
 				NamedEntityLinkingAnnotations.Builder annotationbuilder = new NamedEntityLinkingAnnotations.Builder();
 
-				annotationbuilder.addClassAnnotations(linker.annotateClasses(instanceContent));
-				annotationbuilder.addIndividualAnnotations(linker.annotateIndividuals(instanceContent));
+				annotationbuilder.addClassAnnotations(linker.annotateClasses(instance.name, instanceContent));
+				annotationbuilder.addIndividualAnnotations(linker.annotateIndividuals(instance.name, instanceContent));
 
 				NamedEntityLinkingAnnotations nerl = annotationbuilder.build();
 
@@ -204,4 +211,60 @@ public class ShallowAnnotation {
 		}
 
 	}
+
+	public static Set<Class<? extends IOBIEThing>> getClassRestrictions(Class<? extends ISCIOThing> corpusType) {
+
+		if (corpusType == IOrganismModel.class) {
+
+			return OntologyAnalyzer.getRelatedClassTypesUnderRoot(IOrganismModel.class).stream()
+					.map(c -> ReflectionUtils.getDirectInterfaces(c)).collect(Collectors.toSet());
+		}
+
+		else
+			return null;
+	}
+
+	public static InvestigationRestriction getSlotRestrictions(Class<? extends ISCIOThing> corpusType) {
+		Set<RestrictedField> restrictFields = new HashSet<>();
+
+		InvestigationRestriction restrictions = null;
+		if (IOrganismModel.class.isAssignableFrom(corpusType)) {
+			restrictFields.add(new RestrictedField("gender", true));
+			restrictFields.add(new RestrictedField("age", true));
+			restrictFields.add(new RestrictedField("ageCategory", true));
+			restrictFields.add(new RestrictedField("weight", true));
+			restrictFields.add(new RestrictedField("organismSpecies", true));
+			restrictions = new InvestigationRestriction(restrictFields, true);
+		}
+
+		if (IInjury.class.isAssignableFrom(corpusType)) {
+			restrictFields.add(new RestrictedField("injuryVertebralLocation", true));
+			restrictFields.add(new RestrictedField("injuryDevice", true));
+			restrictFields.add(new RestrictedField("injuryArea", true));
+			restrictFields.add(new RestrictedField("force", true));
+			restrictFields.add(new RestrictedField("weight", true));
+			restrictFields.add(new RestrictedField("volume", true));
+			restrictFields.add(new RestrictedField("pressure", true));
+			restrictFields.add(new RestrictedField("distance", true));
+			restrictFields.add(new RestrictedField("duration", true));
+			restrictFields.add(new RestrictedField("upperVertebrae", true));
+			restrictFields.add(new RestrictedField("lowerVertebrae", true));
+			restrictions = new InvestigationRestriction(restrictFields, true);
+		}
+
+		if (ITreatment.class.isAssignableFrom(corpusType)) {
+			restrictFields.add(new RestrictedField("duration", true));
+			restrictFields.add(new RestrictedField("deliveryMethod", true));
+			restrictFields.add(new RestrictedField("location", true));
+			restrictFields.add(new RestrictedField("dosage", true));
+			restrictFields.add(new RestrictedField("compound", true));
+			restrictions = new InvestigationRestriction(restrictFields, true);
+		}
+		if (IInvestigationMethod.class.isAssignableFrom(corpusType)) {
+
+			restrictions = InvestigationRestriction.noRestrictionInstance;
+		}
+		return restrictions;
+	}
+
 }

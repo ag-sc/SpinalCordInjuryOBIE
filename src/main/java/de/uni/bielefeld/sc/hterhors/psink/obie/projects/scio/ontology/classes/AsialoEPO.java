@@ -15,6 +15,7 @@ import org.apache.jena.rdf.model.Resource;
 import java.util.Map;
 import java.lang.InstantiationException;
 import java.lang.SecurityException;
+import de.hterhors.obie.core.ontology.InvestigationRestriction;
 import de.hterhors.obie.core.ontology.annotations.DirectSiblings;
 import java.lang.IllegalAccessException;
 import de.hterhors.obie.core.ontology.annotations.AssignableSubClasses;
@@ -41,16 +42,16 @@ import de.hterhors.obie.core.ontology.AbstractIndividual;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
 @SuperRootClasses(get={Compound.class, })
 
+@AssignableSubClasses(get={})
+
 @DirectSiblings(get={Steroid.class, Melatonin.class, P4.class, Erythropoietin.class, DehydroEpiandrosteroneSulfate.class, Estrogen.class, _17BetaEstradiolE2.class, PregnenoloneS.class, Pregnenolone.class, RecombinantEPORhEpo.class, AsialoEPO.class, EstradiolBenzoate.class, Progesterone.class, })
 
 @DirectInterface(get=IAsialoEPO.class)
-
-@AssignableSubClasses(get={})
  public class AsialoEPO implements IAsialoEPO{
 
 final public static IndividualFactory<AsialoEPOIndividual> individualFactory = new IndividualFactory<>();
@@ -75,7 +76,15 @@ static class AsialoEPOIndividual extends AbstractIndividual {
 	@Override
 	public AbstractIndividual getIndividual() {
 		return individual;
-	}	final static public String ONTOLOGY_NAME = "http://psink.de/scio/AsialoEPO";
+	}
+	@Override
+	public InvestigationRestriction getInvestigationRestriction() {
+		return investigationRestriction;
+	}
+	@Override
+	public AsialoEPO setInvestigationRestriction(InvestigationRestriction investigationRestriction ) {
+		this.investigationRestriction = investigationRestriction;
+ return this;	}public InvestigationRestriction investigationRestriction;	final static public String ONTOLOGY_NAME = "http://psink.de/scio/AsialoEPO";
 	private Integer characterOffset;
 	private Integer characterOnset;
 	@OntologyModelContent(ontologyName="http://psink.de/scio/hasSupplier")
@@ -88,8 +97,15 @@ final private String textMention;
 private IAnatomicalLocation tissueSourceAnatomicalLocation;
 
 
+	public AsialoEPO(String individualURI, InvestigationRestriction investigationRestriction, String textMention){
+this.individual = 
+				AsialoEPO.individualFactory.getIndividualByURI(individualURI);
+this.investigationRestriction = investigationRestriction==null?InvestigationRestriction.noRestrictionInstance:investigationRestriction;
+this.textMention = textMention;
+}
 	public AsialoEPO(AsialoEPO asialoEPO)throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,NoSuchMethodException, SecurityException{
 this.individual = asialoEPO.individual;
+this.investigationRestriction = asialoEPO.investigationRestriction;
 this.characterOffset = asialoEPO.getCharacterOffset();
 this.characterOnset = asialoEPO.getCharacterOnset();
 if(asialoEPO.getCompoundSupplier()!=null)this.compoundSupplier = (ICompoundSupplier) IOBIEThing.getCloneConstructor(asialoEPO.getCompoundSupplier().getClass())	.newInstance(asialoEPO.getCompoundSupplier());
@@ -98,12 +114,8 @@ if(asialoEPO.getTissueSourceAnatomicalLocation()!=null)this.tissueSourceAnatomic
 }
 	public AsialoEPO(){
 this.individual = null;
+this.investigationRestriction = InvestigationRestriction.noRestrictionInstance;
 this.textMention = null;
-}
-	public AsialoEPO(String individualURI, String textMention){
-this.individual = 
-				AsialoEPO.individualFactory.getIndividualByURI(individualURI);
-this.textMention = textMention;
 }
 
 
@@ -122,6 +134,11 @@ if (other.individual!= null)
 return false;
 } else if (!individual.equals(other.individual))
 return false;
+if (investigationRestriction == null) {
+if (other.investigationRestriction!= null)
+return false;
+} else if (!investigationRestriction.equals(other.investigationRestriction))
+return false;
 if (compoundSupplier == null) {
 if (other.compoundSupplier!= null)
 return false;
@@ -132,20 +149,20 @@ if (other.tissueSourceAnatomicalLocation!= null)
 return false;
 } else if (!tissueSourceAnatomicalLocation.equals(other.tissueSourceAnatomicalLocation))
 return false;
-if (textMention == null) {
-if (other.textMention!= null)
+if (characterOnset == null) {
+if (other.characterOnset!= null)
 return false;
-} else if (!textMention.equals(other.textMention))
+} else if (!characterOnset.equals(other.characterOnset))
 return false;
 if (characterOffset == null) {
 if (other.characterOffset!= null)
 return false;
 } else if (!characterOffset.equals(other.characterOffset))
 return false;
-if (characterOnset == null) {
-if (other.characterOnset!= null)
+if (textMention == null) {
+if (other.textMention!= null)
 return false;
-} else if (!characterOnset.equals(other.characterOnset))
+} else if (!textMention.equals(other.textMention))
 return false;
 return true;
 }
@@ -196,6 +213,10 @@ return ISCIOThing.RDF_MODEL_NAMESPACE + resourceName;}
 @Override
 	public String getTextMention(){
 		return textMention;}
+	/***/
+@Override
+	public IOBIEThing getThis(){
+		return this;}
 	/**
 <p><b>rdfs:label</b>
 <p>has tissue source location
@@ -209,11 +230,12 @@ return ISCIOThing.RDF_MODEL_NAMESPACE + resourceName;}
 		final int prime = 31;
 int result = 1;
 result = prime * result + ((this.individual == null) ? 0 : this.individual.hashCode());
+result = prime * result + ((this.investigationRestriction == null) ? 0 : this.investigationRestriction.hashCode());
 result = prime * result + ((this.compoundSupplier == null) ? 0 : this.compoundSupplier.hashCode());
 result = prime * result + ((this.tissueSourceAnatomicalLocation == null) ? 0 : this.tissueSourceAnatomicalLocation.hashCode());
-result = prime * result + ((this.textMention == null) ? 0 : this.textMention.hashCode());
-result = prime * result + ((this.characterOffset == null) ? 0 : this.characterOffset.hashCode());
 result = prime * result + ((this.characterOnset == null) ? 0 : this.characterOnset.hashCode());
+result = prime * result + ((this.characterOffset == null) ? 0 : this.characterOffset.hashCode());
+result = prime * result + ((this.textMention == null) ? 0 : this.textMention.hashCode());
 return result;}
 	/***/
 @Override
@@ -251,7 +273,7 @@ return this;}
 
 @Override
 public String toString(){
-return "AsialoEPO [individual="+individual+",characterOffset="+characterOffset+",characterOnset="+characterOnset+",compoundSupplier="+compoundSupplier+",serialVersionUID="+serialVersionUID+",textMention="+textMention+",tissueSourceAnatomicalLocation="+tissueSourceAnatomicalLocation+"]";}
+return "AsialoEPO [individual="+individual+",investigationRestriction="+investigationRestriction.summarize()+",characterOffset="+characterOffset+",characterOnset="+characterOnset+",compoundSupplier="+compoundSupplier+",serialVersionUID="+serialVersionUID+",textMention="+textMention+",tissueSourceAnatomicalLocation="+tissueSourceAnatomicalLocation+"]";}
 
 
 }

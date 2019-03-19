@@ -35,12 +35,12 @@ import java.util.stream.Collectors;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
-@ImplementationClass(get=LateralHemisection.class)
-
 @AssignableSubInterfaces(get={})
+
+@ImplementationClass(get=LateralHemisection.class)
  public interface ILateralHemisection
  extends IPartialTransection{
 

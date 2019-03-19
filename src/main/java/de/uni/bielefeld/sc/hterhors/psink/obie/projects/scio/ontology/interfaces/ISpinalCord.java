@@ -42,12 +42,12 @@ cence (see above) or Alexa 488-, respectively Alexa 594-, coupled secondary anti
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
-@AssignableSubInterfaces(get={ISpinalLesionSite.class, ISpinalDorsalHalf.class, ISpinalWhiteMatter.class, IEpidural.class, IIntraspinal.class, IDorsalColumn.class, ICorticospinalTract.class, IAscendingFiberTract.class, ISpinalFiberTract.class, ISpinalGrayMatter.class, IRubrospinalTract.class, ISpinalSubduralArea.class, ISpinalCentralPart.class, ISpinalVentralHalf.class, ILesionAdjacentTissue.class, IIntrathecal.class, })
-
 @ImplementationClass(get=SpinalCord.class)
+
+@AssignableSubInterfaces(get={ISpinalLesionSite.class, ISpinalDorsalHalf.class, ISpinalWhiteMatter.class, IEpidural.class, IIntraspinal.class, IDorsalColumn.class, ICorticospinalTract.class, IAscendingFiberTract.class, ISpinalFiberTract.class, ISpinalGrayMatter.class, IRubrospinalTract.class, ISpinalSubduralArea.class, ISpinalCentralPart.class, ISpinalVentralHalf.class, ILesionAdjacentTissue.class, IIntrathecal.class, })
  public interface ISpinalCord
  extends ICentralNervousSystem{
 

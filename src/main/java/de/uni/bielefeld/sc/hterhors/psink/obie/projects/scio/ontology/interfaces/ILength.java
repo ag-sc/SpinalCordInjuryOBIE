@@ -35,13 +35,13 @@ import java.util.stream.Collectors;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
+
+@AssignableSubInterfaces(get={})
 
 @DatatypeProperty
 @ImplementationClass(get=Length.class)
-
-@AssignableSubInterfaces(get={})
  public interface ILength
  extends IDatatype, IQudt_Quantity{
 

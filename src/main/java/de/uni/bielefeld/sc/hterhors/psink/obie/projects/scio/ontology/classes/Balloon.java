@@ -15,6 +15,7 @@ import org.apache.jena.rdf.model.Resource;
 import java.util.Map;
 import java.lang.InstantiationException;
 import java.lang.SecurityException;
+import de.hterhors.obie.core.ontology.InvestigationRestriction;
 import de.hterhors.obie.core.ontology.annotations.DirectSiblings;
 import java.lang.IllegalAccessException;
 import de.hterhors.obie.core.ontology.annotations.AssignableSubClasses;
@@ -41,16 +42,16 @@ import de.hterhors.obie.core.ontology.AbstractIndividual;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
-@SuperRootClasses(get={InjuryDevice.class, })
+@AssignableSubClasses(get={FogartyBalloonCatheter.class, })
 
 @DirectInterface(get=IBalloon.class)
 
 @DirectSiblings(get={Clip.class, DistractorDevices.class, Balloon.class, WeightDrop.class, Forceps.class, CuttingDevice.class, })
 
-@AssignableSubClasses(get={FogartyBalloonCatheter.class, })
+@SuperRootClasses(get={InjuryDevice.class, })
  public class Balloon implements IBalloon{
 
 final public static IndividualFactory<BalloonIndividual> individualFactory = new IndividualFactory<>();
@@ -75,38 +76,52 @@ static class BalloonIndividual extends AbstractIndividual {
 	@Override
 	public AbstractIndividual getIndividual() {
 		return individual;
-	}	final static public String ONTOLOGY_NAME = "http://psink.de/scio/Balloon";
+	}
+	@Override
+	public InvestigationRestriction getInvestigationRestriction() {
+		return investigationRestriction;
+	}
+	@Override
+	public Balloon setInvestigationRestriction(InvestigationRestriction investigationRestriction ) {
+		this.investigationRestriction = investigationRestriction;
+ return this;	}public InvestigationRestriction investigationRestriction;	final static public String ONTOLOGY_NAME = "http://psink.de/scio/Balloon";
 	private Integer characterOffset;
 	private Integer characterOnset;
-	@OntologyModelContent(ontologyName="http://psink.de/scio/hasForce")
+	@DatatypeProperty
+@OntologyModelContent(ontologyName="http://psink.de/scio/hasForce")
 private IForce force;
-	@OntologyModelContent(ontologyName="http://psink.de/scio/hasPressure")
+	@DatatypeProperty
+@OntologyModelContent(ontologyName="http://psink.de/scio/hasPressure")
 private IPressure pressure;
 	final static private Map<IOBIEThing, String> resourceFactory = new HashMap<>();
 	final static private long serialVersionUID = 64L;
 	@TextMention
 final private String textMention;
 	@OntologyModelContent(ontologyName="http://psink.de/scio/hasVolume")
+@DatatypeProperty
 private IVolume volume;
 
 
-	public Balloon(String individualURI, String textMention){
-this.individual = 
-				Balloon.individualFactory.getIndividualByURI(individualURI);
-this.textMention = textMention;
+	public Balloon(){
+this.individual = null;
+this.investigationRestriction = InvestigationRestriction.noRestrictionInstance;
+this.textMention = null;
 }
 	public Balloon(Balloon balloon)throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,NoSuchMethodException, SecurityException{
 this.individual = balloon.individual;
+this.investigationRestriction = balloon.investigationRestriction;
 this.characterOffset = balloon.getCharacterOffset();
 this.characterOnset = balloon.getCharacterOnset();
-if(balloon.getForce()!=null)this.force = (IForce) IOBIEThing.getCloneConstructor(balloon.getForce().getClass())	.newInstance(balloon.getForce());
-if(balloon.getPressure()!=null)this.pressure = (IPressure) IOBIEThing.getCloneConstructor(balloon.getPressure().getClass())	.newInstance(balloon.getPressure());
+if(balloon.getForce()!=null)this.force = new Force((Force)balloon.getForce());
+if(balloon.getPressure()!=null)this.pressure = new Pressure((Pressure)balloon.getPressure());
 this.textMention = balloon.getTextMention();
-if(balloon.getVolume()!=null)this.volume = (IVolume) IOBIEThing.getCloneConstructor(balloon.getVolume().getClass())	.newInstance(balloon.getVolume());
+if(balloon.getVolume()!=null)this.volume = new Volume((Volume)balloon.getVolume());
 }
-	public Balloon(){
-this.individual = null;
-this.textMention = null;
+	public Balloon(String individualURI, InvestigationRestriction investigationRestriction, String textMention){
+this.individual = 
+				Balloon.individualFactory.getIndividualByURI(individualURI);
+this.investigationRestriction = investigationRestriction==null?InvestigationRestriction.noRestrictionInstance:investigationRestriction;
+this.textMention = textMention;
 }
 
 
@@ -125,15 +140,10 @@ if (other.individual!= null)
 return false;
 } else if (!individual.equals(other.individual))
 return false;
-if (textMention == null) {
-if (other.textMention!= null)
+if (investigationRestriction == null) {
+if (other.investigationRestriction!= null)
 return false;
-} else if (!textMention.equals(other.textMention))
-return false;
-if (characterOffset == null) {
-if (other.characterOffset!= null)
-return false;
-} else if (!characterOffset.equals(other.characterOffset))
+} else if (!investigationRestriction.equals(other.investigationRestriction))
 return false;
 if (pressure == null) {
 if (other.pressure!= null)
@@ -150,10 +160,20 @@ if (other.characterOnset!= null)
 return false;
 } else if (!characterOnset.equals(other.characterOnset))
 return false;
+if (characterOffset == null) {
+if (other.characterOffset!= null)
+return false;
+} else if (!characterOffset.equals(other.characterOffset))
+return false;
 if (volume == null) {
 if (other.volume!= null)
 return false;
 } else if (!volume.equals(other.volume))
+return false;
+if (textMention == null) {
+if (other.textMention!= null)
+return false;
+} else if (!textMention.equals(other.textMention))
 return false;
 return true;
 }
@@ -214,6 +234,10 @@ return ISCIOThing.RDF_MODEL_NAMESPACE + resourceName;}
 @Override
 	public String getTextMention(){
 		return textMention;}
+	/***/
+@Override
+	public IOBIEThing getThis(){
+		return this;}
 	/**
 <p><b>rdfs:label</b>
 <p>has volume
@@ -227,12 +251,13 @@ return ISCIOThing.RDF_MODEL_NAMESPACE + resourceName;}
 		final int prime = 31;
 int result = 1;
 result = prime * result + ((this.individual == null) ? 0 : this.individual.hashCode());
-result = prime * result + ((this.textMention == null) ? 0 : this.textMention.hashCode());
-result = prime * result + ((this.characterOffset == null) ? 0 : this.characterOffset.hashCode());
+result = prime * result + ((this.investigationRestriction == null) ? 0 : this.investigationRestriction.hashCode());
 result = prime * result + ((this.pressure == null) ? 0 : this.pressure.hashCode());
 result = prime * result + ((this.force == null) ? 0 : this.force.hashCode());
 result = prime * result + ((this.characterOnset == null) ? 0 : this.characterOnset.hashCode());
+result = prime * result + ((this.characterOffset == null) ? 0 : this.characterOffset.hashCode());
 result = prime * result + ((this.volume == null) ? 0 : this.volume.hashCode());
+result = prime * result + ((this.textMention == null) ? 0 : this.textMention.hashCode());
 return result;}
 	/***/
 @Override
@@ -281,7 +306,7 @@ return this;}
 
 @Override
 public String toString(){
-return "Balloon [individual="+individual+",characterOffset="+characterOffset+",characterOnset="+characterOnset+",force="+force+",pressure="+pressure+",serialVersionUID="+serialVersionUID+",textMention="+textMention+",volume="+volume+"]";}
+return "Balloon [individual="+individual+",investigationRestriction="+investigationRestriction.summarize()+",characterOffset="+characterOffset+",characterOnset="+characterOnset+",force="+force+",pressure="+pressure+",serialVersionUID="+serialVersionUID+",textMention="+textMention+",volume="+volume+"]";}
 
 
 }

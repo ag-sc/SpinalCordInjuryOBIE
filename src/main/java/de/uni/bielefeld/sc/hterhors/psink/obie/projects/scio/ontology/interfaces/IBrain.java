@@ -42,12 +42,12 @@ layer V of primary somatosensory cortex projecting into the dorsal CST revealed 
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
-@ImplementationClass(get=Brain.class)
-
 @AssignableSubInterfaces(get={})
+
+@ImplementationClass(get=Brain.class)
  public interface IBrain
  extends ICentralNervousSystem{
 

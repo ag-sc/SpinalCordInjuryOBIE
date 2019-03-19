@@ -41,12 +41,12 @@ import java.util.stream.Collectors;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
-@AssignableSubInterfaces(get={ISpinalLesionSite.class, ISpinalDorsalHalf.class, ISpinalWhiteMatter.class, IEpidural.class, IBrain.class, IIntraspinal.class, IDorsalColumn.class, ICorticospinalTract.class, IAscendingFiberTract.class, ISpinalFiberTract.class, ISpinalCord.class, ISpinalGrayMatter.class, IRubrospinalTract.class, ISpinalSubduralArea.class, ISpinalCentralPart.class, ISpinalVentralHalf.class, ILesionAdjacentTissue.class, IIntrathecal.class, })
-
 @ImplementationClass(get=CentralNervousSystem.class)
+
+@AssignableSubInterfaces(get={ISpinalLesionSite.class, ISpinalDorsalHalf.class, ISpinalWhiteMatter.class, IEpidural.class, IBrain.class, IIntraspinal.class, IDorsalColumn.class, ICorticospinalTract.class, IAscendingFiberTract.class, ISpinalFiberTract.class, ISpinalCord.class, ISpinalGrayMatter.class, IRubrospinalTract.class, ISpinalSubduralArea.class, ISpinalCentralPart.class, ISpinalVentralHalf.class, ILesionAdjacentTissue.class, IIntrathecal.class, })
  public interface ICentralNervousSystem
  extends IAnatomicalLocation{
 

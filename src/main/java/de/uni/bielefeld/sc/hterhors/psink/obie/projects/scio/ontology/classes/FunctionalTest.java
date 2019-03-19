@@ -15,6 +15,7 @@ import org.apache.jena.rdf.model.Resource;
 import java.util.Map;
 import java.lang.InstantiationException;
 import java.lang.SecurityException;
+import de.hterhors.obie.core.ontology.InvestigationRestriction;
 import de.hterhors.obie.core.ontology.annotations.DirectSiblings;
 import java.lang.IllegalAccessException;
 import de.hterhors.obie.core.ontology.annotations.AssignableSubClasses;
@@ -47,14 +48,14 @@ import de.hterhors.obie.core.ontology.AbstractIndividual;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
 @DirectInterface(get=IFunctionalTest.class)
 
-@SuperRootClasses(get={InvestigationMethod.class, })
-
 @DirectSiblings(get={FunctionalTest.class, ObservationOfAnimalBehaviour.class, ImagingTest.class, NonFunctionalTest.class, })
+
+@SuperRootClasses(get={InvestigationMethod.class, })
 
 @AssignableSubClasses(get={CardioVascularFunctionTest.class, ManualDexterityTest.class, LouisvilleSwimScale.class, HReflexTest.class, AutonomicDysreflexiaTest.class, FootprintAnalysisTest.class, BBBSubscoreTest.class, ForelimbAsymmetryTest.class, ThermalHyperalgesiaTest.class, NeurologicScalesTest.class, NarrowBeamTest.class, SpinalCordEvokedPotentialsTest.class, LocomotorTest.class, AvoidanceResponseTest.class, ForelimbStrengthTest.class, MechanicalAllodyniaTest.class, OpenFieldTest.class, InclinedPlaneTest.class, SwimmingTest.class, GaitTest.class, ContactPlacingResponseTest.class, MotorEvokedPotentialsTest.class, RearingTest.class, InfectionExamination.class, GaleRatingScoreTest.class, SinglePelletReachingTest.class, AdhesiveRemovalTest.class, SensoryTest.class, LimbMuscleStrengthTest.class, TailFlickReflexTest.class, BloodBrainBarrierTest.class, PhysiologyTest.class, HindpawSensationTest.class, UrineVoidingTest.class, PainTest.class, ElectrophysiologyTest.class, LadderRungTest.class, BloodCirculationExamination.class, BodyWeightExamination.class, BMSTest.class, MotorTest.class, GastricUlcerogenesisTest.class, SomatosensoryEvokedPotentialsTest.class, WalkingAnalysisTest.class, BBBTest.class, MotorReflexTest.class, StaircaseTest.class, SurfaceRightingReflexTest.class, AutomatedGaitAnalysis.class, })
  public class FunctionalTest implements IFunctionalTest{
@@ -81,39 +82,51 @@ static class FunctionalTestIndividual extends AbstractIndividual {
 	@Override
 	public AbstractIndividual getIndividual() {
 		return individual;
-	}	final static public String ONTOLOGY_NAME = "http://psink.de/scio/FunctionalTest";
+	}
+	@Override
+	public InvestigationRestriction getInvestigationRestriction() {
+		return investigationRestriction;
+	}
+	@Override
+	public FunctionalTest setInvestigationRestriction(InvestigationRestriction investigationRestriction ) {
+		this.investigationRestriction = investigationRestriction;
+ return this;	}public InvestigationRestriction investigationRestriction;	final static public String ONTOLOGY_NAME = "http://psink.de/scio/FunctionalTest";
 	private Integer characterOffset;
 	private Integer characterOnset;
 	@OntologyModelContent(ontologyName="http://psink.de/scio/hasDuration")
+@DatatypeProperty
 private IDuration duration;
 	@OntologyModelContent(ontologyName="http://psink.de/scio/makesUseOf")
 @RelationTypeCollection
 private List<IApparatus> makesUseOfApparatus = new ArrayList<>();
 	final static private Map<IOBIEThing, String> resourceFactory = new HashMap<>();
 	final static private long serialVersionUID = 64L;
-	@RelationTypeCollection
-@OntologyModelContent(ontologyName="http://psink.de/scio/testsFor")
+	@OntologyModelContent(ontologyName="http://psink.de/scio/testsFor")
+@RelationTypeCollection
 private List<IFunction> testsForFunctions = new ArrayList<>();
 	@TextMention
 final private String textMention;
 
 
-	public FunctionalTest(String individualURI, String textMention){
-this.individual = 
-				FunctionalTest.individualFactory.getIndividualByURI(individualURI);
-this.textMention = textMention;
-}
 	public FunctionalTest(FunctionalTest functionalTest)throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,NoSuchMethodException, SecurityException{
 this.individual = functionalTest.individual;
+this.investigationRestriction = functionalTest.investigationRestriction;
 this.characterOffset = functionalTest.getCharacterOffset();
 this.characterOnset = functionalTest.getCharacterOnset();
-if(functionalTest.getDuration()!=null)this.duration = (IDuration) IOBIEThing.getCloneConstructor(functionalTest.getDuration().getClass())	.newInstance(functionalTest.getDuration());
+if(functionalTest.getDuration()!=null)this.duration = new Duration((Duration)functionalTest.getDuration());
 for (int j = 0; j < functionalTest.getMakesUseOfApparatus().size(); j++) {if (functionalTest.getMakesUseOfApparatus().get(j) != null) {makesUseOfApparatus.add((IApparatus) IOBIEThing.getCloneConstructor(functionalTest.getMakesUseOfApparatus().get(j).getClass()).newInstance(functionalTest.getMakesUseOfApparatus().get(j)));} else {makesUseOfApparatus.add(null);}}
 for (int j = 0; j < functionalTest.getTestsForFunctions().size(); j++) {if (functionalTest.getTestsForFunctions().get(j) != null) {testsForFunctions.add((IFunction) IOBIEThing.getCloneConstructor(functionalTest.getTestsForFunctions().get(j).getClass()).newInstance(functionalTest.getTestsForFunctions().get(j)));} else {testsForFunctions.add(null);}}
 this.textMention = functionalTest.getTextMention();
 }
+	public FunctionalTest(String individualURI, InvestigationRestriction investigationRestriction, String textMention){
+this.individual = 
+				FunctionalTest.individualFactory.getIndividualByURI(individualURI);
+this.investigationRestriction = investigationRestriction==null?InvestigationRestriction.noRestrictionInstance:investigationRestriction;
+this.textMention = textMention;
+}
 	public FunctionalTest(){
 this.individual = null;
+this.investigationRestriction = InvestigationRestriction.noRestrictionInstance;
 this.textMention = null;
 }
 
@@ -152,25 +165,10 @@ if (other.individual!= null)
 return false;
 } else if (!individual.equals(other.individual))
 return false;
-if (testsForFunctions == null) {
-if (other.testsForFunctions!= null)
+if (investigationRestriction == null) {
+if (other.investigationRestriction!= null)
 return false;
-} else if (!testsForFunctions.equals(other.testsForFunctions))
-return false;
-if (makesUseOfApparatus == null) {
-if (other.makesUseOfApparatus!= null)
-return false;
-} else if (!makesUseOfApparatus.equals(other.makesUseOfApparatus))
-return false;
-if (textMention == null) {
-if (other.textMention!= null)
-return false;
-} else if (!textMention.equals(other.textMention))
-return false;
-if (characterOffset == null) {
-if (other.characterOffset!= null)
-return false;
-} else if (!characterOffset.equals(other.characterOffset))
+} else if (!investigationRestriction.equals(other.investigationRestriction))
 return false;
 if (duration == null) {
 if (other.duration!= null)
@@ -181,6 +179,26 @@ if (characterOnset == null) {
 if (other.characterOnset!= null)
 return false;
 } else if (!characterOnset.equals(other.characterOnset))
+return false;
+if (makesUseOfApparatus == null) {
+if (other.makesUseOfApparatus!= null)
+return false;
+} else if (!makesUseOfApparatus.equals(other.makesUseOfApparatus))
+return false;
+if (testsForFunctions == null) {
+if (other.testsForFunctions!= null)
+return false;
+} else if (!testsForFunctions.equals(other.testsForFunctions))
+return false;
+if (characterOffset == null) {
+if (other.characterOffset!= null)
+return false;
+} else if (!characterOffset.equals(other.characterOffset))
+return false;
+if (textMention == null) {
+if (other.textMention!= null)
+return false;
+} else if (!textMention.equals(other.textMention))
 return false;
 return true;
 }
@@ -253,16 +271,21 @@ return ISCIOThing.RDF_MODEL_NAMESPACE + resourceName;}
 		return textMention;}
 	/***/
 @Override
+	public IOBIEThing getThis(){
+		return this;}
+	/***/
+@Override
 	public int hashCode(){
 		final int prime = 31;
 int result = 1;
 result = prime * result + ((this.individual == null) ? 0 : this.individual.hashCode());
-result = prime * result + ((this.testsForFunctions == null) ? 0 : this.testsForFunctions.hashCode());
-result = prime * result + ((this.makesUseOfApparatus == null) ? 0 : this.makesUseOfApparatus.hashCode());
-result = prime * result + ((this.textMention == null) ? 0 : this.textMention.hashCode());
-result = prime * result + ((this.characterOffset == null) ? 0 : this.characterOffset.hashCode());
+result = prime * result + ((this.investigationRestriction == null) ? 0 : this.investigationRestriction.hashCode());
 result = prime * result + ((this.duration == null) ? 0 : this.duration.hashCode());
 result = prime * result + ((this.characterOnset == null) ? 0 : this.characterOnset.hashCode());
+result = prime * result + ((this.makesUseOfApparatus == null) ? 0 : this.makesUseOfApparatus.hashCode());
+result = prime * result + ((this.testsForFunctions == null) ? 0 : this.testsForFunctions.hashCode());
+result = prime * result + ((this.characterOffset == null) ? 0 : this.characterOffset.hashCode());
+result = prime * result + ((this.textMention == null) ? 0 : this.textMention.hashCode());
 return result;}
 	/***/
 @Override
@@ -314,7 +337,7 @@ return this;}
 
 @Override
 public String toString(){
-return "FunctionalTest [individual="+individual+",characterOffset="+characterOffset+",characterOnset="+characterOnset+",duration="+duration+",makesUseOfApparatus="+makesUseOfApparatus+",serialVersionUID="+serialVersionUID+",testsForFunctions="+testsForFunctions+",textMention="+textMention+"]";}
+return "FunctionalTest [individual="+individual+",investigationRestriction="+investigationRestriction.summarize()+",characterOffset="+characterOffset+",characterOnset="+characterOnset+",duration="+duration+",makesUseOfApparatus="+makesUseOfApparatus+",serialVersionUID="+serialVersionUID+",testsForFunctions="+testsForFunctions+",textMention="+textMention+"]";}
 
 
 }

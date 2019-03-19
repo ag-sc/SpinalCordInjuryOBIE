@@ -15,6 +15,7 @@ import org.apache.jena.rdf.model.Resource;
 import java.util.Map;
 import java.lang.InstantiationException;
 import java.lang.SecurityException;
+import de.hterhors.obie.core.ontology.InvestigationRestriction;
 import de.hterhors.obie.core.ontology.annotations.DirectSiblings;
 import java.lang.IllegalAccessException;
 import de.hterhors.obie.core.ontology.annotations.AssignableSubClasses;
@@ -47,16 +48,16 @@ import de.hterhors.obie.core.ontology.AbstractIndividual;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
-
-@AssignableSubClasses(get={})
-
-@DirectInterface(get=IOvariectomyTreatment.class)
 
 @SuperRootClasses(get={Treatment.class, })
 
+@DirectInterface(get=IOvariectomyTreatment.class)
+
 @DirectSiblings(get={OvariectomyTreatment.class, GeneticModificationTreatment.class, })
+
+@AssignableSubClasses(get={})
  public class OvariectomyTreatment implements IOvariectomyTreatment{
 
 final public static IndividualFactory<OvariectomyTreatmentIndividual> individualFactory = new IndividualFactory<>();
@@ -81,17 +82,26 @@ static class OvariectomyTreatmentIndividual extends AbstractIndividual {
 	@Override
 	public AbstractIndividual getIndividual() {
 		return individual;
-	}	final static public String ONTOLOGY_NAME = "http://psink.de/scio/OvariectomyTreatment";
+	}
+	@Override
+	public InvestigationRestriction getInvestigationRestriction() {
+		return investigationRestriction;
+	}
+	@Override
+	public OvariectomyTreatment setInvestigationRestriction(InvestigationRestriction investigationRestriction ) {
+		this.investigationRestriction = investigationRestriction;
+ return this;	}public InvestigationRestriction investigationRestriction;	final static public String ONTOLOGY_NAME = "http://psink.de/scio/OvariectomyTreatment";
 	@OntologyModelContent(ontologyName="http://psink.de/scio/hasApplicationInstrument")
 private IApplicationInstrument applicationInstrument;
 	private Integer characterOffset;
 	private Integer characterOnset;
 	@OntologyModelContent(ontologyName="http://psink.de/scio/hasDeliveryMethod")
 private IDeliveryMethod deliveryMethod;
-	@RelationTypeCollection
-@OntologyModelContent(ontologyName="http://psink.de/scio/hasDirection")
+	@OntologyModelContent(ontologyName="http://psink.de/scio/hasDirection")
+@RelationTypeCollection
 private List<IDirection> directions = new ArrayList<>();
 	@OntologyModelContent(ontologyName="http://psink.de/scio/hasDuration")
+@DatatypeProperty
 private IDuration duration;
 	@DatatypeProperty
 @OntologyModelContent(ontologyName="http://psink.de/scio/hasFrequency")
@@ -103,8 +113,8 @@ private IInterval interval;
 private ILocation location;
 	final static private Map<IOBIEThing, String> resourceFactory = new HashMap<>();
 	final static private long serialVersionUID = 64L;
-	@RelationTypeCollection
-@OntologyModelContent(ontologyName="http://psink.de/scio/hasTemporalInterval")
+	@OntologyModelContent(ontologyName="http://psink.de/scio/hasTemporalInterval")
+@RelationTypeCollection
 private List<ITemporalInterval> temporalIntervals = new ArrayList<>();
 	@TextMention
 final private String textMention;
@@ -112,26 +122,29 @@ final private String textMention;
 
 	public OvariectomyTreatment(){
 this.individual = null;
+this.investigationRestriction = InvestigationRestriction.noRestrictionInstance;
 this.textMention = null;
+}
+	public OvariectomyTreatment(String individualURI, InvestigationRestriction investigationRestriction, String textMention){
+this.individual = 
+				OvariectomyTreatment.individualFactory.getIndividualByURI(individualURI);
+this.investigationRestriction = investigationRestriction==null?InvestigationRestriction.noRestrictionInstance:investigationRestriction;
+this.textMention = textMention;
 }
 	public OvariectomyTreatment(OvariectomyTreatment ovariectomyTreatment)throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,NoSuchMethodException, SecurityException{
 this.individual = ovariectomyTreatment.individual;
+this.investigationRestriction = ovariectomyTreatment.investigationRestriction;
 if(ovariectomyTreatment.getApplicationInstrument()!=null)this.applicationInstrument = (IApplicationInstrument) IOBIEThing.getCloneConstructor(ovariectomyTreatment.getApplicationInstrument().getClass())	.newInstance(ovariectomyTreatment.getApplicationInstrument());
 this.characterOffset = ovariectomyTreatment.getCharacterOffset();
 this.characterOnset = ovariectomyTreatment.getCharacterOnset();
 if(ovariectomyTreatment.getDeliveryMethod()!=null)this.deliveryMethod = (IDeliveryMethod) IOBIEThing.getCloneConstructor(ovariectomyTreatment.getDeliveryMethod().getClass())	.newInstance(ovariectomyTreatment.getDeliveryMethod());
 for (int j = 0; j < ovariectomyTreatment.getDirections().size(); j++) {if (ovariectomyTreatment.getDirections().get(j) != null) {directions.add((IDirection) IOBIEThing.getCloneConstructor(ovariectomyTreatment.getDirections().get(j).getClass()).newInstance(ovariectomyTreatment.getDirections().get(j)));} else {directions.add(null);}}
-if(ovariectomyTreatment.getDuration()!=null)this.duration = (IDuration) IOBIEThing.getCloneConstructor(ovariectomyTreatment.getDuration().getClass())	.newInstance(ovariectomyTreatment.getDuration());
+if(ovariectomyTreatment.getDuration()!=null)this.duration = new Duration((Duration)ovariectomyTreatment.getDuration());
 if(ovariectomyTreatment.getFrequency()!=null)this.frequency = new Frequency((Frequency)ovariectomyTreatment.getFrequency());
 if(ovariectomyTreatment.getInterval()!=null)this.interval = new Interval((Interval)ovariectomyTreatment.getInterval());
 if(ovariectomyTreatment.getLocation()!=null)this.location = (ILocation) IOBIEThing.getCloneConstructor(ovariectomyTreatment.getLocation().getClass())	.newInstance(ovariectomyTreatment.getLocation());
 for (int j = 0; j < ovariectomyTreatment.getTemporalIntervals().size(); j++) {if (ovariectomyTreatment.getTemporalIntervals().get(j) != null) {temporalIntervals.add((ITemporalInterval) IOBIEThing.getCloneConstructor(ovariectomyTreatment.getTemporalIntervals().get(j).getClass()).newInstance(ovariectomyTreatment.getTemporalIntervals().get(j)));} else {temporalIntervals.add(null);}}
 this.textMention = ovariectomyTreatment.getTextMention();
-}
-	public OvariectomyTreatment(String individualURI, String textMention){
-this.individual = 
-				OvariectomyTreatment.individualFactory.getIndividualByURI(individualURI);
-this.textMention = textMention;
 }
 
 
@@ -166,35 +179,45 @@ if (other.individual!= null)
 return false;
 } else if (!individual.equals(other.individual))
 return false;
+if (investigationRestriction == null) {
+if (other.investigationRestriction!= null)
+return false;
+} else if (!investigationRestriction.equals(other.investigationRestriction))
+return false;
+if (duration == null) {
+if (other.duration!= null)
+return false;
+} else if (!duration.equals(other.duration))
+return false;
 if (temporalIntervals == null) {
 if (other.temporalIntervals!= null)
 return false;
 } else if (!temporalIntervals.equals(other.temporalIntervals))
 return false;
-if (frequency == null) {
-if (other.frequency!= null)
+if (characterOffset == null) {
+if (other.characterOffset!= null)
 return false;
-} else if (!frequency.equals(other.frequency))
+} else if (!characterOffset.equals(other.characterOffset))
 return false;
-if (applicationInstrument == null) {
-if (other.applicationInstrument!= null)
+if (location == null) {
+if (other.location!= null)
 return false;
-} else if (!applicationInstrument.equals(other.applicationInstrument))
-return false;
-if (characterOnset == null) {
-if (other.characterOnset!= null)
-return false;
-} else if (!characterOnset.equals(other.characterOnset))
+} else if (!location.equals(other.location))
 return false;
 if (deliveryMethod == null) {
 if (other.deliveryMethod!= null)
 return false;
 } else if (!deliveryMethod.equals(other.deliveryMethod))
 return false;
-if (location == null) {
-if (other.location!= null)
+if (characterOnset == null) {
+if (other.characterOnset!= null)
 return false;
-} else if (!location.equals(other.location))
+} else if (!characterOnset.equals(other.characterOnset))
+return false;
+if (applicationInstrument == null) {
+if (other.applicationInstrument!= null)
+return false;
+} else if (!applicationInstrument.equals(other.applicationInstrument))
 return false;
 if (directions == null) {
 if (other.directions!= null)
@@ -211,15 +234,10 @@ if (other.textMention!= null)
 return false;
 } else if (!textMention.equals(other.textMention))
 return false;
-if (characterOffset == null) {
-if (other.characterOffset!= null)
+if (frequency == null) {
+if (other.frequency!= null)
 return false;
-} else if (!characterOffset.equals(other.characterOffset))
-return false;
-if (duration == null) {
-if (other.duration!= null)
-return false;
-} else if (!duration.equals(other.duration))
+} else if (!frequency.equals(other.frequency))
 return false;
 return true;
 }
@@ -353,21 +371,26 @@ return ISCIOThing.RDF_MODEL_NAMESPACE + resourceName;}
 		return textMention;}
 	/***/
 @Override
+	public IOBIEThing getThis(){
+		return this;}
+	/***/
+@Override
 	public int hashCode(){
 		final int prime = 31;
 int result = 1;
 result = prime * result + ((this.individual == null) ? 0 : this.individual.hashCode());
+result = prime * result + ((this.investigationRestriction == null) ? 0 : this.investigationRestriction.hashCode());
+result = prime * result + ((this.duration == null) ? 0 : this.duration.hashCode());
 result = prime * result + ((this.temporalIntervals == null) ? 0 : this.temporalIntervals.hashCode());
-result = prime * result + ((this.frequency == null) ? 0 : this.frequency.hashCode());
-result = prime * result + ((this.applicationInstrument == null) ? 0 : this.applicationInstrument.hashCode());
-result = prime * result + ((this.characterOnset == null) ? 0 : this.characterOnset.hashCode());
-result = prime * result + ((this.deliveryMethod == null) ? 0 : this.deliveryMethod.hashCode());
+result = prime * result + ((this.characterOffset == null) ? 0 : this.characterOffset.hashCode());
 result = prime * result + ((this.location == null) ? 0 : this.location.hashCode());
+result = prime * result + ((this.deliveryMethod == null) ? 0 : this.deliveryMethod.hashCode());
+result = prime * result + ((this.characterOnset == null) ? 0 : this.characterOnset.hashCode());
+result = prime * result + ((this.applicationInstrument == null) ? 0 : this.applicationInstrument.hashCode());
 result = prime * result + ((this.directions == null) ? 0 : this.directions.hashCode());
 result = prime * result + ((this.interval == null) ? 0 : this.interval.hashCode());
 result = prime * result + ((this.textMention == null) ? 0 : this.textMention.hashCode());
-result = prime * result + ((this.characterOffset == null) ? 0 : this.characterOffset.hashCode());
-result = prime * result + ((this.duration == null) ? 0 : this.duration.hashCode());
+result = prime * result + ((this.frequency == null) ? 0 : this.frequency.hashCode());
 return result;}
 	/***/
 @Override
@@ -485,7 +508,7 @@ return this;}
 
 @Override
 public String toString(){
-return "OvariectomyTreatment [individual="+individual+",applicationInstrument="+applicationInstrument+",characterOffset="+characterOffset+",characterOnset="+characterOnset+",deliveryMethod="+deliveryMethod+",directions="+directions+",duration="+duration+",frequency="+frequency+",interval="+interval+",location="+location+",serialVersionUID="+serialVersionUID+",temporalIntervals="+temporalIntervals+",textMention="+textMention+"]";}
+return "OvariectomyTreatment [individual="+individual+",investigationRestriction="+investigationRestriction.summarize()+",applicationInstrument="+applicationInstrument+",characterOffset="+characterOffset+",characterOnset="+characterOnset+",deliveryMethod="+deliveryMethod+",directions="+directions+",duration="+duration+",frequency="+frequency+",interval="+interval+",location="+location+",serialVersionUID="+serialVersionUID+",temporalIntervals="+temporalIntervals+",textMention="+textMention+"]";}
 
 
 }

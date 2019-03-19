@@ -29,12 +29,12 @@ import java.util.stream.Collectors;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
-@AssignableSubInterfaces(get={IInVitroExperimentalProcedure.class, })
-
 @ImplementationClass(get=ExperimentalProcedure.class)
+
+@AssignableSubInterfaces(get={IInVitroExperimentalProcedure.class, })
  public interface IExperimentalProcedure
  extends IStudyDesign{
 

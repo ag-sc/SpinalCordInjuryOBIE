@@ -315,8 +315,9 @@ public class SCIOSemanticInterpreter implements IDatatypeInterpreter<ISCIOThing>
 		} else if (Current.class == classType) {
 			semantics = new SemanticPressure.Builder().interprete(textMention).build();
 		} else {
-			throw new IllegalArgumentException(
-					"Unknown data type for(" + textMention + "): " + classType.getSimpleName());
+			semantics = null;
+//			throw new IllegalArgumentException(
+//					"Unknown data type for(" + textMention + "): " + classType.getSimpleName());
 		}
 		return semantics;
 	}

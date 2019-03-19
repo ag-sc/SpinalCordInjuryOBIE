@@ -32,12 +32,12 @@ import java.util.stream.Collectors;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
-@ImplementationClass(get=AtorvastatinAT.class)
-
 @AssignableSubInterfaces(get={})
+
+@ImplementationClass(get=AtorvastatinAT.class)
  public interface IAtorvastatinAT
  extends I_17BetaEstradiolE2{
 

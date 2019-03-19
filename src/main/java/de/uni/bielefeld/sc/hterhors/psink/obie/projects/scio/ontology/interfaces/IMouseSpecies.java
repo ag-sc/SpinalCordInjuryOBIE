@@ -32,12 +32,12 @@ import java.util.stream.Collectors;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
-@ImplementationClass(get=MouseSpecies.class)
-
 @AssignableSubInterfaces(get={})
+
+@ImplementationClass(get=MouseSpecies.class)
  public interface IMouseSpecies
  extends IAnimalSpecies{
 

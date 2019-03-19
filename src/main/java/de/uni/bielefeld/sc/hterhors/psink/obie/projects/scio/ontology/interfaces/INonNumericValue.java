@@ -23,14 +23,14 @@ import java.util.stream.Collectors;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
-@DatatypeProperty
 @ImplementationClass(get=NonNumericValue.class)
 
 @AssignableSubInterfaces(get={})
- public interface INonNumericValue
+
+@DatatypeProperty public interface INonNumericValue
  extends IDatatype, ISCIOThing{
 
 }

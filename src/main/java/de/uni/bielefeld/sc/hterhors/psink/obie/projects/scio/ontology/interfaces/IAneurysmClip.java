@@ -35,12 +35,12 @@ import java.util.stream.Collectors;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
-@ImplementationClass(get=AneurysmClip.class)
-
 @AssignableSubInterfaces(get={})
+
+@ImplementationClass(get=AneurysmClip.class)
  public interface IAneurysmClip
  extends IClip{
 

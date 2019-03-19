@@ -18,11 +18,9 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.omg.PortableServer.IMPLICIT_ACTIVATION_POLICY_ID;
-
 import com.opencsv.CSVReader;
 
-import de.hterhors.obie.core.ontology.AbstractIndividual;
+import de.hterhors.obie.core.ontology.InvestigationRestriction;
 import de.hterhors.obie.core.ontology.annotations.AssignableSubClasses;
 import de.hterhors.obie.core.ontology.annotations.ImplementationClass;
 import de.hterhors.obie.core.ontology.annotations.OntologyModelContent;
@@ -31,10 +29,10 @@ import de.hterhors.obie.core.ontology.interfaces.IOBIEThing;
 import de.hterhors.obie.core.tools.JavaClassNamingTools;
 import de.hterhors.obie.core.utils.AnnotationExtractorHelper;
 import de.hterhors.obie.ml.utils.OBIEClassFormatter;
-import de.hterhors.obie.ml.variables.TemplateAnnotation;
+import de.hterhors.obie.ml.variables.IETmplateAnnotation;
 import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.annodb.RDFRelatedAnnotation;
 import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.annodb.Triple;
-import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.SCIOOntologyEnvironment;
+import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.environments.OntologyEnvironment;
 import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.semantics.SCIOSemanticInterpreter;
 import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ontology.classes.AnalyzedExperimentalGroup;
 import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ontology.classes.Dosage;
@@ -69,7 +67,7 @@ public class AnnoDBRDFReader<R extends ISCIOThing> {
 	 * This should be the most upper class of interest e.g. OrganismModel, Injury,
 	 * Treatment, InvestigationMethod...
 	 */
-	private static final String PREFIX = SCIOOntologyEnvironment.getInstance().getBasePackage() + "classes.";
+	private static final String PREFIX = OntologyEnvironment.getInstance().getBasePackage() + "classes.";
 	private static final String RDF_LABEL = "<http://www.w3.org/2000/01/rdf-schema#label>";
 	/*
 	 * Do not read triples with properties that are in this list.
@@ -90,7 +88,7 @@ public class AnnoDBRDFReader<R extends ISCIOThing> {
 
 	private final Map<String, Map<String, Set<String>>> triples = new HashMap<>();
 
-	private final Map<Triple, RDFRelatedAnnotation> annotations = new HashMap<>();
+	public final Map<Triple, RDFRelatedAnnotation> annotations = new HashMap<>();
 
 	private final Set<String> rootDataPoints = new HashSet<>();
 
@@ -191,13 +189,13 @@ public class AnnoDBRDFReader<R extends ISCIOThing> {
 
 				}
 
-				dataPoint = classType.getConstructor(String.class, String.class).newInstance(individual,
-						annotation.textMention);
+				dataPoint = classType.getConstructor(String.class, InvestigationRestriction.class, String.class)
+						.newInstance(individual, null, annotation.textMention);
 				dataPoint.setCharacterOnset(annotation.onset);
 			}
 			things.add((R) buildJavaBinRec(dataPoint, rootDataPoint));
 		}
-		System.out.println("--------------------");
+//		System.out.println("--------------------");
 
 	}
 
@@ -242,9 +240,9 @@ public class AnnoDBRDFReader<R extends ISCIOThing> {
 	 * @param t
 	 * @return
 	 */
-	private Set<TemplateAnnotation> extractAnimalModels(List<IResult> scioAnnotationInstance, final int limit) {
+	private Set<IETmplateAnnotation> extractAnimalModels(List<IResult> scioAnnotationInstance, final int limit) {
 
-		Set<TemplateAnnotation> internalAnnotations = new HashSet<>();
+		Set<IETmplateAnnotation> internalAnnotations = new HashSet<>();
 
 		Set<IOrganismModel> annotations = new HashSet<>();
 
@@ -290,7 +288,7 @@ public class AnnoDBRDFReader<R extends ISCIOThing> {
 			if (!AnnotationExtractorHelper.testLimitToAnnnotationElementsRecursively(annotation, limit)) {
 				return new HashSet<>();
 			}
-			TemplateAnnotation entity = new TemplateAnnotation(IOrganismModel.class, annotation);
+			IETmplateAnnotation entity = new IETmplateAnnotation(IOrganismModel.class, annotation);
 			internalAnnotations.add(entity);
 		}
 		return internalAnnotations;
@@ -319,9 +317,19 @@ public class AnnoDBRDFReader<R extends ISCIOThing> {
 //									.forName(PREFIX + line[CLASS_TYPE_INDEX].trim());
 
 						final Triple linkID = new Triple(subject, predicate, object);
-						annotations.put(linkID, new RDFRelatedAnnotation(line[TEXT_MENTION_INDEX].trim(),
-								Integer.parseInt(line[ONSET_INDEX].trim()), Integer.parseInt(line[OFFSET_INDEX].trim()),
-								line[ANNOTATION_ID_INDEX].trim(), linkID));
+						try {
+
+							annotations.put(linkID,
+									new RDFRelatedAnnotation(line[TEXT_MENTION_INDEX].trim(),
+											Integer.parseInt(line[ONSET_INDEX].trim()),
+											Integer.parseInt(line[OFFSET_INDEX].trim()),
+											line[ANNOTATION_ID_INDEX].trim(), linkID));
+
+						} catch (Exception e) {
+							System.out.println(Arrays.toString(line));
+							e.printStackTrace();
+							throw e;
+						}
 
 					}
 				} else {
@@ -366,8 +374,11 @@ public class AnnoDBRDFReader<R extends ISCIOThing> {
 //			System.out.println(ontologyName);
 
 			final Field f = getFieldByOntologyName(object.getClass().getDeclaredFields(), slotOntologyName);
-			if (f == null)
-				System.out.println(slotOntologyName + " in " + object.getClass().getSimpleName());
+		
+			if (f == null) {
+				throw new IllegalStateException(slotOntologyName + " in " + object.getClass().getSimpleName());				
+			}
+			
 			f.setAccessible(true);
 
 			/*
@@ -477,7 +488,7 @@ public class AnnoDBRDFReader<R extends ISCIOThing> {
 	 */
 	private ISCIOThing toDataPointValue(Field slot, Triple linkedID) throws ClassNotFoundException,
 			InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
-		System.out.println(slot + "--" + linkedID);
+//		System.out.println(slot + "--" + linkedID);
 
 		/*
 		 * Data point
@@ -492,8 +503,8 @@ public class AnnoDBRDFReader<R extends ISCIOThing> {
 
 		ISCIOThing scioDataThing;
 		if (annotations.containsKey(linkedID)) {
-			scioDataThing = dataClassType.getConstructor(String.class, String.class).newInstance(individual,
-					annotations.get(linkedID).textMention);
+			scioDataThing = dataClassType.getConstructor(String.class, InvestigationRestriction.class, String.class)
+					.newInstance(individual, null, annotations.get(linkedID).textMention);
 			scioDataThing.setCharacterOnset(annotations.get(linkedID).onset);
 //			scioDataThing.setCharacterOffset(annotations.get(linkedID).offset);
 		} else {
@@ -507,7 +518,7 @@ public class AnnoDBRDFReader<R extends ISCIOThing> {
 			throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
 			NoSuchMethodException, SecurityException {
 
-		System.out.println(slot + "--" + linkedID);
+//		System.out.println(slot + "--" + linkedID);
 
 		/*
 		 * Ontology type
@@ -553,7 +564,8 @@ public class AnnoDBRDFReader<R extends ISCIOThing> {
 		} else {
 			textmention = null;
 		}
-		instanceThing = scioClassType.getConstructor(String.class, String.class).newInstance(individual, textmention);
+		instanceThing = scioClassType.getConstructor(String.class, InvestigationRestriction.class, String.class)
+				.newInstance(individual, null, textmention);
 
 		if (annotations.containsKey(linkedID))
 			instanceThing.setCharacterOnset(annotations.get(linkedID).onset);
@@ -583,7 +595,7 @@ public class AnnoDBRDFReader<R extends ISCIOThing> {
 
 	private ISCIOThing toDatatypeValue(Field slot, final Triple linkedID)
 			throws InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
-		System.out.println(slot + "--" + linkedID);
+//		System.out.println(slot + "--" + linkedID);
 		/*
 		 * Data type Property
 		 */

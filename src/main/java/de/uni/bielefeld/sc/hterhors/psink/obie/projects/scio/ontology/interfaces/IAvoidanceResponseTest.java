@@ -42,12 +42,12 @@ avoidance responses to at-level touch, respectively.
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
-@ImplementationClass(get=AvoidanceResponseTest.class)
-
 @AssignableSubInterfaces(get={})
+
+@ImplementationClass(get=AvoidanceResponseTest.class)
  public interface IAvoidanceResponseTest
  extends IPainTest{
 

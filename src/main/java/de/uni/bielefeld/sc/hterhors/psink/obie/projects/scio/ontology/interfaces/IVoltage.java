@@ -35,14 +35,14 @@ import java.util.stream.Collectors;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
 @ImplementationClass(get=Voltage.class)
 
-@DatatypeProperty
 @AssignableSubInterfaces(get={})
- public interface IVoltage
+
+@DatatypeProperty public interface IVoltage
  extends IDatatype, IQudt_Quantity{
 
 }

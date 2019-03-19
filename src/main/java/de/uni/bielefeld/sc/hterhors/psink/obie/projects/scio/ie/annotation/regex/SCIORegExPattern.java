@@ -1,4 +1,4 @@
-package de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.nel.regex;
+package de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.annotation.regex;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -62,7 +62,12 @@ import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ontology.interfaces
 
 public class SCIORegExPattern extends BasicRegExPattern<ISCIOThing> {
 
-	private static final Set<String> SCIO_STOP_WORDS = new HashSet<>(Arrays.asList());
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	private static final Set<String> SCIO_STOP_WORDS = new HashSet<>(Arrays.asList("spinal", "cord", "injury"));
 
 	/*
 	 * Rats
@@ -119,8 +124,9 @@ public class SCIORegExPattern extends BasicRegExPattern<ISCIOThing> {
 	/*
 	 * Gender
 	 */
-	private static Pattern GENDER_MALE_PATTERN_1 = Pattern.compile(PRE_BOUNDS + "male" + POST_BOUNDS, PATTERN_BITMASK);
-	private static Pattern GENDER_FEMALE_PATTERN_1 = Pattern.compile(PRE_BOUNDS + "female" + POST_BOUNDS,
+	private static Pattern GENDER_MALE_PATTERN_1 = Pattern.compile(PRE_BOUNDS + "males?" + POST_BOUNDS,
+			PATTERN_BITMASK);
+	private static Pattern GENDER_FEMALE_PATTERN_1 = Pattern.compile(PRE_BOUNDS + "females?" + POST_BOUNDS,
 			PATTERN_BITMASK);
 	private static Pattern GENDER_MIXED_PATTERN_1 = Pattern.compile(PRE_BOUNDS + "mixed" + POST_BOUNDS,
 			PATTERN_BITMASK);
@@ -129,8 +135,8 @@ public class SCIORegExPattern extends BasicRegExPattern<ISCIOThing> {
 	 * AgeCategory
 	 */
 
-	private static Pattern AGE_CATEGORY_ADULT_PATTERN_1 = Pattern.compile(PRE_BOUNDS + "(mature|adult)" + POST_BOUNDS,
-			PATTERN_BITMASK);
+	private static Pattern AGE_CATEGORY_ADULT_PATTERN_1 = Pattern
+			.compile(PRE_BOUNDS + "(matures?|adults?)" + POST_BOUNDS, PATTERN_BITMASK);
 	private static Pattern AGE_CATEGORY_YOUNG_PATTERN_1 = Pattern.compile(PRE_BOUNDS + "young" + POST_BOUNDS,
 			PATTERN_BITMASK);
 
@@ -391,7 +397,7 @@ public class SCIORegExPattern extends BasicRegExPattern<ISCIOThing> {
 
 	@Override
 	public int getMinTokenlength() {
-		return 3;
+		return 2;
 	}
 
 }

@@ -21,9 +21,9 @@ import de.hterhors.obie.ml.corpus.BigramInternalCorpus;
 import de.hterhors.obie.ml.run.param.RunParameter;
 import de.hterhors.obie.ml.utils.OBIEClassFormatter;
 import de.hterhors.obie.ml.variables.OBIEInstance;
-import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.SCIOOntologyEnvironment;
-import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.SCIOParameterQuickAccess;
-import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.SCIOProjectEnvironment;
+import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.environments.OntologyEnvironment;
+import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.environments.SlotFillingProjectEnvironment;
+import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.run.parameter.SCIOParameterQuickAccess;
 import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ontology.classes.Age;
 import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ontology.classes.Dosage;
 import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ontology.classes.Weight;
@@ -68,11 +68,11 @@ public class ILPSingleSlotBaseline {
 
 			System.out.println(doc.getName());
 
-			List<IOBIEThing> gold = doc.getGoldAnnotation().getTemplateAnnotations().stream().map(e -> e.getThing())
+			List<IOBIEThing> gold = doc.getGoldAnnotation().getAnnotations().stream().map(e -> e.getThing())
 					.collect(Collectors.toList());
 
 			List<IOBIEThing> predictions = exhaustiveSearchFindBestSingleSlot(singleSlotProbs.get(doc.getName()));
-			doc.getGoldAnnotation().getTemplateAnnotations()
+			doc.getGoldAnnotation().getAnnotations()
 					.forEach(s -> System.out.println(OBIEClassFormatter.format(s.getThing(), false)));
 			System.out.println("____________________________");
 			predictions.forEach(f -> System.out.println(OBIEClassFormatter.format(f, false)));
@@ -112,7 +112,7 @@ public class ILPSingleSlotBaseline {
 				}).get();
 
 		IOBIEThing bestThing = (IOBIEThing) Class
-				.forName(SCIOOntologyEnvironment.getInstance().getBasePackage() + "classes." + bestType.getKey())
+				.forName(OntologyEnvironment.getInstance().getBasePackage() + "classes." + bestType.getKey())
 				.newInstance();
 
 		for (Entry<String, Map<String, Double>> slots : probs.entrySet()) {
@@ -151,7 +151,7 @@ public class ILPSingleSlotBaseline {
 				} else {
 					f.set(bestThing,
 							(IOBIEThing) Class.forName(
-									SCIOOntologyEnvironment.getInstance().getBasePackage() + "classes." + value)
+									OntologyEnvironment.getInstance().getBasePackage() + "classes." + value)
 									.newInstance());
 				}
 

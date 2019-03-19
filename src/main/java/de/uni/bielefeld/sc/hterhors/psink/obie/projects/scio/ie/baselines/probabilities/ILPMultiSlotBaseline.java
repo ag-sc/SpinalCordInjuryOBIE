@@ -67,13 +67,13 @@ public class ILPMultiSlotBaseline {
 		for (OBIEInstance doc : corpus.getInternalInstances()) {
 
 			System.out.println(doc.getName());
-			List<IOBIEThing> gold = doc.getGoldAnnotation().getTemplateAnnotations().stream().map(e -> e.getThing())
+			List<IOBIEThing> gold = doc.getGoldAnnotation().getAnnotations().stream().map(e -> e.getThing())
 					.collect(Collectors.toList());
 			singleData = singleSlotProbs.get(doc.getName());
 			doubleData = doubleSlotProbs.get(doc.getName());
 
 			List<IOBIEThing> predictions = exhaustiveSearchFindBestDoubleSlot();
-			doc.getGoldAnnotation().getTemplateAnnotations()
+			doc.getGoldAnnotation().getAnnotations()
 					.forEach(s -> System.out.println(OBIEClassFormatter.format(s.getThing(), false)));
 			System.out.println("____________________________");
 			predictions.forEach(f -> System.out.println(OBIEClassFormatter.format(f, false)));

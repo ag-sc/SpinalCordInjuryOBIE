@@ -41,12 +41,12 @@ import java.util.stream.Collectors;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
-@ImplementationClass(get=SurvivalObservation.class)
-
 @AssignableSubInterfaces(get={})
+
+@ImplementationClass(get=SurvivalObservation.class)
  public interface ISurvivalObservation
  extends IObservationOfAnimalBehaviour{
 

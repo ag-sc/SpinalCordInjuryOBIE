@@ -46,12 +46,12 @@ and oligodendrocyte apoptosis by 1 week after SCI relative to control.
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
-@ImplementationClass(get=ApoptosisTest.class)
-
 @AssignableSubInterfaces(get={})
+
+@ImplementationClass(get=ApoptosisTest.class)
  public interface IApoptosisTest
  extends ISecondaryDegenerationTest{
 

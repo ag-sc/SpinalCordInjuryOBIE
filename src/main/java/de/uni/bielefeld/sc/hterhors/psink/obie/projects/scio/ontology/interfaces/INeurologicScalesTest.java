@@ -36,7 +36,7 @@ Instrument designed to assess human or animal behavior, using a standardized for
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
 @ImplementationClass(get=NeurologicScalesTest.class)

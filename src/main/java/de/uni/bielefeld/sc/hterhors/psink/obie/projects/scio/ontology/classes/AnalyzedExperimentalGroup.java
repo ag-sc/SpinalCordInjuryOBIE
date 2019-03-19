@@ -15,6 +15,7 @@ import org.apache.jena.rdf.model.Resource;
 import java.util.Map;
 import java.lang.InstantiationException;
 import java.lang.SecurityException;
+import de.hterhors.obie.core.ontology.InvestigationRestriction;
 import de.hterhors.obie.core.ontology.annotations.DirectSiblings;
 import java.lang.IllegalAccessException;
 import de.hterhors.obie.core.ontology.annotations.AssignableSubClasses;
@@ -41,16 +42,16 @@ import de.hterhors.obie.core.ontology.AbstractIndividual;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
 @SuperRootClasses(get={ExperimentalGroup.class, })
 
 @DirectSiblings(get={DefinedExperimentalGroup.class, AnalyzedExperimentalGroup.class, })
 
-@DirectInterface(get=IAnalyzedExperimentalGroup.class)
-
 @AssignableSubClasses(get={})
+
+@DirectInterface(get=IAnalyzedExperimentalGroup.class)
  public class AnalyzedExperimentalGroup implements IAnalyzedExperimentalGroup{
 
 final public static IndividualFactory<AnalyzedExperimentalGroupIndividual> individualFactory = new IndividualFactory<>();
@@ -75,14 +76,22 @@ static class AnalyzedExperimentalGroupIndividual extends AbstractIndividual {
 	@Override
 	public AbstractIndividual getIndividual() {
 		return individual;
-	}	final static public String ONTOLOGY_NAME = "http://psink.de/scio/AnalyzedExperimentalGroup";
+	}
+	@Override
+	public InvestigationRestriction getInvestigationRestriction() {
+		return investigationRestriction;
+	}
+	@Override
+	public AnalyzedExperimentalGroup setInvestigationRestriction(InvestigationRestriction investigationRestriction ) {
+		this.investigationRestriction = investigationRestriction;
+ return this;	}public InvestigationRestriction investigationRestriction;	final static public String ONTOLOGY_NAME = "http://psink.de/scio/AnalyzedExperimentalGroup";
 	private Integer characterOffset;
 	private Integer characterOnset;
 	@OntologyModelContent(ontologyName="http://psink.de/scio/hasConstraint")
 @RelationTypeCollection
 private List<IConstraint> constraints = new ArrayList<>();
-	@OntologyModelContent(ontologyName="http://psink.de/scio/hasGroupName")
-@DatatypeProperty
+	@DatatypeProperty
+@OntologyModelContent(ontologyName="http://psink.de/scio/hasGroupName")
 @RelationTypeCollection
 private List<IGroupName> groupNames = new ArrayList<>();
 	@OntologyModelContent(ontologyName="http://psink.de/scio/hasGroupNumber")
@@ -90,8 +99,8 @@ private List<IGroupName> groupNames = new ArrayList<>();
 private IGroupNumber groupNumber;
 	@OntologyModelContent(ontologyName="http://psink.de/scio/hasInjuryModel")
 private IInjury injuryModel;
-	@RelationTypeCollection
-@OntologyModelContent(ontologyName="http://psink.de/scio/hasMember")
+	@OntologyModelContent(ontologyName="http://psink.de/scio/hasMember")
+@RelationTypeCollection
 private List<IDefinedExperimentalGroup> memberDefinedExperimentalGroups = new ArrayList<>();
 	@DatatypeProperty
 @OntologyModelContent(ontologyName="http://psink.de/scio/hasNNumber")
@@ -105,17 +114,25 @@ final private String textMention;
 	@DatatypeProperty
 @OntologyModelContent(ontologyName="http://psink.de/scio/hasTotalPopulationSize")
 private ITotalPopulationSize totalPopulationSize;
-	@RelationTypeCollection
-@OntologyModelContent(ontologyName="http://psink.de/scio/hasTreatmentType")
+	@OntologyModelContent(ontologyName="http://psink.de/scio/hasTreatmentType")
+@RelationTypeCollection
 private List<ITreatment> treatmentTypes = new ArrayList<>();
 
 
 	public AnalyzedExperimentalGroup(){
 this.individual = null;
+this.investigationRestriction = InvestigationRestriction.noRestrictionInstance;
 this.textMention = null;
+}
+	public AnalyzedExperimentalGroup(String individualURI, InvestigationRestriction investigationRestriction, String textMention){
+this.individual = 
+				AnalyzedExperimentalGroup.individualFactory.getIndividualByURI(individualURI);
+this.investigationRestriction = investigationRestriction==null?InvestigationRestriction.noRestrictionInstance:investigationRestriction;
+this.textMention = textMention;
 }
 	public AnalyzedExperimentalGroup(AnalyzedExperimentalGroup analyzedExperimentalGroup)throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,NoSuchMethodException, SecurityException{
 this.individual = analyzedExperimentalGroup.individual;
+this.investigationRestriction = analyzedExperimentalGroup.investigationRestriction;
 this.characterOffset = analyzedExperimentalGroup.getCharacterOffset();
 this.characterOnset = analyzedExperimentalGroup.getCharacterOnset();
 for (int j = 0; j < analyzedExperimentalGroup.getConstraints().size(); j++) {if (analyzedExperimentalGroup.getConstraints().get(j) != null) {constraints.add((IConstraint) IOBIEThing.getCloneConstructor(analyzedExperimentalGroup.getConstraints().get(j).getClass()).newInstance(analyzedExperimentalGroup.getConstraints().get(j)));} else {constraints.add(null);}}
@@ -128,11 +145,6 @@ if(analyzedExperimentalGroup.getOrganismModel()!=null)this.organismModel = (IOrg
 this.textMention = analyzedExperimentalGroup.getTextMention();
 if(analyzedExperimentalGroup.getTotalPopulationSize()!=null)this.totalPopulationSize = new TotalPopulationSize((TotalPopulationSize)analyzedExperimentalGroup.getTotalPopulationSize());
 for (int j = 0; j < analyzedExperimentalGroup.getTreatmentTypes().size(); j++) {if (analyzedExperimentalGroup.getTreatmentTypes().get(j) != null) {treatmentTypes.add((ITreatment) IOBIEThing.getCloneConstructor(analyzedExperimentalGroup.getTreatmentTypes().get(j).getClass()).newInstance(analyzedExperimentalGroup.getTreatmentTypes().get(j)));} else {treatmentTypes.add(null);}}
-}
-	public AnalyzedExperimentalGroup(String individualURI, String textMention){
-this.individual = 
-				AnalyzedExperimentalGroup.individualFactory.getIndividualByURI(individualURI);
-this.textMention = textMention;
 }
 
 
@@ -189,15 +201,10 @@ if (other.individual!= null)
 return false;
 } else if (!individual.equals(other.individual))
 return false;
-if (nNumber == null) {
-if (other.nNumber!= null)
+if (investigationRestriction == null) {
+if (other.investigationRestriction!= null)
 return false;
-} else if (!nNumber.equals(other.nNumber))
-return false;
-if (groupNames == null) {
-if (other.groupNames!= null)
-return false;
-} else if (!groupNames.equals(other.groupNames))
+} else if (!investigationRestriction.equals(other.investigationRestriction))
 return false;
 if (memberDefinedExperimentalGroups == null) {
 if (other.memberDefinedExperimentalGroups!= null)
@@ -209,25 +216,20 @@ if (other.groupNumber!= null)
 return false;
 } else if (!groupNumber.equals(other.groupNumber))
 return false;
-if (totalPopulationSize == null) {
-if (other.totalPopulationSize!= null)
+if (characterOffset == null) {
+if (other.characterOffset!= null)
 return false;
-} else if (!totalPopulationSize.equals(other.totalPopulationSize))
+} else if (!characterOffset.equals(other.characterOffset))
 return false;
-if (characterOnset == null) {
-if (other.characterOnset!= null)
+if (groupNames == null) {
+if (other.groupNames!= null)
 return false;
-} else if (!characterOnset.equals(other.characterOnset))
+} else if (!groupNames.equals(other.groupNames))
 return false;
 if (organismModel == null) {
 if (other.organismModel!= null)
 return false;
 } else if (!organismModel.equals(other.organismModel))
-return false;
-if (injuryModel == null) {
-if (other.injuryModel!= null)
-return false;
-} else if (!injuryModel.equals(other.injuryModel))
 return false;
 if (constraints == null) {
 if (other.constraints!= null)
@@ -239,15 +241,30 @@ if (other.treatmentTypes!= null)
 return false;
 } else if (!treatmentTypes.equals(other.treatmentTypes))
 return false;
+if (nNumber == null) {
+if (other.nNumber!= null)
+return false;
+} else if (!nNumber.equals(other.nNumber))
+return false;
+if (injuryModel == null) {
+if (other.injuryModel!= null)
+return false;
+} else if (!injuryModel.equals(other.injuryModel))
+return false;
+if (characterOnset == null) {
+if (other.characterOnset!= null)
+return false;
+} else if (!characterOnset.equals(other.characterOnset))
+return false;
+if (totalPopulationSize == null) {
+if (other.totalPopulationSize!= null)
+return false;
+} else if (!totalPopulationSize.equals(other.totalPopulationSize))
+return false;
 if (textMention == null) {
 if (other.textMention!= null)
 return false;
 } else if (!textMention.equals(other.textMention))
-return false;
-if (characterOffset == null) {
-if (other.characterOffset!= null)
-return false;
-} else if (!characterOffset.equals(other.characterOffset))
 return false;
 return true;
 }
@@ -352,6 +369,10 @@ return ISCIOThing.RDF_MODEL_NAMESPACE + resourceName;}
 @Override
 	public String getTextMention(){
 		return textMention;}
+	/***/
+@Override
+	public IOBIEThing getThis(){
+		return this;}
 	/**
 <p><b>rdfs:label</b>
 <p>has total population size
@@ -372,18 +393,19 @@ return ISCIOThing.RDF_MODEL_NAMESPACE + resourceName;}
 		final int prime = 31;
 int result = 1;
 result = prime * result + ((this.individual == null) ? 0 : this.individual.hashCode());
-result = prime * result + ((this.nNumber == null) ? 0 : this.nNumber.hashCode());
-result = prime * result + ((this.groupNames == null) ? 0 : this.groupNames.hashCode());
+result = prime * result + ((this.investigationRestriction == null) ? 0 : this.investigationRestriction.hashCode());
 result = prime * result + ((this.memberDefinedExperimentalGroups == null) ? 0 : this.memberDefinedExperimentalGroups.hashCode());
 result = prime * result + ((this.groupNumber == null) ? 0 : this.groupNumber.hashCode());
-result = prime * result + ((this.totalPopulationSize == null) ? 0 : this.totalPopulationSize.hashCode());
-result = prime * result + ((this.characterOnset == null) ? 0 : this.characterOnset.hashCode());
+result = prime * result + ((this.characterOffset == null) ? 0 : this.characterOffset.hashCode());
+result = prime * result + ((this.groupNames == null) ? 0 : this.groupNames.hashCode());
 result = prime * result + ((this.organismModel == null) ? 0 : this.organismModel.hashCode());
-result = prime * result + ((this.injuryModel == null) ? 0 : this.injuryModel.hashCode());
 result = prime * result + ((this.constraints == null) ? 0 : this.constraints.hashCode());
 result = prime * result + ((this.treatmentTypes == null) ? 0 : this.treatmentTypes.hashCode());
+result = prime * result + ((this.nNumber == null) ? 0 : this.nNumber.hashCode());
+result = prime * result + ((this.injuryModel == null) ? 0 : this.injuryModel.hashCode());
+result = prime * result + ((this.characterOnset == null) ? 0 : this.characterOnset.hashCode());
+result = prime * result + ((this.totalPopulationSize == null) ? 0 : this.totalPopulationSize.hashCode());
 result = prime * result + ((this.textMention == null) ? 0 : this.textMention.hashCode());
-result = prime * result + ((this.characterOffset == null) ? 0 : this.characterOffset.hashCode());
 return result;}
 	/***/
 @Override
@@ -489,7 +511,7 @@ return this;}
 
 @Override
 public String toString(){
-return "AnalyzedExperimentalGroup [individual="+individual+",characterOffset="+characterOffset+",characterOnset="+characterOnset+",constraints="+constraints+",groupNames="+groupNames+",groupNumber="+groupNumber+",injuryModel="+injuryModel+",memberDefinedExperimentalGroups="+memberDefinedExperimentalGroups+",nNumber="+nNumber+",organismModel="+organismModel+",serialVersionUID="+serialVersionUID+",textMention="+textMention+",totalPopulationSize="+totalPopulationSize+",treatmentTypes="+treatmentTypes+"]";}
+return "AnalyzedExperimentalGroup [individual="+individual+",investigationRestriction="+investigationRestriction.summarize()+",characterOffset="+characterOffset+",characterOnset="+characterOnset+",constraints="+constraints+",groupNames="+groupNames+",groupNumber="+groupNumber+",injuryModel="+injuryModel+",memberDefinedExperimentalGroups="+memberDefinedExperimentalGroups+",nNumber="+nNumber+",organismModel="+organismModel+",serialVersionUID="+serialVersionUID+",textMention="+textMention+",totalPopulationSize="+totalPopulationSize+",treatmentTypes="+treatmentTypes+"]";}
 
 
 }

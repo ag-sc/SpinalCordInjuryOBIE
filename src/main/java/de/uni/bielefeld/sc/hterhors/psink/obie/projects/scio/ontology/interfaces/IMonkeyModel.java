@@ -36,12 +36,12 @@ A suborder of primates consisting of six families.
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
-@ImplementationClass(get=MonkeyModel.class)
-
 @AssignableSubInterfaces(get={})
+
+@ImplementationClass(get=MonkeyModel.class)
  public interface IMonkeyModel
  extends IAnimalModel{
 

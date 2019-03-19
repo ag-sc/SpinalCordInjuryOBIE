@@ -29,12 +29,12 @@ import java.util.stream.Collectors;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
-@ImplementationClass(get=NT3Lentivirus.class)
-
 @AssignableSubInterfaces(get={})
+
+@ImplementationClass(get=NT3Lentivirus.class)
  public interface INT3Lentivirus
  extends ILentivirus{
 

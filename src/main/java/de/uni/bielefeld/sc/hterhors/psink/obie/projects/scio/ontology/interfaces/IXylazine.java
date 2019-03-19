@@ -40,12 +40,12 @@ Year introduced: 1991(1975)
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
-@AssignableSubInterfaces(get={})
-
 @ImplementationClass(get=Xylazine.class)
+
+@AssignableSubInterfaces(get={})
  public interface IXylazine
  extends IAnaesthetic{
 

@@ -35,12 +35,12 @@ import java.util.stream.Collectors;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
-@ImplementationClass(get=Antibody.class)
-
 @AssignableSubInterfaces(get={IAntiNG2Antibody.class, IAntiCD11dAntibody.class, IAntiNogoAAntibody.class, })
+
+@ImplementationClass(get=Antibody.class)
  public interface IAntibody
  extends IProtein{
 

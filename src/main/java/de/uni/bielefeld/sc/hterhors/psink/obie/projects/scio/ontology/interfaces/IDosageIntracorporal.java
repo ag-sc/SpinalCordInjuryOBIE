@@ -29,12 +29,12 @@ import java.util.stream.Collectors;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
-@DatatypeProperty
 @AssignableSubInterfaces(get={})
 
+@DatatypeProperty
 @ImplementationClass(get=DosageIntracorporal.class)
  public interface IDosageIntracorporal
  extends IDatatype, IDosage{

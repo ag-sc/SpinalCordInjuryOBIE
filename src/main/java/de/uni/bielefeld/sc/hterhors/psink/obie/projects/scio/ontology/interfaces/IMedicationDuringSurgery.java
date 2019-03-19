@@ -29,12 +29,12 @@ import java.util.stream.Collectors;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
-@AssignableSubInterfaces(get={IChloralHydrate.class, IGlycopyrrolate.class, IAnaesthetic.class, INitrousOxide.class, IFluanisoneMidazolamMixture.class, IAtropineSulfate.class, IIsoflurane.class, ISodiumPentobarbital.class, ISedative.class, IDiazepam.class, IXylazine.class, IThiopentalSodium.class, IHalothane.class, IKetamineAsAnaesthetic.class, })
-
 @ImplementationClass(get=MedicationDuringSurgery.class)
+
+@AssignableSubInterfaces(get={IChloralHydrate.class, IGlycopyrrolate.class, IAnaesthetic.class, INitrousOxide.class, IFluanisoneMidazolamMixture.class, IAtropineSulfate.class, IIsoflurane.class, ISodiumPentobarbital.class, ISedative.class, IDiazepam.class, IXylazine.class, IThiopentalSodium.class, IHalothane.class, IKetamineAsAnaesthetic.class, })
  public interface IMedicationDuringSurgery
  extends IAnimalCareCondition{
 

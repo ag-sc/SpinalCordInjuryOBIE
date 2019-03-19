@@ -15,6 +15,7 @@ import org.apache.jena.rdf.model.Resource;
 import java.util.Map;
 import java.lang.InstantiationException;
 import java.lang.SecurityException;
+import de.hterhors.obie.core.ontology.InvestigationRestriction;
 import de.hterhors.obie.core.ontology.annotations.DirectSiblings;
 import java.lang.IllegalAccessException;
 import de.hterhors.obie.core.ontology.annotations.AssignableSubClasses;
@@ -47,16 +48,16 @@ import de.hterhors.obie.core.ontology.AbstractIndividual;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
+
+@SuperRootClasses(get={SpatialDimensions.class, })
 
 @DirectSiblings(get={Left.class, Right.class, Caudal.class, Rostral.class, })
 
 @AssignableSubClasses(get={})
 
 @DirectInterface(get=ILeft.class)
-
-@SuperRootClasses(get={SpatialDimensions.class, })
  public class Left implements ILeft{
 
 final public static IndividualFactory<LeftIndividual> individualFactory = new IndividualFactory<>();
@@ -81,7 +82,15 @@ static class LeftIndividual extends AbstractIndividual {
 	@Override
 	public AbstractIndividual getIndividual() {
 		return individual;
-	}	final static public String ONTOLOGY_NAME = "http://psink.de/scio/Left";
+	}
+	@Override
+	public InvestigationRestriction getInvestigationRestriction() {
+		return investigationRestriction;
+	}
+	@Override
+	public Left setInvestigationRestriction(InvestigationRestriction investigationRestriction ) {
+		this.investigationRestriction = investigationRestriction;
+ return this;	}public InvestigationRestriction investigationRestriction;	final static public String ONTOLOGY_NAME = "http://psink.de/scio/Left";
 	private Integer characterOffset;
 	private Integer characterOnset;
 	@OntologyModelContent(ontologyName="http://psink.de/scio/relativeTo")
@@ -94,15 +103,18 @@ final private String textMention;
 
 	public Left(){
 this.individual = null;
+this.investigationRestriction = InvestigationRestriction.noRestrictionInstance;
 this.textMention = null;
 }
-	public Left(String individualURI, String textMention){
+	public Left(String individualURI, InvestigationRestriction investigationRestriction, String textMention){
 this.individual = 
 				Left.individualFactory.getIndividualByURI(individualURI);
+this.investigationRestriction = investigationRestriction==null?InvestigationRestriction.noRestrictionInstance:investigationRestriction;
 this.textMention = textMention;
 }
 	public Left(Left left)throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,NoSuchMethodException, SecurityException{
 this.individual = left.individual;
+this.investigationRestriction = left.investigationRestriction;
 this.characterOffset = left.getCharacterOffset();
 this.characterOnset = left.getCharacterOnset();
 if(left.getRelativeToLocation()!=null)this.relativeToLocation = (ILocation) IOBIEThing.getCloneConstructor(left.getRelativeToLocation().getClass())	.newInstance(left.getRelativeToLocation());
@@ -125,25 +137,30 @@ if (other.individual!= null)
 return false;
 } else if (!individual.equals(other.individual))
 return false;
-if (textMention == null) {
-if (other.textMention!= null)
+if (investigationRestriction == null) {
+if (other.investigationRestriction!= null)
 return false;
-} else if (!textMention.equals(other.textMention))
+} else if (!investigationRestriction.equals(other.investigationRestriction))
 return false;
-if (characterOffset == null) {
-if (other.characterOffset!= null)
+if (relativeToLocation == null) {
+if (other.relativeToLocation!= null)
 return false;
-} else if (!characterOffset.equals(other.characterOffset))
+} else if (!relativeToLocation.equals(other.relativeToLocation))
 return false;
 if (characterOnset == null) {
 if (other.characterOnset!= null)
 return false;
 } else if (!characterOnset.equals(other.characterOnset))
 return false;
-if (relativeToLocation == null) {
-if (other.relativeToLocation!= null)
+if (characterOffset == null) {
+if (other.characterOffset!= null)
 return false;
-} else if (!relativeToLocation.equals(other.relativeToLocation))
+} else if (!characterOffset.equals(other.characterOffset))
+return false;
+if (textMention == null) {
+if (other.textMention!= null)
+return false;
+} else if (!textMention.equals(other.textMention))
 return false;
 return true;
 }
@@ -190,14 +207,19 @@ return ISCIOThing.RDF_MODEL_NAMESPACE + resourceName;}
 		return textMention;}
 	/***/
 @Override
+	public IOBIEThing getThis(){
+		return this;}
+	/***/
+@Override
 	public int hashCode(){
 		final int prime = 31;
 int result = 1;
 result = prime * result + ((this.individual == null) ? 0 : this.individual.hashCode());
-result = prime * result + ((this.textMention == null) ? 0 : this.textMention.hashCode());
-result = prime * result + ((this.characterOffset == null) ? 0 : this.characterOffset.hashCode());
-result = prime * result + ((this.characterOnset == null) ? 0 : this.characterOnset.hashCode());
+result = prime * result + ((this.investigationRestriction == null) ? 0 : this.investigationRestriction.hashCode());
 result = prime * result + ((this.relativeToLocation == null) ? 0 : this.relativeToLocation.hashCode());
+result = prime * result + ((this.characterOnset == null) ? 0 : this.characterOnset.hashCode());
+result = prime * result + ((this.characterOffset == null) ? 0 : this.characterOffset.hashCode());
+result = prime * result + ((this.textMention == null) ? 0 : this.textMention.hashCode());
 return result;}
 	/***/
 @Override
@@ -221,7 +243,7 @@ return this;}
 
 @Override
 public String toString(){
-return "Left [individual="+individual+",characterOffset="+characterOffset+",characterOnset="+characterOnset+",relativeToLocation="+relativeToLocation+",serialVersionUID="+serialVersionUID+",textMention="+textMention+"]";}
+return "Left [individual="+individual+",investigationRestriction="+investigationRestriction.summarize()+",characterOffset="+characterOffset+",characterOnset="+characterOnset+",relativeToLocation="+relativeToLocation+",serialVersionUID="+serialVersionUID+",textMention="+textMention+"]";}
 
 
 }

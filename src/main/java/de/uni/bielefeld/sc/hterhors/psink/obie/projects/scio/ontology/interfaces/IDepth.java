@@ -29,14 +29,14 @@ import java.util.stream.Collectors;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
 @ImplementationClass(get=Depth.class)
 
-@DatatypeProperty
 @AssignableSubInterfaces(get={})
- public interface IDepth
+
+@DatatypeProperty public interface IDepth
  extends IDatatype, IQudt_Quantity{
 
 }

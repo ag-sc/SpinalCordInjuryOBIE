@@ -1,4 +1,4 @@
-package de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.templates;
+package de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.templates.slotfilling;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -17,12 +17,13 @@ import de.hterhors.obie.core.ontology.interfaces.IOBIEThing;
 import de.hterhors.obie.core.tools.pdfToText.WordMetric;
 import de.hterhors.obie.ml.ner.NERLClassAnnotation;
 import de.hterhors.obie.ml.ner.NamedEntityLinkingAnnotations;
+import de.hterhors.obie.ml.run.AbstractOBIERunner;
 import de.hterhors.obie.ml.run.param.RunParameter;
 import de.hterhors.obie.ml.templates.AbstractOBIETemplate;
 import de.hterhors.obie.ml.templates.utils.BinningUtils;
 import de.hterhors.obie.ml.variables.OBIEState;
-import de.hterhors.obie.ml.variables.TemplateAnnotation;
-import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.templates.StringSimilarityTemplate.Scope;
+import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.templates.slotfilling.StringSimilarityTemplate.Scope;
+import de.hterhors.obie.ml.variables.IETmplateAnnotation;
 import factors.Factor;
 import factors.FactorScope;
 import learning.Vector;
@@ -60,8 +61,8 @@ public class StringSimilarityTemplate extends AbstractOBIETemplate<Scope> {
 	 */
 	final private float[] similarities = BinningUtils.getFloatBins(NUMBER_OF_BINS);
 
-	public StringSimilarityTemplate(RunParameter parameter) {
-		super(parameter);
+	public StringSimilarityTemplate(AbstractOBIERunner runner) {
+		super(runner);
 	}
 
 	/**
@@ -91,9 +92,9 @@ public class StringSimilarityTemplate extends AbstractOBIETemplate<Scope> {
 	@Override
 	public List<Scope> generateFactorScopes(OBIEState state) {
 		List<Scope> factors = new ArrayList<>();
-		for (TemplateAnnotation entity : state.getCurrentTemplateAnnotations().getTemplateAnnotations()) {
+		for (IETmplateAnnotation entity : state.getCurrentIETemplateAnnotations().getAnnotations()) {
 
-			factors.addAll(addFactorRecursive(state.getInstance().getNamedEntityLinkingAnnotations(),
+			factors.addAll(addFactorRecursive(state.getInstance().getEntityAnnotations(),
 					entity.rootClassType, entity.getThing()));
 
 		}

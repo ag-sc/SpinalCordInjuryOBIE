@@ -38,7 +38,7 @@ import java.util.stream.Collectors;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
 @AssignableSubInterfaces(get={ISurgeryTreatment.class, IVoltageApplication.class, ICompoundTreatment.class, IRehabilitativeTraining.class, IEnrichedEnvironment.class, IModificationTreatment.class, ICurrentApplication.class, IElectromagneticFieldTreatment.class, IGeneticModificationTreatment.class, IPhysicalImplantTreatment.class, IHypothermicTreatment.class, INormothermicTreatment.class, ITemperatureTreatment.class, IMagneticFieldApplication.class, ITreadmillTraining.class, IOvariectomyTreatment.class, IPhysicalTreatment.class, })

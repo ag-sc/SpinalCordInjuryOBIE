@@ -33,7 +33,7 @@ is a PPAR agonist used for type II diabetes.
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
 @ImplementationClass(get=Pioglitazone.class)

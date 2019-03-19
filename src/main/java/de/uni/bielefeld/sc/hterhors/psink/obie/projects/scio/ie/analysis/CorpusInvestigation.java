@@ -1,4 +1,4 @@
-package de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio;
+package de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.analysis;
 
 import java.io.FileNotFoundException;
 import java.util.List;
@@ -10,7 +10,7 @@ import de.hterhors.obie.ml.corpus.BigramInternalCorpus;
 import de.hterhors.obie.ml.run.param.RunParameter;
 import de.hterhors.obie.ml.utils.OBIEClassFormatter;
 import de.hterhors.obie.ml.variables.OBIEInstance;
-import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.SCIOParameterQuickAccess;
+import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.run.parameter.SCIOParameterQuickAccess;
 import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ontology.classes.InvestigationMethod;
 
 public class CorpusInvestigation {
@@ -38,10 +38,10 @@ public class CorpusInvestigation {
 		for (OBIEInstance doc : documents) {
 
 			System.out.println(doc.getName());
-			System.out.println(doc.getNamedEntityLinkingAnnotations().getAvailableClassTypes());
+			System.out.println(doc.getEntityAnnotations().getAvailableClassTypes());
 			for (Class<? extends IOBIEThing> investMethodClass : InvestigationMethod.class
 					.getAnnotation(AssignableSubClasses.class).get()) {
-				int i = doc.getNamedEntityLinkingAnnotations().getClassAnnotations(investMethodClass).size();
+				int i = doc.getEntityAnnotations().getClassAnnotations(investMethodClass).size();
 				System.out.println(investMethodClass + " : " + i);
 			}
 
@@ -115,13 +115,13 @@ public class CorpusInvestigation {
 			System.out.println("______________" + "Document: " + doc.getName() + "______________");
 			System.out.println(doc.getContent());
 
-			doc.getGoldAnnotation().getTemplateAnnotations()
+			doc.getGoldAnnotation().getAnnotations()
 					.forEach(s -> System.out.println(OBIEClassFormatter.format(s.getThing(), true)));
 
-			for (Class<? extends IOBIEThing> availableClass : doc.getNamedEntityLinkingAnnotations()
+			for (Class<? extends IOBIEThing> availableClass : doc.getEntityAnnotations()
 					.getAvailableClassTypes()) {
 				System.out.println("Available class: " + availableClass.getSimpleName() + ":");
-				doc.getNamedEntityLinkingAnnotations().getClassAnnotations(availableClass)
+				doc.getEntityAnnotations().getClassAnnotations(availableClass)
 						.forEach(a -> System.out.println(a));
 				System.out.println("+++++++++++");
 			}

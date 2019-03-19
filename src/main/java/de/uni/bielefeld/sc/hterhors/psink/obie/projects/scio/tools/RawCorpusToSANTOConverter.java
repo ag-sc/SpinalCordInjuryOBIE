@@ -4,8 +4,8 @@ import java.io.File;
 
 import de.hterhors.obie.core.tools.annodb.ConvertRawCorpusToSANTOFormat;
 import de.hterhors.obie.core.tools.annodb.OWLToAnnoDBConfigurationConverter;
-import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.SCIOOntologyEnvironment;
-import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.SCIOProjectEnvironment;
+import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.environments.OntologyEnvironment;
+import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.environments.SlotFillingProjectEnvironment;
 
 /**
  * Loads the raw corpus and transforms it into an SANTO format for file writing.
@@ -20,9 +20,9 @@ public class RawCorpusToSANTOConverter {
 		final File parentCSVDirectory = new File("annodb/configuration/corpus");
 		final File parentCorpusDirectory = new File("annodb/corpus");
 
-		new OWLToAnnoDBConfigurationConverter(parentCSVDirectory, SCIOOntologyEnvironment.getInstance());
+		new OWLToAnnoDBConfigurationConverter(parentCSVDirectory, OntologyEnvironment.getInstance());
 
-		new ConvertRawCorpusToSANTOFormat(parentCorpusDirectory, SCIOProjectEnvironment.getInstance());
+		new ConvertRawCorpusToSANTOFormat(parentCorpusDirectory, SlotFillingProjectEnvironment.getInstance());
 
 	}
 

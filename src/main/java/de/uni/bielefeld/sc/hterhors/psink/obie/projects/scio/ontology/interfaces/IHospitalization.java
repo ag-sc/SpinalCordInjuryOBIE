@@ -38,12 +38,12 @@ import java.util.stream.Collectors;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
-@ImplementationClass(get=Hospitalization.class)
-
 @AssignableSubInterfaces(get={})
+
+@ImplementationClass(get=Hospitalization.class)
  public interface IHospitalization
  extends IConstraint{
 

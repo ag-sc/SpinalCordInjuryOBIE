@@ -41,12 +41,12 @@ import java.util.stream.Collectors;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
-@ImplementationClass(get=MinipigModel.class)
-
 @AssignableSubInterfaces(get={})
+
+@ImplementationClass(get=MinipigModel.class)
  public interface IMinipigModel
  extends IAnimalModel{
 

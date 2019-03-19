@@ -32,12 +32,12 @@ import java.util.stream.Collectors;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
-@ImplementationClass(get=RehabilitativeTraining.class)
-
 @AssignableSubInterfaces(get={IEnrichedEnvironment.class, ITreadmillTraining.class, })
+
+@ImplementationClass(get=RehabilitativeTraining.class)
  public interface IRehabilitativeTraining
  extends IPhysicalTreatment{
 

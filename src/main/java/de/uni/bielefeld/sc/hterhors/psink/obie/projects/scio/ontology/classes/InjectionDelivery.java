@@ -15,6 +15,7 @@ import org.apache.jena.rdf.model.Resource;
 import java.util.Map;
 import java.lang.InstantiationException;
 import java.lang.SecurityException;
+import de.hterhors.obie.core.ontology.InvestigationRestriction;
 import de.hterhors.obie.core.ontology.annotations.DirectSiblings;
 import java.lang.IllegalAccessException;
 import de.hterhors.obie.core.ontology.annotations.AssignableSubClasses;
@@ -47,7 +48,7 @@ import de.hterhors.obie.core.ontology.AbstractIndividual;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
 @SuperRootClasses(get={DeliveryMethod.class, })
@@ -81,13 +82,22 @@ static class InjectionDeliveryIndividual extends AbstractIndividual {
 	@Override
 	public AbstractIndividual getIndividual() {
 		return individual;
-	}	final static public String ONTOLOGY_NAME = "http://psink.de/scio/InjectionDelivery";
+	}
+	@Override
+	public InvestigationRestriction getInvestigationRestriction() {
+		return investigationRestriction;
+	}
+	@Override
+	public InjectionDelivery setInvestigationRestriction(InvestigationRestriction investigationRestriction ) {
+		this.investigationRestriction = investigationRestriction;
+ return this;	}public InvestigationRestriction investigationRestriction;	final static public String ONTOLOGY_NAME = "http://psink.de/scio/InjectionDelivery";
 	private Integer characterOffset;
 	private Integer characterOnset;
 	@OntologyModelContent(ontologyName="http://psink.de/scio/hasDuration")
+@DatatypeProperty
 private IDuration duration;
-	@RelationTypeCollection
-@OntologyModelContent(ontologyName="http://psink.de/scio/hasLocation")
+	@OntologyModelContent(ontologyName="http://psink.de/scio/hasLocation")
+@RelationTypeCollection
 private List<ILocation> locations = new ArrayList<>();
 	final static private Map<IOBIEThing, String> resourceFactory = new HashMap<>();
 	final static private long serialVersionUID = 64L;
@@ -95,22 +105,25 @@ private List<ILocation> locations = new ArrayList<>();
 final private String textMention;
 
 
+	public InjectionDelivery(String individualURI, InvestigationRestriction investigationRestriction, String textMention){
+this.individual = 
+				InjectionDelivery.individualFactory.getIndividualByURI(individualURI);
+this.investigationRestriction = investigationRestriction==null?InvestigationRestriction.noRestrictionInstance:investigationRestriction;
+this.textMention = textMention;
+}
 	public InjectionDelivery(){
 this.individual = null;
+this.investigationRestriction = InvestigationRestriction.noRestrictionInstance;
 this.textMention = null;
 }
 	public InjectionDelivery(InjectionDelivery injectionDelivery)throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,NoSuchMethodException, SecurityException{
 this.individual = injectionDelivery.individual;
+this.investigationRestriction = injectionDelivery.investigationRestriction;
 this.characterOffset = injectionDelivery.getCharacterOffset();
 this.characterOnset = injectionDelivery.getCharacterOnset();
-if(injectionDelivery.getDuration()!=null)this.duration = (IDuration) IOBIEThing.getCloneConstructor(injectionDelivery.getDuration().getClass())	.newInstance(injectionDelivery.getDuration());
+if(injectionDelivery.getDuration()!=null)this.duration = new Duration((Duration)injectionDelivery.getDuration());
 for (int j = 0; j < injectionDelivery.getLocations().size(); j++) {if (injectionDelivery.getLocations().get(j) != null) {locations.add((ILocation) IOBIEThing.getCloneConstructor(injectionDelivery.getLocations().get(j).getClass()).newInstance(injectionDelivery.getLocations().get(j)));} else {locations.add(null);}}
 this.textMention = injectionDelivery.getTextMention();
-}
-	public InjectionDelivery(String individualURI, String textMention){
-this.individual = 
-				InjectionDelivery.individualFactory.getIndividualByURI(individualURI);
-this.textMention = textMention;
 }
 
 
@@ -145,20 +158,10 @@ if (other.individual!= null)
 return false;
 } else if (!individual.equals(other.individual))
 return false;
-if (locations == null) {
-if (other.locations!= null)
+if (investigationRestriction == null) {
+if (other.investigationRestriction!= null)
 return false;
-} else if (!locations.equals(other.locations))
-return false;
-if (textMention == null) {
-if (other.textMention!= null)
-return false;
-} else if (!textMention.equals(other.textMention))
-return false;
-if (characterOffset == null) {
-if (other.characterOffset!= null)
-return false;
-} else if (!characterOffset.equals(other.characterOffset))
+} else if (!investigationRestriction.equals(other.investigationRestriction))
 return false;
 if (duration == null) {
 if (other.duration!= null)
@@ -169,6 +172,21 @@ if (characterOnset == null) {
 if (other.characterOnset!= null)
 return false;
 } else if (!characterOnset.equals(other.characterOnset))
+return false;
+if (characterOffset == null) {
+if (other.characterOffset!= null)
+return false;
+} else if (!characterOffset.equals(other.characterOffset))
+return false;
+if (locations == null) {
+if (other.locations!= null)
+return false;
+} else if (!locations.equals(other.locations))
+return false;
+if (textMention == null) {
+if (other.textMention!= null)
+return false;
+} else if (!textMention.equals(other.textMention))
 return false;
 return true;
 }
@@ -239,15 +257,20 @@ return ISCIOThing.RDF_MODEL_NAMESPACE + resourceName;}
 		return textMention;}
 	/***/
 @Override
+	public IOBIEThing getThis(){
+		return this;}
+	/***/
+@Override
 	public int hashCode(){
 		final int prime = 31;
 int result = 1;
 result = prime * result + ((this.individual == null) ? 0 : this.individual.hashCode());
-result = prime * result + ((this.locations == null) ? 0 : this.locations.hashCode());
-result = prime * result + ((this.textMention == null) ? 0 : this.textMention.hashCode());
-result = prime * result + ((this.characterOffset == null) ? 0 : this.characterOffset.hashCode());
+result = prime * result + ((this.investigationRestriction == null) ? 0 : this.investigationRestriction.hashCode());
 result = prime * result + ((this.duration == null) ? 0 : this.duration.hashCode());
 result = prime * result + ((this.characterOnset == null) ? 0 : this.characterOnset.hashCode());
+result = prime * result + ((this.characterOffset == null) ? 0 : this.characterOffset.hashCode());
+result = prime * result + ((this.locations == null) ? 0 : this.locations.hashCode());
+result = prime * result + ((this.textMention == null) ? 0 : this.textMention.hashCode());
 return result;}
 	/***/
 @Override
@@ -296,7 +319,7 @@ return this;}
 
 @Override
 public String toString(){
-return "InjectionDelivery [individual="+individual+",characterOffset="+characterOffset+",characterOnset="+characterOnset+",duration="+duration+",locations="+locations+",serialVersionUID="+serialVersionUID+",textMention="+textMention+"]";}
+return "InjectionDelivery [individual="+individual+",investigationRestriction="+investigationRestriction.summarize()+",characterOffset="+characterOffset+",characterOnset="+characterOnset+",duration="+duration+",locations="+locations+",serialVersionUID="+serialVersionUID+",textMention="+textMention+"]";}
 
 
 }

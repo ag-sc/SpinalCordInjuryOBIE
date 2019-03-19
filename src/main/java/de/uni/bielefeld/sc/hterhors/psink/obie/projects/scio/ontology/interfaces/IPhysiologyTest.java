@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
 @AssignableSubInterfaces(get={IBodyWeightExamination.class, IBloodBrainBarrierTest.class, IGastricUlcerogenesisTest.class, IInfectionExamination.class, IAutonomicDysreflexiaTest.class, ICardioVascularFunctionTest.class, IUrineVoidingTest.class, IBloodCirculationExamination.class, })

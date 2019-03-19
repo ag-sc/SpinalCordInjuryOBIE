@@ -15,6 +15,7 @@ import org.apache.jena.rdf.model.Resource;
 import java.util.Map;
 import java.lang.InstantiationException;
 import java.lang.SecurityException;
+import de.hterhors.obie.core.ontology.InvestigationRestriction;
 import de.hterhors.obie.core.ontology.annotations.DirectSiblings;
 import java.lang.IllegalAccessException;
 import de.hterhors.obie.core.ontology.annotations.AssignableSubClasses;
@@ -44,16 +45,16 @@ import de.hterhors.obie.core.ontology.AbstractIndividual;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
+
+@DirectInterface(get=IPublication.class)
+
+@AssignableSubClasses(get={})
 
 @SuperRootClasses(get={Publication.class, })
 
 @DirectSiblings(get={})
-
-@AssignableSubClasses(get={})
-
-@DirectInterface(get=IPublication.class)
  public class Publication implements IPublication{
 
 final public static IndividualFactory<PublicationIndividual> individualFactory = new IndividualFactory<>();
@@ -78,14 +79,22 @@ static class PublicationIndividual extends AbstractIndividual {
 	@Override
 	public AbstractIndividual getIndividual() {
 		return individual;
-	}	final static public String ONTOLOGY_NAME = "http://psink.de/scio/Publication";
+	}
+	@Override
+	public InvestigationRestriction getInvestigationRestriction() {
+		return investigationRestriction;
+	}
+	@Override
+	public Publication setInvestigationRestriction(InvestigationRestriction investigationRestriction ) {
+		this.investigationRestriction = investigationRestriction;
+ return this;	}public InvestigationRestriction investigationRestriction;	final static public String ONTOLOGY_NAME = "http://psink.de/scio/Publication";
 	@OntologyModelContent(ontologyName="http://psink.de/scio/hasAuthor")
 @RelationTypeCollection
 private List<IPerson> authorPersons = new ArrayList<>();
 	private Integer characterOffset;
 	private Integer characterOnset;
-	@RelationTypeCollection
-@OntologyModelContent(ontologyName="http://psink.de/scio/describes")
+	@OntologyModelContent(ontologyName="http://psink.de/scio/describes")
+@RelationTypeCollection
 private List<IExperiment> describesExperiments = new ArrayList<>();
 	@OntologyModelContent(ontologyName="http://psink.de/scio/hasPublicationYear")
 @DatatypeProperty
@@ -99,17 +108,9 @@ private IPubmedID pubmedID;
 final private String textMention;
 
 
-	public Publication(String individualURI, String textMention){
-this.individual = 
-				Publication.individualFactory.getIndividualByURI(individualURI);
-this.textMention = textMention;
-}
-	public Publication(){
-this.individual = null;
-this.textMention = null;
-}
 	public Publication(Publication publication)throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,NoSuchMethodException, SecurityException{
 this.individual = publication.individual;
+this.investigationRestriction = publication.investigationRestriction;
 for (int j = 0; j < publication.getAuthorPersons().size(); j++) {if (publication.getAuthorPersons().get(j) != null) {authorPersons.add((IPerson) IOBIEThing.getCloneConstructor(publication.getAuthorPersons().get(j).getClass()).newInstance(publication.getAuthorPersons().get(j)));} else {authorPersons.add(null);}}
 this.characterOffset = publication.getCharacterOffset();
 this.characterOnset = publication.getCharacterOnset();
@@ -117,6 +118,17 @@ for (int j = 0; j < publication.getDescribesExperiments().size(); j++) {if (publ
 if(publication.getPublicationYear()!=null)this.publicationYear = new PublicationYear((PublicationYear)publication.getPublicationYear());
 if(publication.getPubmedID()!=null)this.pubmedID = new PubmedID((PubmedID)publication.getPubmedID());
 this.textMention = publication.getTextMention();
+}
+	public Publication(){
+this.individual = null;
+this.investigationRestriction = InvestigationRestriction.noRestrictionInstance;
+this.textMention = null;
+}
+	public Publication(String individualURI, InvestigationRestriction investigationRestriction, String textMention){
+this.individual = 
+				Publication.individualFactory.getIndividualByURI(individualURI);
+this.investigationRestriction = investigationRestriction==null?InvestigationRestriction.noRestrictionInstance:investigationRestriction;
+this.textMention = textMention;
 }
 
 
@@ -151,40 +163,45 @@ if (other.individual!= null)
 return false;
 } else if (!individual.equals(other.individual))
 return false;
-if (publicationYear == null) {
-if (other.publicationYear!= null)
+if (investigationRestriction == null) {
+if (other.investigationRestriction!= null)
 return false;
-} else if (!publicationYear.equals(other.publicationYear))
+} else if (!investigationRestriction.equals(other.investigationRestriction))
 return false;
 if (pubmedID == null) {
 if (other.pubmedID!= null)
 return false;
 } else if (!pubmedID.equals(other.pubmedID))
 return false;
-if (authorPersons == null) {
-if (other.authorPersons!= null)
+if (publicationYear == null) {
+if (other.publicationYear!= null)
 return false;
-} else if (!authorPersons.equals(other.authorPersons))
+} else if (!publicationYear.equals(other.publicationYear))
 return false;
 if (describesExperiments == null) {
 if (other.describesExperiments!= null)
 return false;
 } else if (!describesExperiments.equals(other.describesExperiments))
 return false;
-if (textMention == null) {
-if (other.textMention!= null)
+if (characterOnset == null) {
+if (other.characterOnset!= null)
 return false;
-} else if (!textMention.equals(other.textMention))
+} else if (!characterOnset.equals(other.characterOnset))
 return false;
 if (characterOffset == null) {
 if (other.characterOffset!= null)
 return false;
 } else if (!characterOffset.equals(other.characterOffset))
 return false;
-if (characterOnset == null) {
-if (other.characterOnset!= null)
+if (authorPersons == null) {
+if (other.authorPersons!= null)
 return false;
-} else if (!characterOnset.equals(other.characterOnset))
+} else if (!authorPersons.equals(other.authorPersons))
+return false;
+if (textMention == null) {
+if (other.textMention!= null)
+return false;
+} else if (!textMention.equals(other.textMention))
 return false;
 return true;
 }
@@ -258,17 +275,22 @@ return ISCIOThing.RDF_MODEL_NAMESPACE + resourceName;}
 		return textMention;}
 	/***/
 @Override
+	public IOBIEThing getThis(){
+		return this;}
+	/***/
+@Override
 	public int hashCode(){
 		final int prime = 31;
 int result = 1;
 result = prime * result + ((this.individual == null) ? 0 : this.individual.hashCode());
-result = prime * result + ((this.publicationYear == null) ? 0 : this.publicationYear.hashCode());
+result = prime * result + ((this.investigationRestriction == null) ? 0 : this.investigationRestriction.hashCode());
 result = prime * result + ((this.pubmedID == null) ? 0 : this.pubmedID.hashCode());
-result = prime * result + ((this.authorPersons == null) ? 0 : this.authorPersons.hashCode());
+result = prime * result + ((this.publicationYear == null) ? 0 : this.publicationYear.hashCode());
 result = prime * result + ((this.describesExperiments == null) ? 0 : this.describesExperiments.hashCode());
-result = prime * result + ((this.textMention == null) ? 0 : this.textMention.hashCode());
-result = prime * result + ((this.characterOffset == null) ? 0 : this.characterOffset.hashCode());
 result = prime * result + ((this.characterOnset == null) ? 0 : this.characterOnset.hashCode());
+result = prime * result + ((this.characterOffset == null) ? 0 : this.characterOffset.hashCode());
+result = prime * result + ((this.authorPersons == null) ? 0 : this.authorPersons.hashCode());
+result = prime * result + ((this.textMention == null) ? 0 : this.textMention.hashCode());
 return result;}
 	/***/
 @Override
@@ -322,7 +344,7 @@ return this;}
 
 @Override
 public String toString(){
-return "Publication [individual="+individual+",authorPersons="+authorPersons+",characterOffset="+characterOffset+",characterOnset="+characterOnset+",describesExperiments="+describesExperiments+",publicationYear="+publicationYear+",pubmedID="+pubmedID+",serialVersionUID="+serialVersionUID+",textMention="+textMention+"]";}
+return "Publication [individual="+individual+",investigationRestriction="+investigationRestriction.summarize()+",authorPersons="+authorPersons+",characterOffset="+characterOffset+",characterOnset="+characterOnset+",describesExperiments="+describesExperiments+",publicationYear="+publicationYear+",pubmedID="+pubmedID+",serialVersionUID="+serialVersionUID+",textMention="+textMention+"]";}
 
 
 }

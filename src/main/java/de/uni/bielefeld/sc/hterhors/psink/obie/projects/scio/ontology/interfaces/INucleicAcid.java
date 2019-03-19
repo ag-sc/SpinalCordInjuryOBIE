@@ -35,12 +35,12 @@ import java.util.stream.Collectors;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
-@ImplementationClass(get=NucleicAcid.class)
-
 @AssignableSubInterfaces(get={IDNA.class, IVimentinAntiSenseDNA.class, IRNA.class, })
+
+@ImplementationClass(get=NucleicAcid.class)
  public interface INucleicAcid
  extends ICompound{
 

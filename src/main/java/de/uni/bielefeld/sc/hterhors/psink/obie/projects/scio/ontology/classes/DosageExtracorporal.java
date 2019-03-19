@@ -15,6 +15,7 @@ import org.apache.jena.rdf.model.Resource;
 import java.util.Map;
 import java.lang.InstantiationException;
 import java.lang.SecurityException;
+import de.hterhors.obie.core.ontology.InvestigationRestriction;
 import de.hterhors.obie.core.ontology.annotations.DirectSiblings;
 import java.lang.IllegalAccessException;
 import de.hterhors.obie.core.ontology.annotations.AssignableSubClasses;
@@ -41,7 +42,7 @@ import de.hterhors.obie.core.ontology.AbstractIndividual;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
 @SuperRootClasses(get={Dosage.class, })
@@ -49,38 +50,38 @@ import de.hterhors.obie.core.ontology.AbstractIndividual;
 @DatatypeProperty
 @AssignableSubClasses(get={})
 
-@DirectInterface(get=IDosageExtracorporal.class)
-
 @DirectSiblings(get={DosageExtracorporal.class, DosageIntracorporal.class, })
+
+@DirectInterface(get=IDosageExtracorporal.class)
  public class DosageExtracorporal implements IDosageExtracorporal{
 
 	final static public String ONTOLOGY_NAME = "http://psink.de/scio/DosageExtracorporal";
 	private Integer characterOffset;
 	private Integer characterOnset;
+	final private String interpretedValue;
 	final static private Map<IOBIEThing, String> resourceFactory = new HashMap<>();
-	final private String semanticValue;
 	final static private long serialVersionUID = 64L;
 	@TextMention
 final private String textMention;
 
 
-	public DosageExtracorporal(String semanticValue, String textMention){
-this.semanticValue = semanticValue;
+	public DosageExtracorporal(String interpretedValue, String textMention){
+this.interpretedValue = interpretedValue;
 this.textMention = textMention;
+}
+	public DosageExtracorporal(String interpretedValue){
+this.interpretedValue = interpretedValue;
+this.textMention = null;
+}
+	public DosageExtracorporal(){
+this.interpretedValue = null;
+this.textMention = null;
 }
 	public DosageExtracorporal(DosageExtracorporal dosageExtracorporal){
 this.characterOffset = dosageExtracorporal.getCharacterOffset();
 this.characterOnset = dosageExtracorporal.getCharacterOnset();
-this.semanticValue = dosageExtracorporal.getSemanticValue();
+this.interpretedValue = dosageExtracorporal.getInterpretedValue();
 this.textMention = dosageExtracorporal.getTextMention();
-}
-	public DosageExtracorporal(String semanticValue){
-this.semanticValue = semanticValue;
-this.textMention = null;
-}
-	public DosageExtracorporal(){
-this.semanticValue = null;
-this.textMention = null;
 }
 
 
@@ -94,25 +95,25 @@ return false;
 if (getClass() != obj.getClass())
 return false;
 DosageExtracorporal other = (DosageExtracorporal) obj;
-if (textMention == null) {
-if (other.textMention!= null)
+if (characterOnset == null) {
+if (other.characterOnset!= null)
 return false;
-} else if (!textMention.equals(other.textMention))
+} else if (!characterOnset.equals(other.characterOnset))
 return false;
 if (characterOffset == null) {
 if (other.characterOffset!= null)
 return false;
 } else if (!characterOffset.equals(other.characterOffset))
 return false;
-if (characterOnset == null) {
-if (other.characterOnset!= null)
+if (textMention == null) {
+if (other.textMention!= null)
 return false;
-} else if (!characterOnset.equals(other.characterOnset))
+} else if (!textMention.equals(other.textMention))
 return false;
-if (semanticValue == null) {
-if (other.semanticValue!= null)
+if (interpretedValue == null) {
+if (other.interpretedValue!= null)
 return false;
-} else if (!semanticValue.equals(other.semanticValue))
+} else if (!interpretedValue.equals(other.interpretedValue))
 return false;
 return true;
 }
@@ -124,6 +125,10 @@ return true;
 @Override
 	public Integer getCharacterOnset(){
 		return characterOnset;}
+	/***/
+@Override
+	public String getInterpretedValue(){
+		return interpretedValue;}
 	/***/
 @Override
 	public String getONTOLOGY_NAME(){
@@ -148,21 +153,21 @@ return ISCIOThing.RDF_MODEL_NAMESPACE + resourceName;}
 }
 	/***/
 @Override
-	public String getSemanticValue(){
-		return semanticValue;}
-	/***/
-@Override
 	public String getTextMention(){
 		return textMention;}
+	/***/
+@Override
+	public IOBIEThing getThis(){
+		return this;}
 	/***/
 @Override
 	public int hashCode(){
 		final int prime = 31;
 int result = 1;
-result = prime * result + ((this.textMention == null) ? 0 : this.textMention.hashCode());
-result = prime * result + ((this.characterOffset == null) ? 0 : this.characterOffset.hashCode());
 result = prime * result + ((this.characterOnset == null) ? 0 : this.characterOnset.hashCode());
-result = prime * result + ((this.semanticValue == null) ? 0 : this.semanticValue.hashCode());
+result = prime * result + ((this.characterOffset == null) ? 0 : this.characterOffset.hashCode());
+result = prime * result + ((this.textMention == null) ? 0 : this.textMention.hashCode());
+result = prime * result + ((this.interpretedValue == null) ? 0 : this.interpretedValue.hashCode());
 return result;}
 	/***/
 @Override
@@ -178,7 +183,7 @@ return false;}
 
 @Override
 public String toString(){
-return "DosageExtracorporal [characterOffset="+characterOffset+",characterOnset="+characterOnset+",semanticValue="+semanticValue+",serialVersionUID="+serialVersionUID+",textMention="+textMention+"]";}
+return "DosageExtracorporal [characterOffset="+characterOffset+",characterOnset="+characterOnset+",interpretedValue="+interpretedValue+",serialVersionUID="+serialVersionUID+",textMention="+textMention+"]";}
 
 
 }

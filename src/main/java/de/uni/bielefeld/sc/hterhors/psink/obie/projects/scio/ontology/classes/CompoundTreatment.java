@@ -15,6 +15,7 @@ import org.apache.jena.rdf.model.Resource;
 import java.util.Map;
 import java.lang.InstantiationException;
 import java.lang.SecurityException;
+import de.hterhors.obie.core.ontology.InvestigationRestriction;
 import de.hterhors.obie.core.ontology.annotations.DirectSiblings;
 import java.lang.IllegalAccessException;
 import de.hterhors.obie.core.ontology.annotations.AssignableSubClasses;
@@ -47,16 +48,16 @@ import de.hterhors.obie.core.ontology.AbstractIndividual;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
+
+@SuperRootClasses(get={Treatment.class, })
 
 @DirectSiblings(get={CompoundTreatment.class, ModificationTreatment.class, PhysicalTreatment.class, })
 
-@DirectInterface(get=ICompoundTreatment.class)
-
 @AssignableSubClasses(get={})
 
-@SuperRootClasses(get={Treatment.class, })
+@DirectInterface(get=ICompoundTreatment.class)
  public class CompoundTreatment implements ICompoundTreatment{
 
 final public static IndividualFactory<CompoundTreatmentIndividual> individualFactory = new IndividualFactory<>();
@@ -81,7 +82,15 @@ static class CompoundTreatmentIndividual extends AbstractIndividual {
 	@Override
 	public AbstractIndividual getIndividual() {
 		return individual;
-	}	final static public String ONTOLOGY_NAME = "http://psink.de/scio/CompoundTreatment";
+	}
+	@Override
+	public InvestigationRestriction getInvestigationRestriction() {
+		return investigationRestriction;
+	}
+	@Override
+	public CompoundTreatment setInvestigationRestriction(InvestigationRestriction investigationRestriction ) {
+		this.investigationRestriction = investigationRestriction;
+ return this;	}public InvestigationRestriction investigationRestriction;	final static public String ONTOLOGY_NAME = "http://psink.de/scio/CompoundTreatment";
 	@OntologyModelContent(ontologyName="http://psink.de/scio/hasApplicationInstrument")
 private IApplicationInstrument applicationInstrument;
 	private Integer characterOffset;
@@ -90,12 +99,14 @@ private IApplicationInstrument applicationInstrument;
 private ICompound compound;
 	@OntologyModelContent(ontologyName="http://psink.de/scio/hasDeliveryMethod")
 private IDeliveryMethod deliveryMethod;
-	@RelationTypeCollection
-@OntologyModelContent(ontologyName="http://psink.de/scio/hasDirection")
+	@OntologyModelContent(ontologyName="http://psink.de/scio/hasDirection")
+@RelationTypeCollection
 private List<IDirection> directions = new ArrayList<>();
-	@OntologyModelContent(ontologyName="http://psink.de/scio/hasDosage")
+	@DatatypeProperty
+@OntologyModelContent(ontologyName="http://psink.de/scio/hasDosage")
 private IDosage dosage;
 	@OntologyModelContent(ontologyName="http://psink.de/scio/hasDuration")
+@DatatypeProperty
 private IDuration duration;
 	@DatatypeProperty
 @OntologyModelContent(ontologyName="http://psink.de/scio/hasFrequency")
@@ -109,32 +120,35 @@ private ILocation location;
 	final static private long serialVersionUID = 64L;
 	@OntologyModelContent(ontologyName="http://psink.de/scio/hasSuppliedCompositeCompound")
 private ICompound suppliedCompositeCompound;
-	@RelationTypeCollection
-@OntologyModelContent(ontologyName="http://psink.de/scio/hasTemporalInterval")
+	@OntologyModelContent(ontologyName="http://psink.de/scio/hasTemporalInterval")
+@RelationTypeCollection
 private List<ITemporalInterval> temporalIntervals = new ArrayList<>();
 	@TextMention
 final private String textMention;
 
 
-	public CompoundTreatment(String individualURI, String textMention){
+	public CompoundTreatment(String individualURI, InvestigationRestriction investigationRestriction, String textMention){
 this.individual = 
 				CompoundTreatment.individualFactory.getIndividualByURI(individualURI);
+this.investigationRestriction = investigationRestriction==null?InvestigationRestriction.noRestrictionInstance:investigationRestriction;
 this.textMention = textMention;
 }
 	public CompoundTreatment(){
 this.individual = null;
+this.investigationRestriction = InvestigationRestriction.noRestrictionInstance;
 this.textMention = null;
 }
 	public CompoundTreatment(CompoundTreatment compoundTreatment)throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,NoSuchMethodException, SecurityException{
 this.individual = compoundTreatment.individual;
+this.investigationRestriction = compoundTreatment.investigationRestriction;
 if(compoundTreatment.getApplicationInstrument()!=null)this.applicationInstrument = (IApplicationInstrument) IOBIEThing.getCloneConstructor(compoundTreatment.getApplicationInstrument().getClass())	.newInstance(compoundTreatment.getApplicationInstrument());
 this.characterOffset = compoundTreatment.getCharacterOffset();
 this.characterOnset = compoundTreatment.getCharacterOnset();
 if(compoundTreatment.getCompound()!=null)this.compound = (ICompound) IOBIEThing.getCloneConstructor(compoundTreatment.getCompound().getClass())	.newInstance(compoundTreatment.getCompound());
 if(compoundTreatment.getDeliveryMethod()!=null)this.deliveryMethod = (IDeliveryMethod) IOBIEThing.getCloneConstructor(compoundTreatment.getDeliveryMethod().getClass())	.newInstance(compoundTreatment.getDeliveryMethod());
 for (int j = 0; j < compoundTreatment.getDirections().size(); j++) {if (compoundTreatment.getDirections().get(j) != null) {directions.add((IDirection) IOBIEThing.getCloneConstructor(compoundTreatment.getDirections().get(j).getClass()).newInstance(compoundTreatment.getDirections().get(j)));} else {directions.add(null);}}
-if(compoundTreatment.getDosage()!=null)this.dosage = (IDosage) IOBIEThing.getCloneConstructor(compoundTreatment.getDosage().getClass())	.newInstance(compoundTreatment.getDosage());
-if(compoundTreatment.getDuration()!=null)this.duration = (IDuration) IOBIEThing.getCloneConstructor(compoundTreatment.getDuration().getClass())	.newInstance(compoundTreatment.getDuration());
+if(compoundTreatment.getDosage()!=null)this.dosage = new Dosage((Dosage)compoundTreatment.getDosage());
+if(compoundTreatment.getDuration()!=null)this.duration = new Duration((Duration)compoundTreatment.getDuration());
 if(compoundTreatment.getFrequency()!=null)this.frequency = new Frequency((Frequency)compoundTreatment.getFrequency());
 if(compoundTreatment.getInterval()!=null)this.interval = new Interval((Interval)compoundTreatment.getInterval());
 if(compoundTreatment.getLocation()!=null)this.location = (ILocation) IOBIEThing.getCloneConstructor(compoundTreatment.getLocation().getClass())	.newInstance(compoundTreatment.getLocation());
@@ -175,50 +189,55 @@ if (other.individual!= null)
 return false;
 } else if (!individual.equals(other.individual))
 return false;
-if (temporalIntervals == null) {
-if (other.temporalIntervals!= null)
+if (investigationRestriction == null) {
+if (other.investigationRestriction!= null)
 return false;
-} else if (!temporalIntervals.equals(other.temporalIntervals))
+} else if (!investigationRestriction.equals(other.investigationRestriction))
 return false;
-if (frequency == null) {
-if (other.frequency!= null)
+if (duration == null) {
+if (other.duration!= null)
 return false;
-} else if (!frequency.equals(other.frequency))
+} else if (!duration.equals(other.duration))
 return false;
 if (dosage == null) {
 if (other.dosage!= null)
 return false;
 } else if (!dosage.equals(other.dosage))
 return false;
+if (temporalIntervals == null) {
+if (other.temporalIntervals!= null)
+return false;
+} else if (!temporalIntervals.equals(other.temporalIntervals))
+return false;
+if (characterOffset == null) {
+if (other.characterOffset!= null)
+return false;
+} else if (!characterOffset.equals(other.characterOffset))
+return false;
 if (suppliedCompositeCompound == null) {
 if (other.suppliedCompositeCompound!= null)
 return false;
 } else if (!suppliedCompositeCompound.equals(other.suppliedCompositeCompound))
-return false;
-if (applicationInstrument == null) {
-if (other.applicationInstrument!= null)
-return false;
-} else if (!applicationInstrument.equals(other.applicationInstrument))
-return false;
-if (characterOnset == null) {
-if (other.characterOnset!= null)
-return false;
-} else if (!characterOnset.equals(other.characterOnset))
-return false;
-if (deliveryMethod == null) {
-if (other.deliveryMethod!= null)
-return false;
-} else if (!deliveryMethod.equals(other.deliveryMethod))
 return false;
 if (location == null) {
 if (other.location!= null)
 return false;
 } else if (!location.equals(other.location))
 return false;
-if (compound == null) {
-if (other.compound!= null)
+if (deliveryMethod == null) {
+if (other.deliveryMethod!= null)
 return false;
-} else if (!compound.equals(other.compound))
+} else if (!deliveryMethod.equals(other.deliveryMethod))
+return false;
+if (characterOnset == null) {
+if (other.characterOnset!= null)
+return false;
+} else if (!characterOnset.equals(other.characterOnset))
+return false;
+if (applicationInstrument == null) {
+if (other.applicationInstrument!= null)
+return false;
+} else if (!applicationInstrument.equals(other.applicationInstrument))
 return false;
 if (directions == null) {
 if (other.directions!= null)
@@ -230,20 +249,20 @@ if (other.interval!= null)
 return false;
 } else if (!interval.equals(other.interval))
 return false;
+if (compound == null) {
+if (other.compound!= null)
+return false;
+} else if (!compound.equals(other.compound))
+return false;
 if (textMention == null) {
 if (other.textMention!= null)
 return false;
 } else if (!textMention.equals(other.textMention))
 return false;
-if (characterOffset == null) {
-if (other.characterOffset!= null)
+if (frequency == null) {
+if (other.frequency!= null)
 return false;
-} else if (!characterOffset.equals(other.characterOffset))
-return false;
-if (duration == null) {
-if (other.duration!= null)
-return false;
-} else if (!duration.equals(other.duration))
+} else if (!frequency.equals(other.frequency))
 return false;
 return true;
 }
@@ -420,24 +439,29 @@ return ISCIOThing.RDF_MODEL_NAMESPACE + resourceName;}
 		return textMention;}
 	/***/
 @Override
+	public IOBIEThing getThis(){
+		return this;}
+	/***/
+@Override
 	public int hashCode(){
 		final int prime = 31;
 int result = 1;
 result = prime * result + ((this.individual == null) ? 0 : this.individual.hashCode());
-result = prime * result + ((this.temporalIntervals == null) ? 0 : this.temporalIntervals.hashCode());
-result = prime * result + ((this.frequency == null) ? 0 : this.frequency.hashCode());
+result = prime * result + ((this.investigationRestriction == null) ? 0 : this.investigationRestriction.hashCode());
+result = prime * result + ((this.duration == null) ? 0 : this.duration.hashCode());
 result = prime * result + ((this.dosage == null) ? 0 : this.dosage.hashCode());
+result = prime * result + ((this.temporalIntervals == null) ? 0 : this.temporalIntervals.hashCode());
+result = prime * result + ((this.characterOffset == null) ? 0 : this.characterOffset.hashCode());
 result = prime * result + ((this.suppliedCompositeCompound == null) ? 0 : this.suppliedCompositeCompound.hashCode());
-result = prime * result + ((this.applicationInstrument == null) ? 0 : this.applicationInstrument.hashCode());
-result = prime * result + ((this.characterOnset == null) ? 0 : this.characterOnset.hashCode());
-result = prime * result + ((this.deliveryMethod == null) ? 0 : this.deliveryMethod.hashCode());
 result = prime * result + ((this.location == null) ? 0 : this.location.hashCode());
-result = prime * result + ((this.compound == null) ? 0 : this.compound.hashCode());
+result = prime * result + ((this.deliveryMethod == null) ? 0 : this.deliveryMethod.hashCode());
+result = prime * result + ((this.characterOnset == null) ? 0 : this.characterOnset.hashCode());
+result = prime * result + ((this.applicationInstrument == null) ? 0 : this.applicationInstrument.hashCode());
 result = prime * result + ((this.directions == null) ? 0 : this.directions.hashCode());
 result = prime * result + ((this.interval == null) ? 0 : this.interval.hashCode());
+result = prime * result + ((this.compound == null) ? 0 : this.compound.hashCode());
 result = prime * result + ((this.textMention == null) ? 0 : this.textMention.hashCode());
-result = prime * result + ((this.characterOffset == null) ? 0 : this.characterOffset.hashCode());
-result = prime * result + ((this.duration == null) ? 0 : this.duration.hashCode());
+result = prime * result + ((this.frequency == null) ? 0 : this.frequency.hashCode());
 return result;}
 	/***/
 @Override
@@ -601,7 +625,7 @@ return this;}
 
 @Override
 public String toString(){
-return "CompoundTreatment [individual="+individual+",applicationInstrument="+applicationInstrument+",characterOffset="+characterOffset+",characterOnset="+characterOnset+",compound="+compound+",deliveryMethod="+deliveryMethod+",directions="+directions+",dosage="+dosage+",duration="+duration+",frequency="+frequency+",interval="+interval+",location="+location+",serialVersionUID="+serialVersionUID+",suppliedCompositeCompound="+suppliedCompositeCompound+",temporalIntervals="+temporalIntervals+",textMention="+textMention+"]";}
+return "CompoundTreatment [individual="+individual+",investigationRestriction="+investigationRestriction.summarize()+",applicationInstrument="+applicationInstrument+",characterOffset="+characterOffset+",characterOnset="+characterOnset+",compound="+compound+",deliveryMethod="+deliveryMethod+",directions="+directions+",dosage="+dosage+",duration="+duration+",frequency="+frequency+",interval="+interval+",location="+location+",serialVersionUID="+serialVersionUID+",suppliedCompositeCompound="+suppliedCompositeCompound+",temporalIntervals="+temporalIntervals+",textMention="+textMention+"]";}
 
 
 }

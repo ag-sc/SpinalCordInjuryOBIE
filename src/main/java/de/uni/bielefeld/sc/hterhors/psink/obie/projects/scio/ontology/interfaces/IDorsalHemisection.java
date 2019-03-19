@@ -38,12 +38,12 @@ import java.util.stream.Collectors;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
-@ImplementationClass(get=DorsalHemisection.class)
-
 @AssignableSubInterfaces(get={})
+
+@ImplementationClass(get=DorsalHemisection.class)
  public interface IDorsalHemisection
  extends IPartialTransection{
 

@@ -41,12 +41,12 @@ import java.util.stream.Collectors;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
-@ImplementationClass(get=BloodCirculationExamination.class)
-
 @AssignableSubInterfaces(get={})
+
+@ImplementationClass(get=BloodCirculationExamination.class)
  public interface IBloodCirculationExamination
  extends ICardioVascularFunctionTest{
 

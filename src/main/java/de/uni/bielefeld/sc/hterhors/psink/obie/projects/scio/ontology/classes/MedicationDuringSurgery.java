@@ -15,6 +15,7 @@ import org.apache.jena.rdf.model.Resource;
 import java.util.Map;
 import java.lang.InstantiationException;
 import java.lang.SecurityException;
+import de.hterhors.obie.core.ontology.InvestigationRestriction;
 import de.hterhors.obie.core.ontology.annotations.DirectSiblings;
 import java.lang.IllegalAccessException;
 import de.hterhors.obie.core.ontology.annotations.AssignableSubClasses;
@@ -41,16 +42,16 @@ import de.hterhors.obie.core.ontology.AbstractIndividual;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
-@SuperRootClasses(get={AnimalCareCondition.class, })
+@DirectSiblings(get={KeepingCondition.class, PostSurgeryCondition.class, BodyTemperatureMeasurement.class, MedicationDuringSurgery.class, })
 
 @DirectInterface(get=IMedicationDuringSurgery.class)
 
 @AssignableSubClasses(get={KetamineAsAnaesthetic.class, Halothane.class, Xylazine.class, ChloralHydrate.class, Glycopyrrolate.class, Isoflurane.class, FluanisoneMidazolamMixture.class, SodiumPentobarbital.class, ThiopentalSodium.class, Anaesthetic.class, NitrousOxide.class, AtropineSulfate.class, Sedative.class, Diazepam.class, })
 
-@DirectSiblings(get={KeepingCondition.class, PostSurgeryCondition.class, BodyTemperatureMeasurement.class, MedicationDuringSurgery.class, })
+@SuperRootClasses(get={AnimalCareCondition.class, })
  public class MedicationDuringSurgery implements IMedicationDuringSurgery{
 
 final public static IndividualFactory<MedicationDuringSurgeryIndividual> individualFactory = new IndividualFactory<>();
@@ -75,7 +76,15 @@ static class MedicationDuringSurgeryIndividual extends AbstractIndividual {
 	@Override
 	public AbstractIndividual getIndividual() {
 		return individual;
-	}	final static public String ONTOLOGY_NAME = "http://psink.de/scio/MedicationDuringSurgery";
+	}
+	@Override
+	public InvestigationRestriction getInvestigationRestriction() {
+		return investigationRestriction;
+	}
+	@Override
+	public MedicationDuringSurgery setInvestigationRestriction(InvestigationRestriction investigationRestriction ) {
+		this.investigationRestriction = investigationRestriction;
+ return this;	}public InvestigationRestriction investigationRestriction;	final static public String ONTOLOGY_NAME = "http://psink.de/scio/MedicationDuringSurgery";
 	private Integer characterOffset;
 	private Integer characterOnset;
 	@OntologyModelContent(ontologyName="http://psink.de/scio/hasDeliveryMethod")
@@ -86,21 +95,24 @@ private IDeliveryMethod deliveryMethod;
 final private String textMention;
 
 
-	public MedicationDuringSurgery(MedicationDuringSurgery medicationDuringSurgery)throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,NoSuchMethodException, SecurityException{
-this.individual = medicationDuringSurgery.individual;
-this.characterOffset = medicationDuringSurgery.getCharacterOffset();
-this.characterOnset = medicationDuringSurgery.getCharacterOnset();
-if(medicationDuringSurgery.getDeliveryMethod()!=null)this.deliveryMethod = (IDeliveryMethod) IOBIEThing.getCloneConstructor(medicationDuringSurgery.getDeliveryMethod().getClass())	.newInstance(medicationDuringSurgery.getDeliveryMethod());
-this.textMention = medicationDuringSurgery.getTextMention();
-}
-	public MedicationDuringSurgery(String individualURI, String textMention){
+	public MedicationDuringSurgery(String individualURI, InvestigationRestriction investigationRestriction, String textMention){
 this.individual = 
 				MedicationDuringSurgery.individualFactory.getIndividualByURI(individualURI);
+this.investigationRestriction = investigationRestriction==null?InvestigationRestriction.noRestrictionInstance:investigationRestriction;
 this.textMention = textMention;
 }
 	public MedicationDuringSurgery(){
 this.individual = null;
+this.investigationRestriction = InvestigationRestriction.noRestrictionInstance;
 this.textMention = null;
+}
+	public MedicationDuringSurgery(MedicationDuringSurgery medicationDuringSurgery)throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,NoSuchMethodException, SecurityException{
+this.individual = medicationDuringSurgery.individual;
+this.investigationRestriction = medicationDuringSurgery.investigationRestriction;
+this.characterOffset = medicationDuringSurgery.getCharacterOffset();
+this.characterOnset = medicationDuringSurgery.getCharacterOnset();
+if(medicationDuringSurgery.getDeliveryMethod()!=null)this.deliveryMethod = (IDeliveryMethod) IOBIEThing.getCloneConstructor(medicationDuringSurgery.getDeliveryMethod().getClass())	.newInstance(medicationDuringSurgery.getDeliveryMethod());
+this.textMention = medicationDuringSurgery.getTextMention();
 }
 
 
@@ -119,25 +131,30 @@ if (other.individual!= null)
 return false;
 } else if (!individual.equals(other.individual))
 return false;
-if (textMention == null) {
-if (other.textMention!= null)
+if (investigationRestriction == null) {
+if (other.investigationRestriction!= null)
 return false;
-} else if (!textMention.equals(other.textMention))
+} else if (!investigationRestriction.equals(other.investigationRestriction))
 return false;
-if (characterOffset == null) {
-if (other.characterOffset!= null)
+if (deliveryMethod == null) {
+if (other.deliveryMethod!= null)
 return false;
-} else if (!characterOffset.equals(other.characterOffset))
+} else if (!deliveryMethod.equals(other.deliveryMethod))
 return false;
 if (characterOnset == null) {
 if (other.characterOnset!= null)
 return false;
 } else if (!characterOnset.equals(other.characterOnset))
 return false;
-if (deliveryMethod == null) {
-if (other.deliveryMethod!= null)
+if (characterOffset == null) {
+if (other.characterOffset!= null)
 return false;
-} else if (!deliveryMethod.equals(other.deliveryMethod))
+} else if (!characterOffset.equals(other.characterOffset))
+return false;
+if (textMention == null) {
+if (other.textMention!= null)
+return false;
+} else if (!textMention.equals(other.textMention))
 return false;
 return true;
 }
@@ -193,14 +210,19 @@ return ISCIOThing.RDF_MODEL_NAMESPACE + resourceName;}
 		return textMention;}
 	/***/
 @Override
+	public IOBIEThing getThis(){
+		return this;}
+	/***/
+@Override
 	public int hashCode(){
 		final int prime = 31;
 int result = 1;
 result = prime * result + ((this.individual == null) ? 0 : this.individual.hashCode());
-result = prime * result + ((this.textMention == null) ? 0 : this.textMention.hashCode());
-result = prime * result + ((this.characterOffset == null) ? 0 : this.characterOffset.hashCode());
-result = prime * result + ((this.characterOnset == null) ? 0 : this.characterOnset.hashCode());
+result = prime * result + ((this.investigationRestriction == null) ? 0 : this.investigationRestriction.hashCode());
 result = prime * result + ((this.deliveryMethod == null) ? 0 : this.deliveryMethod.hashCode());
+result = prime * result + ((this.characterOnset == null) ? 0 : this.characterOnset.hashCode());
+result = prime * result + ((this.characterOffset == null) ? 0 : this.characterOffset.hashCode());
+result = prime * result + ((this.textMention == null) ? 0 : this.textMention.hashCode());
 return result;}
 	/***/
 @Override
@@ -233,7 +255,7 @@ return this;}
 
 @Override
 public String toString(){
-return "MedicationDuringSurgery [individual="+individual+",characterOffset="+characterOffset+",characterOnset="+characterOnset+",deliveryMethod="+deliveryMethod+",serialVersionUID="+serialVersionUID+",textMention="+textMention+"]";}
+return "MedicationDuringSurgery [individual="+individual+",investigationRestriction="+investigationRestriction.summarize()+",characterOffset="+characterOffset+",characterOnset="+characterOnset+",deliveryMethod="+deliveryMethod+",serialVersionUID="+serialVersionUID+",textMention="+textMention+"]";}
 
 
 }

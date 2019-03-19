@@ -42,13 +42,13 @@ Any weight measured in µg, g or other units.
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
-@ImplementationClass(get=Weight.class)
+@AssignableSubInterfaces(get={})
 
 @DatatypeProperty
-@AssignableSubInterfaces(get={})
+@ImplementationClass(get=Weight.class)
  public interface IWeight
  extends IDatatype, IQudt_Quantity{
 

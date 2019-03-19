@@ -32,12 +32,12 @@ import java.util.stream.Collectors;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
-@ImplementationClass(get=ApplicationInstrument.class)
-
 @AssignableSubInterfaces(get={IElectrodes.class, })
+
+@ImplementationClass(get=ApplicationInstrument.class)
  public interface IApplicationInstrument
  extends ISCIOThing{
 

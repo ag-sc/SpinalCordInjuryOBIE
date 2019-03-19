@@ -35,12 +35,12 @@ import java.util.stream.Collectors;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
-@ImplementationClass(get=EpiduralClip.class)
-
 @AssignableSubInterfaces(get={})
+
+@ImplementationClass(get=EpiduralClip.class)
  public interface IEpiduralClip
  extends IClip{
 

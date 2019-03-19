@@ -38,12 +38,12 @@ import java.util.stream.Collectors;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
-@ImplementationClass(get=Patient.class)
-
 @AssignableSubInterfaces(get={})
+
+@ImplementationClass(get=Patient.class)
  public interface IPatient
  extends IOrganismModel{
 

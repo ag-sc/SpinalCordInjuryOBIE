@@ -41,12 +41,12 @@ import java.util.stream.Collectors;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
-@ImplementationClass(get=TailFlickReflexTest.class)
-
 @AssignableSubInterfaces(get={})
+
+@ImplementationClass(get=TailFlickReflexTest.class)
  public interface ITailFlickReflexTest
  extends IPainTest{
 

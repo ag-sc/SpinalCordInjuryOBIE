@@ -15,6 +15,7 @@ import org.apache.jena.rdf.model.Resource;
 import java.util.Map;
 import java.lang.InstantiationException;
 import java.lang.SecurityException;
+import de.hterhors.obie.core.ontology.InvestigationRestriction;
 import de.hterhors.obie.core.ontology.annotations.DirectSiblings;
 import java.lang.IllegalAccessException;
 import de.hterhors.obie.core.ontology.annotations.AssignableSubClasses;
@@ -44,16 +45,16 @@ import de.hterhors.obie.core.ontology.AbstractIndividual;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
-
-@DirectInterface(get=IOrganismModel.class)
-
-@DirectSiblings(get={})
 
 @AssignableSubClasses(get={MinipigModel.class, RabbitModel.class, GuineaPigModel.class, RatModel.class, AnimalModel.class, MouseModel.class, Patient.class, DogModel.class, CatModel.class, MonkeyModel.class, })
 
 @SuperRootClasses(get={OrganismModel.class, })
+
+@DirectInterface(get=IOrganismModel.class)
+
+@DirectSiblings(get={})
  public class OrganismModel implements IOrganismModel{
 
 final public static IndividualFactory<OrganismModelIndividual> individualFactory = new IndividualFactory<>();
@@ -78,8 +79,17 @@ static class OrganismModelIndividual extends AbstractIndividual {
 	@Override
 	public AbstractIndividual getIndividual() {
 		return individual;
-	}	final static public String ONTOLOGY_NAME = "http://psink.de/scio/OrganismModel";
-	@OntologyModelContent(ontologyName="http://psink.de/scio/hasAge")
+	}
+	@Override
+	public InvestigationRestriction getInvestigationRestriction() {
+		return investigationRestriction;
+	}
+	@Override
+	public OrganismModel setInvestigationRestriction(InvestigationRestriction investigationRestriction ) {
+		this.investigationRestriction = investigationRestriction;
+ return this;	}public InvestigationRestriction investigationRestriction;	final static public String ONTOLOGY_NAME = "http://psink.de/scio/OrganismModel";
+	@DatatypeProperty
+@OntologyModelContent(ontologyName="http://psink.de/scio/hasAge")
 private IAge age;
 	@OntologyModelContent(ontologyName="http://psink.de/scio/hasAgeCategory")
 private IAgeCategory ageCategory;
@@ -93,29 +103,33 @@ private IOrganismSpecies organismSpecies;
 	final static private long serialVersionUID = 64L;
 	@TextMention
 final private String textMention;
-	@OntologyModelContent(ontologyName="http://psink.de/scio/hasWeight")
+	@DatatypeProperty
+@OntologyModelContent(ontologyName="http://psink.de/scio/hasWeight")
 private IWeight weight;
 
 
-	public OrganismModel(String individualURI, String textMention){
-this.individual = 
-				OrganismModel.individualFactory.getIndividualByURI(individualURI);
-this.textMention = textMention;
-}
 	public OrganismModel(OrganismModel organismModel)throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,NoSuchMethodException, SecurityException{
 this.individual = organismModel.individual;
-if(organismModel.getAge()!=null)this.age = (IAge) IOBIEThing.getCloneConstructor(organismModel.getAge().getClass())	.newInstance(organismModel.getAge());
+this.investigationRestriction = organismModel.investigationRestriction;
+if(organismModel.getAge()!=null)this.age = new Age((Age)organismModel.getAge());
 if(organismModel.getAgeCategory()!=null)this.ageCategory = (IAgeCategory) IOBIEThing.getCloneConstructor(organismModel.getAgeCategory().getClass())	.newInstance(organismModel.getAgeCategory());
 this.characterOffset = organismModel.getCharacterOffset();
 this.characterOnset = organismModel.getCharacterOnset();
 if(organismModel.getGender()!=null)this.gender = (IGender) IOBIEThing.getCloneConstructor(organismModel.getGender().getClass())	.newInstance(organismModel.getGender());
 if(organismModel.getOrganismSpecies()!=null)this.organismSpecies = (IOrganismSpecies) IOBIEThing.getCloneConstructor(organismModel.getOrganismSpecies().getClass())	.newInstance(organismModel.getOrganismSpecies());
 this.textMention = organismModel.getTextMention();
-if(organismModel.getWeight()!=null)this.weight = (IWeight) IOBIEThing.getCloneConstructor(organismModel.getWeight().getClass())	.newInstance(organismModel.getWeight());
+if(organismModel.getWeight()!=null)this.weight = new Weight((Weight)organismModel.getWeight());
 }
 	public OrganismModel(){
 this.individual = null;
+this.investigationRestriction = InvestigationRestriction.noRestrictionInstance;
 this.textMention = null;
+}
+	public OrganismModel(String individualURI, InvestigationRestriction investigationRestriction, String textMention){
+this.individual = 
+				OrganismModel.individualFactory.getIndividualByURI(individualURI);
+this.investigationRestriction = investigationRestriction==null?InvestigationRestriction.noRestrictionInstance:investigationRestriction;
+this.textMention = textMention;
 }
 
 
@@ -134,30 +148,15 @@ if (other.individual!= null)
 return false;
 } else if (!individual.equals(other.individual))
 return false;
+if (investigationRestriction == null) {
+if (other.investigationRestriction!= null)
+return false;
+} else if (!investigationRestriction.equals(other.investigationRestriction))
+return false;
 if (gender == null) {
 if (other.gender!= null)
 return false;
 } else if (!gender.equals(other.gender))
-return false;
-if (ageCategory == null) {
-if (other.ageCategory!= null)
-return false;
-} else if (!ageCategory.equals(other.ageCategory))
-return false;
-if (organismSpecies == null) {
-if (other.organismSpecies!= null)
-return false;
-} else if (!organismSpecies.equals(other.organismSpecies))
-return false;
-if (textMention == null) {
-if (other.textMention!= null)
-return false;
-} else if (!textMention.equals(other.textMention))
-return false;
-if (characterOffset == null) {
-if (other.characterOffset!= null)
-return false;
-} else if (!characterOffset.equals(other.characterOffset))
 return false;
 if (age == null) {
 if (other.age!= null)
@@ -169,10 +168,30 @@ if (other.characterOnset!= null)
 return false;
 } else if (!characterOnset.equals(other.characterOnset))
 return false;
+if (characterOffset == null) {
+if (other.characterOffset!= null)
+return false;
+} else if (!characterOffset.equals(other.characterOffset))
+return false;
+if (textMention == null) {
+if (other.textMention!= null)
+return false;
+} else if (!textMention.equals(other.textMention))
+return false;
+if (organismSpecies == null) {
+if (other.organismSpecies!= null)
+return false;
+} else if (!organismSpecies.equals(other.organismSpecies))
+return false;
 if (weight == null) {
 if (other.weight!= null)
 return false;
 } else if (!weight.equals(other.weight))
+return false;
+if (ageCategory == null) {
+if (other.ageCategory!= null)
+return false;
+} else if (!ageCategory.equals(other.ageCategory))
 return false;
 return true;
 }
@@ -256,6 +275,10 @@ return ISCIOThing.RDF_MODEL_NAMESPACE + resourceName;}
 @Override
 	public String getTextMention(){
 		return textMention;}
+	/***/
+@Override
+	public IOBIEThing getThis(){
+		return this;}
 	/**
 <p><b>scio:example</b>
 <p>After laminectomy, the vertebral column was stabilized with clamps and a 10 g rod was dropped from a 12.5 mm height over the exposed spinal cord and the compression maintained for 5 seconds.
@@ -281,14 +304,15 @@ return ISCIOThing.RDF_MODEL_NAMESPACE + resourceName;}
 		final int prime = 31;
 int result = 1;
 result = prime * result + ((this.individual == null) ? 0 : this.individual.hashCode());
+result = prime * result + ((this.investigationRestriction == null) ? 0 : this.investigationRestriction.hashCode());
 result = prime * result + ((this.gender == null) ? 0 : this.gender.hashCode());
-result = prime * result + ((this.ageCategory == null) ? 0 : this.ageCategory.hashCode());
-result = prime * result + ((this.organismSpecies == null) ? 0 : this.organismSpecies.hashCode());
-result = prime * result + ((this.textMention == null) ? 0 : this.textMention.hashCode());
-result = prime * result + ((this.characterOffset == null) ? 0 : this.characterOffset.hashCode());
 result = prime * result + ((this.age == null) ? 0 : this.age.hashCode());
 result = prime * result + ((this.characterOnset == null) ? 0 : this.characterOnset.hashCode());
+result = prime * result + ((this.characterOffset == null) ? 0 : this.characterOffset.hashCode());
+result = prime * result + ((this.textMention == null) ? 0 : this.textMention.hashCode());
+result = prime * result + ((this.organismSpecies == null) ? 0 : this.organismSpecies.hashCode());
 result = prime * result + ((this.weight == null) ? 0 : this.weight.hashCode());
+result = prime * result + ((this.ageCategory == null) ? 0 : this.ageCategory.hashCode());
 return result;}
 	/***/
 @Override
@@ -374,7 +398,7 @@ return this;}
 
 @Override
 public String toString(){
-return "OrganismModel [individual="+individual+",age="+age+",ageCategory="+ageCategory+",characterOffset="+characterOffset+",characterOnset="+characterOnset+",gender="+gender+",organismSpecies="+organismSpecies+",serialVersionUID="+serialVersionUID+",textMention="+textMention+",weight="+weight+"]";}
+return "OrganismModel [individual="+individual+",investigationRestriction="+investigationRestriction.summarize()+",age="+age+",ageCategory="+ageCategory+",characterOffset="+characterOffset+",characterOnset="+characterOnset+",gender="+gender+",organismSpecies="+organismSpecies+",serialVersionUID="+serialVersionUID+",textMention="+textMention+",weight="+weight+"]";}
 
 
 }

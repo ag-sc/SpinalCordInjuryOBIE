@@ -15,6 +15,7 @@ import org.apache.jena.rdf.model.Resource;
 import java.util.Map;
 import java.lang.InstantiationException;
 import java.lang.SecurityException;
+import de.hterhors.obie.core.ontology.InvestigationRestriction;
 import de.hterhors.obie.core.ontology.annotations.DirectSiblings;
 import java.lang.IllegalAccessException;
 import de.hterhors.obie.core.ontology.annotations.AssignableSubClasses;
@@ -44,16 +45,16 @@ import de.hterhors.obie.core.ontology.AbstractIndividual;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
 @SuperRootClasses(get={TemporalInterval.class, })
 
-@DirectSiblings(get={})
+@DirectInterface(get=ITemporalInterval.class)
 
 @AssignableSubClasses(get={})
 
-@DirectInterface(get=ITemporalInterval.class)
+@DirectSiblings(get={})
  public class TemporalInterval implements ITemporalInterval{
 
 final public static IndividualFactory<TemporalIntervalIndividual> individualFactory = new IndividualFactory<>();
@@ -78,10 +79,19 @@ static class TemporalIntervalIndividual extends AbstractIndividual {
 	@Override
 	public AbstractIndividual getIndividual() {
 		return individual;
-	}	final static public String ONTOLOGY_NAME = "http://psink.de/scio/TemporalInterval";
+	}
+	@Override
+	public InvestigationRestriction getInvestigationRestriction() {
+		return investigationRestriction;
+	}
+	@Override
+	public TemporalInterval setInvestigationRestriction(InvestigationRestriction investigationRestriction ) {
+		this.investigationRestriction = investigationRestriction;
+ return this;	}public InvestigationRestriction investigationRestriction;	final static public String ONTOLOGY_NAME = "http://psink.de/scio/TemporalInterval";
 	private Integer characterOffset;
 	private Integer characterOnset;
 	@OntologyModelContent(ontologyName="http://psink.de/scio/hasDuration")
+@DatatypeProperty
 private IDuration duration;
 	@OntologyModelContent(ontologyName="http://psink.de/scio/hasEventAfter")
 private IEvent eventAfter;
@@ -93,23 +103,26 @@ private IEvent eventBefore;
 final private String textMention;
 
 
+	public TemporalInterval(String individualURI, InvestigationRestriction investigationRestriction, String textMention){
+this.individual = 
+				TemporalInterval.individualFactory.getIndividualByURI(individualURI);
+this.investigationRestriction = investigationRestriction==null?InvestigationRestriction.noRestrictionInstance:investigationRestriction;
+this.textMention = textMention;
+}
 	public TemporalInterval(){
 this.individual = null;
+this.investigationRestriction = InvestigationRestriction.noRestrictionInstance;
 this.textMention = null;
 }
 	public TemporalInterval(TemporalInterval temporalInterval)throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,NoSuchMethodException, SecurityException{
 this.individual = temporalInterval.individual;
+this.investigationRestriction = temporalInterval.investigationRestriction;
 this.characterOffset = temporalInterval.getCharacterOffset();
 this.characterOnset = temporalInterval.getCharacterOnset();
-if(temporalInterval.getDuration()!=null)this.duration = (IDuration) IOBIEThing.getCloneConstructor(temporalInterval.getDuration().getClass())	.newInstance(temporalInterval.getDuration());
+if(temporalInterval.getDuration()!=null)this.duration = new Duration((Duration)temporalInterval.getDuration());
 if(temporalInterval.getEventAfter()!=null)this.eventAfter = (IEvent) IOBIEThing.getCloneConstructor(temporalInterval.getEventAfter().getClass())	.newInstance(temporalInterval.getEventAfter());
 if(temporalInterval.getEventBefore()!=null)this.eventBefore = (IEvent) IOBIEThing.getCloneConstructor(temporalInterval.getEventBefore().getClass())	.newInstance(temporalInterval.getEventBefore());
 this.textMention = temporalInterval.getTextMention();
-}
-	public TemporalInterval(String individualURI, String textMention){
-this.individual = 
-				TemporalInterval.individualFactory.getIndividualByURI(individualURI);
-this.textMention = textMention;
 }
 
 
@@ -128,35 +141,40 @@ if (other.individual!= null)
 return false;
 } else if (!individual.equals(other.individual))
 return false;
-if (eventBefore == null) {
-if (other.eventBefore!= null)
+if (investigationRestriction == null) {
+if (other.investigationRestriction!= null)
 return false;
-} else if (!eventBefore.equals(other.eventBefore))
-return false;
-if (textMention == null) {
-if (other.textMention!= null)
-return false;
-} else if (!textMention.equals(other.textMention))
-return false;
-if (characterOffset == null) {
-if (other.characterOffset!= null)
-return false;
-} else if (!characterOffset.equals(other.characterOffset))
+} else if (!investigationRestriction.equals(other.investigationRestriction))
 return false;
 if (duration == null) {
 if (other.duration!= null)
 return false;
 } else if (!duration.equals(other.duration))
 return false;
+if (eventAfter == null) {
+if (other.eventAfter!= null)
+return false;
+} else if (!eventAfter.equals(other.eventAfter))
+return false;
 if (characterOnset == null) {
 if (other.characterOnset!= null)
 return false;
 } else if (!characterOnset.equals(other.characterOnset))
 return false;
-if (eventAfter == null) {
-if (other.eventAfter!= null)
+if (characterOffset == null) {
+if (other.characterOffset!= null)
 return false;
-} else if (!eventAfter.equals(other.eventAfter))
+} else if (!characterOffset.equals(other.characterOffset))
+return false;
+if (textMention == null) {
+if (other.textMention!= null)
+return false;
+} else if (!textMention.equals(other.textMention))
+return false;
+if (eventBefore == null) {
+if (other.eventBefore!= null)
+return false;
+} else if (!eventBefore.equals(other.eventBefore))
 return false;
 return true;
 }
@@ -226,16 +244,21 @@ return ISCIOThing.RDF_MODEL_NAMESPACE + resourceName;}
 		return textMention;}
 	/***/
 @Override
+	public IOBIEThing getThis(){
+		return this;}
+	/***/
+@Override
 	public int hashCode(){
 		final int prime = 31;
 int result = 1;
 result = prime * result + ((this.individual == null) ? 0 : this.individual.hashCode());
-result = prime * result + ((this.eventBefore == null) ? 0 : this.eventBefore.hashCode());
-result = prime * result + ((this.textMention == null) ? 0 : this.textMention.hashCode());
-result = prime * result + ((this.characterOffset == null) ? 0 : this.characterOffset.hashCode());
+result = prime * result + ((this.investigationRestriction == null) ? 0 : this.investigationRestriction.hashCode());
 result = prime * result + ((this.duration == null) ? 0 : this.duration.hashCode());
-result = prime * result + ((this.characterOnset == null) ? 0 : this.characterOnset.hashCode());
 result = prime * result + ((this.eventAfter == null) ? 0 : this.eventAfter.hashCode());
+result = prime * result + ((this.characterOnset == null) ? 0 : this.characterOnset.hashCode());
+result = prime * result + ((this.characterOffset == null) ? 0 : this.characterOffset.hashCode());
+result = prime * result + ((this.textMention == null) ? 0 : this.textMention.hashCode());
+result = prime * result + ((this.eventBefore == null) ? 0 : this.eventBefore.hashCode());
 return result;}
 	/***/
 @Override
@@ -284,7 +307,7 @@ return this;}
 
 @Override
 public String toString(){
-return "TemporalInterval [individual="+individual+",characterOffset="+characterOffset+",characterOnset="+characterOnset+",duration="+duration+",eventAfter="+eventAfter+",eventBefore="+eventBefore+",serialVersionUID="+serialVersionUID+",textMention="+textMention+"]";}
+return "TemporalInterval [individual="+individual+",investigationRestriction="+investigationRestriction.summarize()+",characterOffset="+characterOffset+",characterOnset="+characterOnset+",duration="+duration+",eventAfter="+eventAfter+",eventBefore="+eventBefore+",serialVersionUID="+serialVersionUID+",textMention="+textMention+"]";}
 
 
 }

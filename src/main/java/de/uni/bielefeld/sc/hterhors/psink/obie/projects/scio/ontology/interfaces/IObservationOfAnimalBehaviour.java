@@ -29,12 +29,12 @@ import java.util.stream.Collectors;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
-@ImplementationClass(get=ObservationOfAnimalBehaviour.class)
-
 @AssignableSubInterfaces(get={IGroomingObservation.class, ISurvivalObservation.class, ISelfMutilationObservation.class, IMortalityObservation.class, ISpasticityObservation.class, ILethargyObservation.class, })
+
+@ImplementationClass(get=ObservationOfAnimalBehaviour.class)
  public interface IObservationOfAnimalBehaviour
  extends IInvestigationMethod{
 

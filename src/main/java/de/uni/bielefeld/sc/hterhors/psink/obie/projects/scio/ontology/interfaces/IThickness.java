@@ -32,13 +32,13 @@ import java.util.stream.Collectors;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
+
+@AssignableSubInterfaces(get={})
 
 @DatatypeProperty
 @ImplementationClass(get=Thickness.class)
-
-@AssignableSubInterfaces(get={})
  public interface IThickness
  extends IDatatype, IQudt_Quantity{
 

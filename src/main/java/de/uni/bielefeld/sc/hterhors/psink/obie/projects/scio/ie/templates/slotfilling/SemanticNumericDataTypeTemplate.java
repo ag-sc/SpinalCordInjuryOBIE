@@ -1,4 +1,4 @@
-package de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.templates;
+package de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.templates.slotfilling;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -13,6 +13,7 @@ import java.util.Set;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import de.hterhors.obie.core.ontology.ReflectionUtils;
 import de.hterhors.obie.core.ontology.annotations.DatatypeProperty;
 import de.hterhors.obie.core.ontology.annotations.OntologyModelContent;
 import de.hterhors.obie.core.ontology.annotations.RelationTypeCollection;
@@ -22,14 +23,14 @@ import de.hterhors.obie.ml.dtinterpreter.IDatatypeInterpretation;
 import de.hterhors.obie.ml.dtinterpreter.INumericInterpreter;
 import de.hterhors.obie.ml.dtinterpreter.IStringInterpreter;
 import de.hterhors.obie.ml.dtinterpreter.IUnit;
+import de.hterhors.obie.ml.run.AbstractOBIERunner;
 import de.hterhors.obie.ml.run.param.RunParameter;
 import de.hterhors.obie.ml.templates.AbstractOBIETemplate;
-import de.hterhors.obie.ml.utils.ReflectionUtils;
 import de.hterhors.obie.ml.variables.OBIEInstance;
 import de.hterhors.obie.ml.variables.OBIEState;
-import de.hterhors.obie.ml.variables.TemplateAnnotation;
+import de.hterhors.obie.ml.variables.IETmplateAnnotation;
 import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.semantics.SCIOSemanticInterpreter;
-import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.templates.SemanticNumericDataTypeTemplate.Scope;
+import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.templates.slotfilling.SemanticNumericDataTypeTemplate.Scope;
 import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ontology.interfaces.ISCIOThing;
 import factors.Factor;
 import factors.FactorScope;
@@ -69,9 +70,11 @@ public class SemanticNumericDataTypeTemplate extends AbstractOBIETemplate<Scope>
 
 	private final AbstractOBIETemplate<?> thisTemplate;
 
-	public SemanticNumericDataTypeTemplate(RunParameter parameter, List<OBIEInstance> train) {
-		super(parameter);
+	public SemanticNumericDataTypeTemplate(AbstractOBIERunner runner) {
+		super(runner);
 		this.thisTemplate = this;
+
+		List<OBIEInstance> train = runner.corpusProvider.trainingCorpus.getInternalInstances();
 
 		Map<Class<? extends IOBIEThing>, Map<Class<? extends IOBIEThing>, Map<IUnit, List<Double>>>> values = extractDataTypeValuesFromTrainingDataRec(
 				train);
@@ -210,8 +213,8 @@ public class SemanticNumericDataTypeTemplate extends AbstractOBIETemplate<Scope>
 		Map<Class<? extends IOBIEThing>, Map<Class<? extends IOBIEThing>, Map<IUnit, List<Double>>>> values = new HashMap<>();
 
 		for (OBIEInstance internalInstance : train) {
-			for (TemplateAnnotation internalAnnotation : internalInstance.getGoldAnnotation()
-					.getTemplateAnnotations()) {
+			for (IETmplateAnnotation internalAnnotation : internalInstance.getGoldAnnotation()
+					.getAnnotations()) {
 				collectDataTypes(values, null, internalAnnotation.getThing());
 			}
 		}
@@ -263,7 +266,7 @@ public class SemanticNumericDataTypeTemplate extends AbstractOBIETemplate<Scope>
 			}
 		}
 
-		ReflectionUtils.getSlots(obieClass.getClass()).forEach(field -> {
+		ReflectionUtils.getFields(obieClass.getClass(), obieClass.getInvestigationRestriction()).forEach(field -> {
 			try {
 				if (field.isAnnotationPresent(RelationTypeCollection.class)) {
 					for (IOBIEThing element : (List<IOBIEThing>) field.get(obieClass)) {
@@ -298,7 +301,7 @@ public class SemanticNumericDataTypeTemplate extends AbstractOBIETemplate<Scope>
 	public List<Scope> generateFactorScopes(OBIEState state) {
 		List<Scope> factors = new ArrayList<>();
 
-		for (TemplateAnnotation entity : state.getCurrentTemplateAnnotations().getTemplateAnnotations()) {
+		for (IETmplateAnnotation entity : state.getCurrentIETemplateAnnotations().getAnnotations()) {
 			factors.addAll(addFactorRecursive(entity.rootClassType, entity.getThing()));
 		}
 

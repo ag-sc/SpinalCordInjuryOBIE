@@ -39,12 +39,12 @@ force: 100-200 kdyn (100-150 kdyn corresponds to mild-moderate injury, 150-200 k
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
-@ImplementationClass(get=InfiniteHorizonImpactor.class)
-
 @AssignableSubInterfaces(get={})
+
+@ImplementationClass(get=InfiniteHorizonImpactor.class)
  public interface IInfiniteHorizonImpactor
  extends IWeightDrop{
 

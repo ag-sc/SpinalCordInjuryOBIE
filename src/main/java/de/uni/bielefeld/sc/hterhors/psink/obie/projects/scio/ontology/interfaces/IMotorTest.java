@@ -32,12 +32,12 @@ import java.util.stream.Collectors;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
-@AssignableSubInterfaces(get={IForelimbStrengthTest.class, ISinglePelletReachingTest.class, IManualDexterityTest.class, IRearingTest.class, IInclinedPlaneTest.class, IStaircaseTest.class, IForelimbAsymmetryTest.class, ILimbMuscleStrengthTest.class, })
-
 @ImplementationClass(get=MotorTest.class)
+
+@AssignableSubInterfaces(get={IForelimbStrengthTest.class, ISinglePelletReachingTest.class, IManualDexterityTest.class, IRearingTest.class, IInclinedPlaneTest.class, IStaircaseTest.class, IForelimbAsymmetryTest.class, ILimbMuscleStrengthTest.class, })
  public interface IMotorTest
  extends IFunctionalTest{
 

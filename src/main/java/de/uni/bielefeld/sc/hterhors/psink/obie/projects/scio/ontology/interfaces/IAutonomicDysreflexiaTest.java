@@ -38,12 +38,12 @@ import java.util.stream.Collectors;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
-@AssignableSubInterfaces(get={})
-
 @ImplementationClass(get=AutonomicDysreflexiaTest.class)
+
+@AssignableSubInterfaces(get={})
  public interface IAutonomicDysreflexiaTest
  extends IPhysiologyTest{
 

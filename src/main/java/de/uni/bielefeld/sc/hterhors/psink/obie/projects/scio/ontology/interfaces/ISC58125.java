@@ -32,12 +32,12 @@ import java.util.stream.Collectors;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
-@ImplementationClass(get=SC58125.class)
-
 @AssignableSubInterfaces(get={})
+
+@ImplementationClass(get=SC58125.class)
  public interface ISC58125
  extends ISubstance{
 

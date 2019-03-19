@@ -1,4 +1,4 @@
-package de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.templates;
+package de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.templates.slotfilling;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -16,27 +16,28 @@ import org.apache.logging.log4j.Logger;
 import de.hterhors.obie.core.ontology.interfaces.IOBIEThing;
 import de.hterhors.obie.core.tools.TFIDF;
 import de.hterhors.obie.core.utils.CounterMap;
+import de.hterhors.obie.ml.run.AbstractOBIERunner;
 import de.hterhors.obie.ml.run.param.RunParameter;
 import de.hterhors.obie.ml.templates.AbstractOBIETemplate;
 import de.hterhors.obie.ml.variables.OBIEState;
-import de.hterhors.obie.ml.variables.TemplateAnnotation;
-import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.templates.CoRefChainTemplate.Scope;
+import de.hterhors.obie.ml.variables.IETmplateAnnotation;
+import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.templates.slotfilling.CoRefResolutionTemplate.Scope;
 import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ontology.interfaces.IExperimentalGroup;
 import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ontology.interfaces.IGroupName;
 import factors.Factor;
 import factors.FactorScope;
 import learning.Vector;
 
-public class CoRefChainTemplate extends AbstractOBIETemplate<Scope> implements Serializable {
+public class CoRefResolutionTemplate extends AbstractOBIETemplate<Scope> implements Serializable {
 
 	private static final String TOKEN_SPLITTER_REGEX = "\\W";
 	private static final Set<String> STOP_WORDS = new HashSet<>(Arrays.asList("group", "treated", "treatment", "..."));
 
-	public CoRefChainTemplate(RunParameter parameter) {
-		super(parameter);
+	public CoRefResolutionTemplate(AbstractOBIERunner runner) {
+		super(runner);
 	}
 
-	private static Logger log = LogManager.getFormatterLogger(CoRefChainTemplate.class.getName());
+	private static Logger log = LogManager.getFormatterLogger(CoRefResolutionTemplate.class.getName());
 
 	class Scope extends FactorScope {
 
@@ -70,7 +71,7 @@ public class CoRefChainTemplate extends AbstractOBIETemplate<Scope> implements S
 		/**
 		 * TODO: works currently only for ExpGroups and GroupNames.
 		 */
-		for (TemplateAnnotation entity : state.getCurrentTemplateAnnotations().getTemplateAnnotations()) {
+		for (IETmplateAnnotation entity : state.getCurrentIETemplateAnnotations().getAnnotations()) {
 
 			if (!IExperimentalGroup.class.isAssignableFrom(entity.rootClassType))
 				continue;

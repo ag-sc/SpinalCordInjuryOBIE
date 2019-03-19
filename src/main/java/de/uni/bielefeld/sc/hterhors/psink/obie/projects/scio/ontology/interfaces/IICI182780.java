@@ -37,12 +37,12 @@ Fulvestrant was approved for medical use in the United States in 2002.
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
-@ImplementationClass(get=ICI182780.class)
-
 @AssignableSubInterfaces(get={})
+
+@ImplementationClass(get=ICI182780.class)
  public interface IICI182780
  extends ISubstance{
 

@@ -32,12 +32,12 @@ import java.util.stream.Collectors;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
-@AssignableSubInterfaces(get={INarrowBeamTest.class, IAutomatedGaitAnalysis.class, })
-
 @ImplementationClass(get=GaitTest.class)
+
+@AssignableSubInterfaces(get={INarrowBeamTest.class, IAutomatedGaitAnalysis.class, })
  public interface IGaitTest
  extends IFunctionalTest{
 

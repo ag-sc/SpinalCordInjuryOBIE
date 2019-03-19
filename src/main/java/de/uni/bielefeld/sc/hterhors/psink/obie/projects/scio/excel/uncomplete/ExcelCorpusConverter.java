@@ -20,7 +20,7 @@ import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
 
 import de.hterhors.obie.core.utils.ToStringFormatter;
-import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.SCIOOntologyEnvironment;
+import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.environments.OntologyEnvironment;
 import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.semantics.SCIOSemanticInterpreter;
 import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ontology.classes.AgeCategory;
 import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ontology.classes.AllenWeightDropDevice;
@@ -195,7 +195,7 @@ public class ExcelCorpusConverter {
 	 */
 	private static final Map<String, Publication> PUBLICATION_FACTORY = new HashMap<>();
 
-	private static final String PACKAGE_NAME_OF_SCIO_CLASSES = SCIOOntologyEnvironment
+	private static final String PACKAGE_NAME_OF_SCIO_CLASSES = OntologyEnvironment
 			.getInstance().OBIE_CLASSES_PACKAGE_NAME;
 
 	/**
@@ -268,14 +268,14 @@ public class ExcelCorpusConverter {
 		 * one experiment. Each experiment has list of results.
 		 */
 		final String pubmedID = line[0];
-		PUBLICATION_FACTORY.putIfAbsent(pubmedID, new Publication(annotationID, pubmedID));
+		PUBLICATION_FACTORY.putIfAbsent(pubmedID, new Publication(null, null, pubmedID));
 
 		if (PUBLICATION_FACTORY.get(pubmedID).getDescribesExperiments().isEmpty()) {
 			PUBLICATION_FACTORY.get(pubmedID).addDescribesExperiment(new Experiment());
 			PUBLICATION_FACTORY.get(pubmedID).setPublicationYear(new PublicationYear(line[5], line[5]));
 			PUBLICATION_FACTORY.get(pubmedID).setPubmedID(new PubmedID(line[0], line[0]));
 			PUBLICATION_FACTORY.get(pubmedID)
-					.addAuthorPerson(new Person(annotationID, line[3]).setName(new Name(line[3])));
+					.addAuthorPerson(new Person(null, null, line[3]).setName(new Name(line[3])));
 		}
 
 		PUBLICATION_FACTORY.get(pubmedID).getDescribesExperiments().get(0).addResult(buildResult(line));
@@ -293,10 +293,10 @@ public class ExcelCorpusConverter {
 	private IResult buildResult(String[] line) {
 		Result r = new Result()
 				.setInvestigation(new Investigation().setInvestigationMethod(reflectClassByName(line[OUTCOME_NAME],
-						new InvestigationMethod(annotationID,
+						new InvestigationMethod(null, null,
 								line[8] + " " + line[9] + " " + line[OUTCOME_NAME] + " " + line[18]),
 						IInvestigationMethod.class)))
-				.setJudgement(reflectClassByName(line[JUDGEMENT], new Judgement(annotationID, line[JUDGEMENT]),
+				.setJudgement(reflectClassByName(line[JUDGEMENT], new Judgement(null, null, line[JUDGEMENT]),
 						IJudgement.class))
 				.setReferenceExperimentalGroup(buildExperimentalReferenceGroup(line))
 				.setTargetExperimentalGroup(buildExperimentalTargetGroup(line)).setTrend(buildTrend(line));
@@ -339,7 +339,7 @@ public class ExcelCorpusConverter {
 	 */
 	private ITrend buildTrend(String[] line) {
 		return new Trend().setObservedDifference(reflectClassByName(line[TREND],
-				new ObservedDifference(annotationID, line[TREND]), IObservedDifference.class));
+				new ObservedDifference(null, null, line[TREND]), IObservedDifference.class));
 	}
 
 	/**
@@ -367,19 +367,19 @@ public class ExcelCorpusConverter {
 	 */
 	private ITreatment buildTreatmentType(String[] line) {
 		ITreatment treatmentType = reflectClassByName(line[TREATMENT_DETAIL],
-				new CompoundTreatment(annotationID, line[23] + " " + line[TREATMENT_DETAIL]), ITreatment.class)
+				new CompoundTreatment(null, null, line[23] + " " + line[TREATMENT_DETAIL]), ITreatment.class)
 						// .setFrequency(new Frequency())
 						// .setApplicationInstrument(new
 						// ApplicationInstrument())
 						.setDeliveryMethod(reflectClassByName(line[TREATMENT_APPLICATION],
-								new DeliveryMethod(annotationID, line[TREATMENT_APPLICATION]), IDeliveryMethod.class))
+								new DeliveryMethod(null, null, line[TREATMENT_APPLICATION]), IDeliveryMethod.class))
 						.setDuration(reflectClassByName(line[INJURY_DEVICE_DETAIL], null, IDuration.class));
 		// .setInterval(new Interval()).setTreatmentLocation(new
 		// AnatomicalLocation());
 
 		if (treatmentType instanceof CompoundTreatment) {
 			((CompoundTreatment) treatmentType).setCompound(reflectClassByName(line[TREATMENT_DETAIL],
-					new Compound(annotationID, line[23] + " " + line[TREATMENT_DETAIL]), ICompound.class));
+					new Compound(null, null, line[23] + " " + line[TREATMENT_DETAIL]), ICompound.class));
 			((CompoundTreatment) treatmentType)
 					.setDosage(reflectClassByName(line[TREATMENT_DOSAGE], null, IDosage.class));
 			// try {
@@ -410,16 +410,16 @@ public class ExcelCorpusConverter {
 	 * @return a new Injury-model.
 	 */
 	private IInjury buildInjuryModel(String[] line) {
-		return reflectClassByName(line[INJURY_TYPE], new Injury(annotationID, line[INJURY_TYPE]), IInjury.class)
+		return reflectClassByName(line[INJURY_TYPE], new Injury(null, null, line[INJURY_TYPE]), IInjury.class)
 				// .addInjuryAnaesthesiaAnaesthetic(
 				// new Anaesthetic().setDeliveryMethod(new
 				// DeliveryMethod()).setDosage(new Dosage()))
 				.setInjuryDevice(buildInjuryDevice(line))
 				.setInjuryVertebralLocation(line[INJURY_HEIGHT].trim().isEmpty() ? null
-						: new VertebralSegment(annotationID, line[INJURY_HEIGHT]))
+						: new VertebralSegment(null, null, line[INJURY_HEIGHT]))
 				// .setInjuryIntensity(new InjuryIntensity())
 				.setInjuryArea(line[INJURY_LOCATION].trim().isEmpty() ? null
-						: new InjuryArea(annotationID, line[INJURY_LOCATION]));
+						: new InjuryArea(null, null, line[INJURY_LOCATION]));
 		// .addInjuryPostsurgicalCareAnimalCareCondition(new
 		// AnimalCareCondition())
 		// .addMedicationDuringSurgery(new MedicationDuringSurgery());
@@ -435,7 +435,7 @@ public class ExcelCorpusConverter {
 	 */
 	private IInjuryDevice buildInjuryDevice(String[] line) {
 		IInjuryDevice device = reflectClassByName(line[INJURY_DEVICE],
-				new InjuryDevice(annotationID, line[INJURY_DEVICE]), IInjuryDevice.class);
+				new InjuryDevice(null, null, line[INJURY_DEVICE]), IInjuryDevice.class);
 
 		if (device instanceof AneurysmClip) {
 			AneurysmClip aneuyrismClip = (AneurysmClip) device;
@@ -539,13 +539,13 @@ public class ExcelCorpusConverter {
 	 */
 	private IOrganismModel buildAnimalModel(String[] line) {
 		IOrganismModel model = reflectClassByName(line[ANIMAL_TYPE],
-				new AnimalModel(annotationID, line[ANIMAL_SUBTYPE] + "-" + line[ANIMAL_TYPE]), IAnimalModel.class)
+				new AnimalModel(null, null, line[ANIMAL_SUBTYPE] + "-" + line[ANIMAL_TYPE]), IAnimalModel.class)
 						.setOrganismSpecies(reflectClassByName(line[ANIMAL_SUBTYPE],
-								new AnimalSpecies(annotationID, line[ANIMAL_SUBTYPE]), IAnimalSpecies.class))
+								new AnimalSpecies(null, null, line[ANIMAL_SUBTYPE]), IAnimalSpecies.class))
 						.setAgeCategory(reflectClassByName(line[ANIMAL_AGE],
-								new AgeCategory(annotationID, line[ANIMAL_AGE]), IAgeCategory.class))
-						.setGender(reflectClassByName(line[ANIMAL_GENDER],
-								new Gender(annotationID, line[ANIMAL_GENDER]), IGender.class))
+								new AgeCategory(null, null, line[ANIMAL_AGE]), IAgeCategory.class))
+						.setGender(reflectClassByName(line[ANIMAL_GENDER], new Gender(null, null, line[ANIMAL_GENDER]),
+								IGender.class))
 						.setWeight(reflectClassByName(line[ANIMAL_WEIGHT], null, IWeight.class));
 
 		return model;

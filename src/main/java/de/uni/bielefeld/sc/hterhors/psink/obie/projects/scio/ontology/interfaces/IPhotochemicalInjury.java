@@ -26,12 +26,12 @@ import java.util.stream.Collectors;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
-@ImplementationClass(get=PhotochemicalInjury.class)
-
 @AssignableSubInterfaces(get={})
+
+@ImplementationClass(get=PhotochemicalInjury.class)
  public interface IPhotochemicalInjury
  extends IInjury{
 

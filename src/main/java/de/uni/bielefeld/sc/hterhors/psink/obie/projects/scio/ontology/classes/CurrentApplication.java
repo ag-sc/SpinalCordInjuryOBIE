@@ -15,6 +15,7 @@ import org.apache.jena.rdf.model.Resource;
 import java.util.Map;
 import java.lang.InstantiationException;
 import java.lang.SecurityException;
+import de.hterhors.obie.core.ontology.InvestigationRestriction;
 import de.hterhors.obie.core.ontology.annotations.DirectSiblings;
 import java.lang.IllegalAccessException;
 import de.hterhors.obie.core.ontology.annotations.AssignableSubClasses;
@@ -41,16 +42,16 @@ import de.hterhors.obie.core.ontology.AbstractIndividual;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
+
+@SuperRootClasses(get={Treatment.class, })
+
+@DirectInterface(get=ICurrentApplication.class)
 
 @DirectSiblings(get={VoltageApplication.class, MagneticFieldApplication.class, CurrentApplication.class, })
 
 @AssignableSubClasses(get={})
-
-@DirectInterface(get=ICurrentApplication.class)
-
-@SuperRootClasses(get={Treatment.class, })
  public class CurrentApplication implements ICurrentApplication{
 
 final public static IndividualFactory<CurrentApplicationIndividual> individualFactory = new IndividualFactory<>();
@@ -75,21 +76,32 @@ static class CurrentApplicationIndividual extends AbstractIndividual {
 	@Override
 	public AbstractIndividual getIndividual() {
 		return individual;
-	}	final static public String ONTOLOGY_NAME = "http://psink.de/scio/CurrentApplication";
+	}
+	@Override
+	public InvestigationRestriction getInvestigationRestriction() {
+		return investigationRestriction;
+	}
+	@Override
+	public CurrentApplication setInvestigationRestriction(InvestigationRestriction investigationRestriction ) {
+		this.investigationRestriction = investigationRestriction;
+ return this;	}public InvestigationRestriction investigationRestriction;	final static public String ONTOLOGY_NAME = "http://psink.de/scio/CurrentApplication";
 	@OntologyModelContent(ontologyName="http://psink.de/scio/hasApplicationInstrument")
 private IApplicationInstrument applicationInstrument;
 	private Integer characterOffset;
 	private Integer characterOnset;
-	@OntologyModelContent(ontologyName="http://psink.de/scio/hasCurrent")
+	@DatatypeProperty
+@OntologyModelContent(ontologyName="http://psink.de/scio/hasCurrent")
 private ICurrent current;
 	@OntologyModelContent(ontologyName="http://psink.de/scio/hasDeliveryMethod")
 private IDeliveryMethod deliveryMethod;
-	@RelationTypeCollection
-@OntologyModelContent(ontologyName="http://psink.de/scio/hasDirection")
+	@OntologyModelContent(ontologyName="http://psink.de/scio/hasDirection")
+@RelationTypeCollection
 private List<IDirection> directions = new ArrayList<>();
 	@OntologyModelContent(ontologyName="http://psink.de/scio/hasDuration")
+@DatatypeProperty
 private IDuration duration;
-	@OntologyModelContent(ontologyName="http://psink.de/scio/hasElectricFieldStrength")
+	@DatatypeProperty
+@OntologyModelContent(ontologyName="http://psink.de/scio/hasElectricFieldStrength")
 private IElectricFieldStrength electricFieldStrength;
 	@DatatypeProperty
 @OntologyModelContent(ontologyName="http://psink.de/scio/hasFrequency")
@@ -101,40 +113,44 @@ private IInterval interval;
 private ILocation location;
 	final static private Map<IOBIEThing, String> resourceFactory = new HashMap<>();
 	final static private long serialVersionUID = 64L;
-	@RelationTypeCollection
-@OntologyModelContent(ontologyName="http://psink.de/scio/hasTemporalInterval")
+	@OntologyModelContent(ontologyName="http://psink.de/scio/hasTemporalInterval")
+@RelationTypeCollection
 private List<ITemporalInterval> temporalIntervals = new ArrayList<>();
 	@TextMention
 final private String textMention;
-	@OntologyModelContent(ontologyName="http://psink.de/scio/hasVoltage")
+	@DatatypeProperty
+@OntologyModelContent(ontologyName="http://psink.de/scio/hasVoltage")
 private IVoltage voltage;
 
 
+	public CurrentApplication(String individualURI, InvestigationRestriction investigationRestriction, String textMention){
+this.individual = 
+				CurrentApplication.individualFactory.getIndividualByURI(individualURI);
+this.investigationRestriction = investigationRestriction==null?InvestigationRestriction.noRestrictionInstance:investigationRestriction;
+this.textMention = textMention;
+}
 	public CurrentApplication(){
 this.individual = null;
+this.investigationRestriction = InvestigationRestriction.noRestrictionInstance;
 this.textMention = null;
 }
 	public CurrentApplication(CurrentApplication currentApplication)throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,NoSuchMethodException, SecurityException{
 this.individual = currentApplication.individual;
+this.investigationRestriction = currentApplication.investigationRestriction;
 if(currentApplication.getApplicationInstrument()!=null)this.applicationInstrument = (IApplicationInstrument) IOBIEThing.getCloneConstructor(currentApplication.getApplicationInstrument().getClass())	.newInstance(currentApplication.getApplicationInstrument());
 this.characterOffset = currentApplication.getCharacterOffset();
 this.characterOnset = currentApplication.getCharacterOnset();
-if(currentApplication.getCurrent()!=null)this.current = (ICurrent) IOBIEThing.getCloneConstructor(currentApplication.getCurrent().getClass())	.newInstance(currentApplication.getCurrent());
+if(currentApplication.getCurrent()!=null)this.current = new Current((Current)currentApplication.getCurrent());
 if(currentApplication.getDeliveryMethod()!=null)this.deliveryMethod = (IDeliveryMethod) IOBIEThing.getCloneConstructor(currentApplication.getDeliveryMethod().getClass())	.newInstance(currentApplication.getDeliveryMethod());
 for (int j = 0; j < currentApplication.getDirections().size(); j++) {if (currentApplication.getDirections().get(j) != null) {directions.add((IDirection) IOBIEThing.getCloneConstructor(currentApplication.getDirections().get(j).getClass()).newInstance(currentApplication.getDirections().get(j)));} else {directions.add(null);}}
-if(currentApplication.getDuration()!=null)this.duration = (IDuration) IOBIEThing.getCloneConstructor(currentApplication.getDuration().getClass())	.newInstance(currentApplication.getDuration());
-if(currentApplication.getElectricFieldStrength()!=null)this.electricFieldStrength = (IElectricFieldStrength) IOBIEThing.getCloneConstructor(currentApplication.getElectricFieldStrength().getClass())	.newInstance(currentApplication.getElectricFieldStrength());
+if(currentApplication.getDuration()!=null)this.duration = new Duration((Duration)currentApplication.getDuration());
+if(currentApplication.getElectricFieldStrength()!=null)this.electricFieldStrength = new ElectricFieldStrength((ElectricFieldStrength)currentApplication.getElectricFieldStrength());
 if(currentApplication.getFrequency()!=null)this.frequency = new Frequency((Frequency)currentApplication.getFrequency());
 if(currentApplication.getInterval()!=null)this.interval = new Interval((Interval)currentApplication.getInterval());
 if(currentApplication.getLocation()!=null)this.location = (ILocation) IOBIEThing.getCloneConstructor(currentApplication.getLocation().getClass())	.newInstance(currentApplication.getLocation());
 for (int j = 0; j < currentApplication.getTemporalIntervals().size(); j++) {if (currentApplication.getTemporalIntervals().get(j) != null) {temporalIntervals.add((ITemporalInterval) IOBIEThing.getCloneConstructor(currentApplication.getTemporalIntervals().get(j).getClass()).newInstance(currentApplication.getTemporalIntervals().get(j)));} else {temporalIntervals.add(null);}}
 this.textMention = currentApplication.getTextMention();
-if(currentApplication.getVoltage()!=null)this.voltage = (IVoltage) IOBIEThing.getCloneConstructor(currentApplication.getVoltage().getClass())	.newInstance(currentApplication.getVoltage());
-}
-	public CurrentApplication(String individualURI, String textMention){
-this.individual = 
-				CurrentApplication.individualFactory.getIndividualByURI(individualURI);
-this.textMention = textMention;
+if(currentApplication.getVoltage()!=null)this.voltage = new Voltage((Voltage)currentApplication.getVoltage());
 }
 
 
@@ -169,35 +185,30 @@ if (other.individual!= null)
 return false;
 } else if (!individual.equals(other.individual))
 return false;
+if (investigationRestriction == null) {
+if (other.investigationRestriction!= null)
+return false;
+} else if (!investigationRestriction.equals(other.investigationRestriction))
+return false;
+if (duration == null) {
+if (other.duration!= null)
+return false;
+} else if (!duration.equals(other.duration))
+return false;
+if (current == null) {
+if (other.current!= null)
+return false;
+} else if (!current.equals(other.current))
+return false;
 if (temporalIntervals == null) {
 if (other.temporalIntervals!= null)
 return false;
 } else if (!temporalIntervals.equals(other.temporalIntervals))
 return false;
-if (frequency == null) {
-if (other.frequency!= null)
+if (characterOffset == null) {
+if (other.characterOffset!= null)
 return false;
-} else if (!frequency.equals(other.frequency))
-return false;
-if (electricFieldStrength == null) {
-if (other.electricFieldStrength!= null)
-return false;
-} else if (!electricFieldStrength.equals(other.electricFieldStrength))
-return false;
-if (applicationInstrument == null) {
-if (other.applicationInstrument!= null)
-return false;
-} else if (!applicationInstrument.equals(other.applicationInstrument))
-return false;
-if (characterOnset == null) {
-if (other.characterOnset!= null)
-return false;
-} else if (!characterOnset.equals(other.characterOnset))
-return false;
-if (deliveryMethod == null) {
-if (other.deliveryMethod!= null)
-return false;
-} else if (!deliveryMethod.equals(other.deliveryMethod))
+} else if (!characterOffset.equals(other.characterOffset))
 return false;
 if (voltage == null) {
 if (other.voltage!= null)
@@ -209,6 +220,26 @@ if (other.location!= null)
 return false;
 } else if (!location.equals(other.location))
 return false;
+if (electricFieldStrength == null) {
+if (other.electricFieldStrength!= null)
+return false;
+} else if (!electricFieldStrength.equals(other.electricFieldStrength))
+return false;
+if (deliveryMethod == null) {
+if (other.deliveryMethod!= null)
+return false;
+} else if (!deliveryMethod.equals(other.deliveryMethod))
+return false;
+if (characterOnset == null) {
+if (other.characterOnset!= null)
+return false;
+} else if (!characterOnset.equals(other.characterOnset))
+return false;
+if (applicationInstrument == null) {
+if (other.applicationInstrument!= null)
+return false;
+} else if (!applicationInstrument.equals(other.applicationInstrument))
+return false;
 if (directions == null) {
 if (other.directions!= null)
 return false;
@@ -219,25 +250,15 @@ if (other.interval!= null)
 return false;
 } else if (!interval.equals(other.interval))
 return false;
-if (current == null) {
-if (other.current!= null)
-return false;
-} else if (!current.equals(other.current))
-return false;
 if (textMention == null) {
 if (other.textMention!= null)
 return false;
 } else if (!textMention.equals(other.textMention))
 return false;
-if (characterOffset == null) {
-if (other.characterOffset!= null)
+if (frequency == null) {
+if (other.frequency!= null)
 return false;
-} else if (!characterOffset.equals(other.characterOffset))
-return false;
-if (duration == null) {
-if (other.duration!= null)
-return false;
-} else if (!duration.equals(other.duration))
+} else if (!frequency.equals(other.frequency))
 return false;
 return true;
 }
@@ -383,6 +404,10 @@ return ISCIOThing.RDF_MODEL_NAMESPACE + resourceName;}
 @Override
 	public String getTextMention(){
 		return textMention;}
+	/***/
+@Override
+	public IOBIEThing getThis(){
+		return this;}
 	/**
 <p><b>rdfs:label</b>
 <p>has voltage
@@ -396,20 +421,21 @@ return ISCIOThing.RDF_MODEL_NAMESPACE + resourceName;}
 		final int prime = 31;
 int result = 1;
 result = prime * result + ((this.individual == null) ? 0 : this.individual.hashCode());
+result = prime * result + ((this.investigationRestriction == null) ? 0 : this.investigationRestriction.hashCode());
+result = prime * result + ((this.duration == null) ? 0 : this.duration.hashCode());
+result = prime * result + ((this.current == null) ? 0 : this.current.hashCode());
 result = prime * result + ((this.temporalIntervals == null) ? 0 : this.temporalIntervals.hashCode());
-result = prime * result + ((this.frequency == null) ? 0 : this.frequency.hashCode());
-result = prime * result + ((this.electricFieldStrength == null) ? 0 : this.electricFieldStrength.hashCode());
-result = prime * result + ((this.applicationInstrument == null) ? 0 : this.applicationInstrument.hashCode());
-result = prime * result + ((this.characterOnset == null) ? 0 : this.characterOnset.hashCode());
-result = prime * result + ((this.deliveryMethod == null) ? 0 : this.deliveryMethod.hashCode());
+result = prime * result + ((this.characterOffset == null) ? 0 : this.characterOffset.hashCode());
 result = prime * result + ((this.voltage == null) ? 0 : this.voltage.hashCode());
 result = prime * result + ((this.location == null) ? 0 : this.location.hashCode());
+result = prime * result + ((this.electricFieldStrength == null) ? 0 : this.electricFieldStrength.hashCode());
+result = prime * result + ((this.deliveryMethod == null) ? 0 : this.deliveryMethod.hashCode());
+result = prime * result + ((this.characterOnset == null) ? 0 : this.characterOnset.hashCode());
+result = prime * result + ((this.applicationInstrument == null) ? 0 : this.applicationInstrument.hashCode());
 result = prime * result + ((this.directions == null) ? 0 : this.directions.hashCode());
 result = prime * result + ((this.interval == null) ? 0 : this.interval.hashCode());
-result = prime * result + ((this.current == null) ? 0 : this.current.hashCode());
 result = prime * result + ((this.textMention == null) ? 0 : this.textMention.hashCode());
-result = prime * result + ((this.characterOffset == null) ? 0 : this.characterOffset.hashCode());
-result = prime * result + ((this.duration == null) ? 0 : this.duration.hashCode());
+result = prime * result + ((this.frequency == null) ? 0 : this.frequency.hashCode());
 return result;}
 	/***/
 @Override
@@ -551,7 +577,7 @@ return this;}
 
 @Override
 public String toString(){
-return "CurrentApplication [individual="+individual+",applicationInstrument="+applicationInstrument+",characterOffset="+characterOffset+",characterOnset="+characterOnset+",current="+current+",deliveryMethod="+deliveryMethod+",directions="+directions+",duration="+duration+",electricFieldStrength="+electricFieldStrength+",frequency="+frequency+",interval="+interval+",location="+location+",serialVersionUID="+serialVersionUID+",temporalIntervals="+temporalIntervals+",textMention="+textMention+",voltage="+voltage+"]";}
+return "CurrentApplication [individual="+individual+",investigationRestriction="+investigationRestriction.summarize()+",applicationInstrument="+applicationInstrument+",characterOffset="+characterOffset+",characterOnset="+characterOnset+",current="+current+",deliveryMethod="+deliveryMethod+",directions="+directions+",duration="+duration+",electricFieldStrength="+electricFieldStrength+",frequency="+frequency+",interval="+interval+",location="+location+",serialVersionUID="+serialVersionUID+",temporalIntervals="+temporalIntervals+",textMention="+textMention+",voltage="+voltage+"]";}
 
 
 }

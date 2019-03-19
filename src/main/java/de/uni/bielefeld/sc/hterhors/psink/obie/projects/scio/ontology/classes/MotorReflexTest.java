@@ -15,6 +15,7 @@ import org.apache.jena.rdf.model.Resource;
 import java.util.Map;
 import java.lang.InstantiationException;
 import java.lang.SecurityException;
+import de.hterhors.obie.core.ontology.InvestigationRestriction;
 import de.hterhors.obie.core.ontology.annotations.DirectSiblings;
 import java.lang.IllegalAccessException;
 import de.hterhors.obie.core.ontology.annotations.AssignableSubClasses;
@@ -51,7 +52,7 @@ The single dose of NNLA (60 mg/kg) applied on the 10th day after SCI or Baclofen
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
 @DirectSiblings(get={GaitTest.class, PhysiologyTest.class, MotorReflexTest.class, MotorTest.class, PainTest.class, NeurologicScalesTest.class, ElectrophysiologyTest.class, SensoryTest.class, LocomotorTest.class, })
@@ -85,18 +86,27 @@ static class MotorReflexTestIndividual extends AbstractIndividual {
 	@Override
 	public AbstractIndividual getIndividual() {
 		return individual;
-	}	final static public String ONTOLOGY_NAME = "http://psink.de/scio/MotorReflexTest";
+	}
+	@Override
+	public InvestigationRestriction getInvestigationRestriction() {
+		return investigationRestriction;
+	}
+	@Override
+	public MotorReflexTest setInvestigationRestriction(InvestigationRestriction investigationRestriction ) {
+		this.investigationRestriction = investigationRestriction;
+ return this;	}public InvestigationRestriction investigationRestriction;	final static public String ONTOLOGY_NAME = "http://psink.de/scio/MotorReflexTest";
 	private Integer characterOffset;
 	private Integer characterOnset;
 	@OntologyModelContent(ontologyName="http://psink.de/scio/hasDuration")
+@DatatypeProperty
 private IDuration duration;
 	@OntologyModelContent(ontologyName="http://psink.de/scio/makesUseOf")
 @RelationTypeCollection
 private List<IApparatus> makesUseOfApparatus = new ArrayList<>();
 	final static private Map<IOBIEThing, String> resourceFactory = new HashMap<>();
 	final static private long serialVersionUID = 64L;
-	@RelationTypeCollection
-@OntologyModelContent(ontologyName="http://psink.de/scio/testsFor")
+	@OntologyModelContent(ontologyName="http://psink.de/scio/testsFor")
+@RelationTypeCollection
 private List<IFunction> testsForFunctions = new ArrayList<>();
 	@TextMention
 final private String textMention;
@@ -104,21 +114,24 @@ final private String textMention;
 
 	public MotorReflexTest(){
 this.individual = null;
+this.investigationRestriction = InvestigationRestriction.noRestrictionInstance;
 this.textMention = null;
+}
+	public MotorReflexTest(String individualURI, InvestigationRestriction investigationRestriction, String textMention){
+this.individual = 
+				MotorReflexTest.individualFactory.getIndividualByURI(individualURI);
+this.investigationRestriction = investigationRestriction==null?InvestigationRestriction.noRestrictionInstance:investigationRestriction;
+this.textMention = textMention;
 }
 	public MotorReflexTest(MotorReflexTest motorReflexTest)throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,NoSuchMethodException, SecurityException{
 this.individual = motorReflexTest.individual;
+this.investigationRestriction = motorReflexTest.investigationRestriction;
 this.characterOffset = motorReflexTest.getCharacterOffset();
 this.characterOnset = motorReflexTest.getCharacterOnset();
-if(motorReflexTest.getDuration()!=null)this.duration = (IDuration) IOBIEThing.getCloneConstructor(motorReflexTest.getDuration().getClass())	.newInstance(motorReflexTest.getDuration());
+if(motorReflexTest.getDuration()!=null)this.duration = new Duration((Duration)motorReflexTest.getDuration());
 for (int j = 0; j < motorReflexTest.getMakesUseOfApparatus().size(); j++) {if (motorReflexTest.getMakesUseOfApparatus().get(j) != null) {makesUseOfApparatus.add((IApparatus) IOBIEThing.getCloneConstructor(motorReflexTest.getMakesUseOfApparatus().get(j).getClass()).newInstance(motorReflexTest.getMakesUseOfApparatus().get(j)));} else {makesUseOfApparatus.add(null);}}
 for (int j = 0; j < motorReflexTest.getTestsForFunctions().size(); j++) {if (motorReflexTest.getTestsForFunctions().get(j) != null) {testsForFunctions.add((IFunction) IOBIEThing.getCloneConstructor(motorReflexTest.getTestsForFunctions().get(j).getClass()).newInstance(motorReflexTest.getTestsForFunctions().get(j)));} else {testsForFunctions.add(null);}}
 this.textMention = motorReflexTest.getTextMention();
-}
-	public MotorReflexTest(String individualURI, String textMention){
-this.individual = 
-				MotorReflexTest.individualFactory.getIndividualByURI(individualURI);
-this.textMention = textMention;
 }
 
 
@@ -156,25 +169,10 @@ if (other.individual!= null)
 return false;
 } else if (!individual.equals(other.individual))
 return false;
-if (testsForFunctions == null) {
-if (other.testsForFunctions!= null)
+if (investigationRestriction == null) {
+if (other.investigationRestriction!= null)
 return false;
-} else if (!testsForFunctions.equals(other.testsForFunctions))
-return false;
-if (makesUseOfApparatus == null) {
-if (other.makesUseOfApparatus!= null)
-return false;
-} else if (!makesUseOfApparatus.equals(other.makesUseOfApparatus))
-return false;
-if (textMention == null) {
-if (other.textMention!= null)
-return false;
-} else if (!textMention.equals(other.textMention))
-return false;
-if (characterOffset == null) {
-if (other.characterOffset!= null)
-return false;
-} else if (!characterOffset.equals(other.characterOffset))
+} else if (!investigationRestriction.equals(other.investigationRestriction))
 return false;
 if (duration == null) {
 if (other.duration!= null)
@@ -185,6 +183,26 @@ if (characterOnset == null) {
 if (other.characterOnset!= null)
 return false;
 } else if (!characterOnset.equals(other.characterOnset))
+return false;
+if (makesUseOfApparatus == null) {
+if (other.makesUseOfApparatus!= null)
+return false;
+} else if (!makesUseOfApparatus.equals(other.makesUseOfApparatus))
+return false;
+if (testsForFunctions == null) {
+if (other.testsForFunctions!= null)
+return false;
+} else if (!testsForFunctions.equals(other.testsForFunctions))
+return false;
+if (characterOffset == null) {
+if (other.characterOffset!= null)
+return false;
+} else if (!characterOffset.equals(other.characterOffset))
+return false;
+if (textMention == null) {
+if (other.textMention!= null)
+return false;
+} else if (!textMention.equals(other.textMention))
 return false;
 return true;
 }
@@ -257,16 +275,21 @@ return ISCIOThing.RDF_MODEL_NAMESPACE + resourceName;}
 		return textMention;}
 	/***/
 @Override
+	public IOBIEThing getThis(){
+		return this;}
+	/***/
+@Override
 	public int hashCode(){
 		final int prime = 31;
 int result = 1;
 result = prime * result + ((this.individual == null) ? 0 : this.individual.hashCode());
-result = prime * result + ((this.testsForFunctions == null) ? 0 : this.testsForFunctions.hashCode());
-result = prime * result + ((this.makesUseOfApparatus == null) ? 0 : this.makesUseOfApparatus.hashCode());
-result = prime * result + ((this.textMention == null) ? 0 : this.textMention.hashCode());
-result = prime * result + ((this.characterOffset == null) ? 0 : this.characterOffset.hashCode());
+result = prime * result + ((this.investigationRestriction == null) ? 0 : this.investigationRestriction.hashCode());
 result = prime * result + ((this.duration == null) ? 0 : this.duration.hashCode());
 result = prime * result + ((this.characterOnset == null) ? 0 : this.characterOnset.hashCode());
+result = prime * result + ((this.makesUseOfApparatus == null) ? 0 : this.makesUseOfApparatus.hashCode());
+result = prime * result + ((this.testsForFunctions == null) ? 0 : this.testsForFunctions.hashCode());
+result = prime * result + ((this.characterOffset == null) ? 0 : this.characterOffset.hashCode());
+result = prime * result + ((this.textMention == null) ? 0 : this.textMention.hashCode());
 return result;}
 	/***/
 @Override
@@ -318,7 +341,7 @@ return this;}
 
 @Override
 public String toString(){
-return "MotorReflexTest [individual="+individual+",characterOffset="+characterOffset+",characterOnset="+characterOnset+",duration="+duration+",makesUseOfApparatus="+makesUseOfApparatus+",serialVersionUID="+serialVersionUID+",testsForFunctions="+testsForFunctions+",textMention="+textMention+"]";}
+return "MotorReflexTest [individual="+individual+",investigationRestriction="+investigationRestriction.summarize()+",characterOffset="+characterOffset+",characterOnset="+characterOnset+",duration="+duration+",makesUseOfApparatus="+makesUseOfApparatus+",serialVersionUID="+serialVersionUID+",testsForFunctions="+testsForFunctions+",textMention="+textMention+"]";}
 
 
 }

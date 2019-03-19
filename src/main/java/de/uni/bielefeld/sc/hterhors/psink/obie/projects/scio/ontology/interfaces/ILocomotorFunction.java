@@ -32,12 +32,12 @@ import java.util.stream.Collectors;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
-@ImplementationClass(get=LocomotorFunction.class)
-
 @AssignableSubInterfaces(get={})
+
+@ImplementationClass(get=LocomotorFunction.class)
  public interface ILocomotorFunction
  extends IFunction{
 

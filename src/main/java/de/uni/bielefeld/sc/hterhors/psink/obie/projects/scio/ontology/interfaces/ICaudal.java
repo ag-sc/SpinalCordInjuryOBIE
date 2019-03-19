@@ -40,12 +40,12 @@ inserted sub-durally to a region directly caudal to the lesion site.
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
-@ImplementationClass(get=Caudal.class)
-
 @AssignableSubInterfaces(get={})
+
+@ImplementationClass(get=Caudal.class)
  public interface ICaudal
  extends IDirection{
 

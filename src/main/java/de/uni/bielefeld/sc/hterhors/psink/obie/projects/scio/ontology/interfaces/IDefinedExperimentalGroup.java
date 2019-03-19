@@ -29,12 +29,12 @@ import java.util.stream.Collectors;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
-@ImplementationClass(get=DefinedExperimentalGroup.class)
-
 @AssignableSubInterfaces(get={})
+
+@ImplementationClass(get=DefinedExperimentalGroup.class)
  public interface IDefinedExperimentalGroup
  extends IExperimentalGroup{
 

@@ -35,12 +35,12 @@ import java.util.stream.Collectors;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
-@ImplementationClass(get=NeuronalActivityTest.class)
-
 @AssignableSubInterfaces(get={})
+
+@ImplementationClass(get=NeuronalActivityTest.class)
  public interface INeuronalActivityTest
  extends INeuronalChangesTest{
 

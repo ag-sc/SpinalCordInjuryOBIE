@@ -32,12 +32,12 @@ import java.util.stream.Collectors;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
-@ImplementationClass(get=Ketamine.class)
-
 @AssignableSubInterfaces(get={})
+
+@ImplementationClass(get=Ketamine.class)
  public interface IKetamine
  extends ISubstance{
 

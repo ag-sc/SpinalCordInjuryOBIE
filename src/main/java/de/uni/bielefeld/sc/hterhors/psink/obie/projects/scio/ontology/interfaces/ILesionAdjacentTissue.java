@@ -35,12 +35,12 @@ import java.util.stream.Collectors;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
-@ImplementationClass(get=LesionAdjacentTissue.class)
-
 @AssignableSubInterfaces(get={})
+
+@ImplementationClass(get=LesionAdjacentTissue.class)
  public interface ILesionAdjacentTissue
  extends ISpinalCord{
 

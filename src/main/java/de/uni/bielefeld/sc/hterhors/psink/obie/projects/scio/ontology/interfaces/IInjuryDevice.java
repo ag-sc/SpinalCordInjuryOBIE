@@ -35,7 +35,7 @@ import java.util.stream.Collectors;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
 
 @AssignableSubInterfaces(get={IMASCISImpactor.class, IInfiniteHorizonImpactor.class, IAneurysmClip.class, IScissors.class, IEpiduralClip.class, IBlade.class, IFogartyBalloonCatheter.class, IDistractorDevices.class, IAllenWeightDropDevice.class, IForceps.class, IIrisClip.class, INYUImpactor.class, IOSUImpactor.class, IWeightDrop.class, IUnivOfTriesteImpactor.class, ICuttingDevice.class, IBalloon.class, IClip.class, })

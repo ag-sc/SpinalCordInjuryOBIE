@@ -15,6 +15,7 @@ import org.apache.jena.rdf.model.Resource;
 import java.util.Map;
 import java.lang.InstantiationException;
 import java.lang.SecurityException;
+import de.hterhors.obie.core.ontology.InvestigationRestriction;
 import de.hterhors.obie.core.ontology.annotations.DirectSiblings;
 import java.lang.IllegalAccessException;
 import de.hterhors.obie.core.ontology.annotations.AssignableSubClasses;
@@ -47,16 +48,16 @@ import de.hterhors.obie.core.ontology.AbstractIndividual;
 * @author hterhors
 *
 *
-*Oct 23, 2018
+*Mar 19, 2019
 */
-
-@DirectInterface(get=IInfusionDelivery.class)
 
 @SuperRootClasses(get={DeliveryMethod.class, })
 
 @AssignableSubClasses(get={})
 
 @DirectSiblings(get={MicrodialysisDelivery.class, InjectionDelivery.class, InhalationDelivery.class, InfusionDelivery.class, SuperficialDelivery.class, OralDelivery.class, })
+
+@DirectInterface(get=IInfusionDelivery.class)
  public class InfusionDelivery implements IInfusionDelivery{
 
 final public static IndividualFactory<InfusionDeliveryIndividual> individualFactory = new IndividualFactory<>();
@@ -81,13 +82,22 @@ static class InfusionDeliveryIndividual extends AbstractIndividual {
 	@Override
 	public AbstractIndividual getIndividual() {
 		return individual;
-	}	final static public String ONTOLOGY_NAME = "http://psink.de/scio/InfusionDelivery";
+	}
+	@Override
+	public InvestigationRestriction getInvestigationRestriction() {
+		return investigationRestriction;
+	}
+	@Override
+	public InfusionDelivery setInvestigationRestriction(InvestigationRestriction investigationRestriction ) {
+		this.investigationRestriction = investigationRestriction;
+ return this;	}public InvestigationRestriction investigationRestriction;	final static public String ONTOLOGY_NAME = "http://psink.de/scio/InfusionDelivery";
 	private Integer characterOffset;
 	private Integer characterOnset;
 	@OntologyModelContent(ontologyName="http://psink.de/scio/hasDuration")
+@DatatypeProperty
 private IDuration duration;
-	@RelationTypeCollection
-@OntologyModelContent(ontologyName="http://psink.de/scio/hasLocation")
+	@OntologyModelContent(ontologyName="http://psink.de/scio/hasLocation")
+@RelationTypeCollection
 private List<ILocation> locations = new ArrayList<>();
 	final static private Map<IOBIEThing, String> resourceFactory = new HashMap<>();
 	final static private long serialVersionUID = 64L;
@@ -95,22 +105,25 @@ private List<ILocation> locations = new ArrayList<>();
 final private String textMention;
 
 
-	public InfusionDelivery(String individualURI, String textMention){
-this.individual = 
-				InfusionDelivery.individualFactory.getIndividualByURI(individualURI);
-this.textMention = textMention;
+	public InfusionDelivery(InfusionDelivery infusionDelivery)throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,NoSuchMethodException, SecurityException{
+this.individual = infusionDelivery.individual;
+this.investigationRestriction = infusionDelivery.investigationRestriction;
+this.characterOffset = infusionDelivery.getCharacterOffset();
+this.characterOnset = infusionDelivery.getCharacterOnset();
+if(infusionDelivery.getDuration()!=null)this.duration = new Duration((Duration)infusionDelivery.getDuration());
+for (int j = 0; j < infusionDelivery.getLocations().size(); j++) {if (infusionDelivery.getLocations().get(j) != null) {locations.add((ILocation) IOBIEThing.getCloneConstructor(infusionDelivery.getLocations().get(j).getClass()).newInstance(infusionDelivery.getLocations().get(j)));} else {locations.add(null);}}
+this.textMention = infusionDelivery.getTextMention();
 }
 	public InfusionDelivery(){
 this.individual = null;
+this.investigationRestriction = InvestigationRestriction.noRestrictionInstance;
 this.textMention = null;
 }
-	public InfusionDelivery(InfusionDelivery infusionDelivery)throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,NoSuchMethodException, SecurityException{
-this.individual = infusionDelivery.individual;
-this.characterOffset = infusionDelivery.getCharacterOffset();
-this.characterOnset = infusionDelivery.getCharacterOnset();
-if(infusionDelivery.getDuration()!=null)this.duration = (IDuration) IOBIEThing.getCloneConstructor(infusionDelivery.getDuration().getClass())	.newInstance(infusionDelivery.getDuration());
-for (int j = 0; j < infusionDelivery.getLocations().size(); j++) {if (infusionDelivery.getLocations().get(j) != null) {locations.add((ILocation) IOBIEThing.getCloneConstructor(infusionDelivery.getLocations().get(j).getClass()).newInstance(infusionDelivery.getLocations().get(j)));} else {locations.add(null);}}
-this.textMention = infusionDelivery.getTextMention();
+	public InfusionDelivery(String individualURI, InvestigationRestriction investigationRestriction, String textMention){
+this.individual = 
+				InfusionDelivery.individualFactory.getIndividualByURI(individualURI);
+this.investigationRestriction = investigationRestriction==null?InvestigationRestriction.noRestrictionInstance:investigationRestriction;
+this.textMention = textMention;
 }
 
 
@@ -145,20 +158,10 @@ if (other.individual!= null)
 return false;
 } else if (!individual.equals(other.individual))
 return false;
-if (locations == null) {
-if (other.locations!= null)
+if (investigationRestriction == null) {
+if (other.investigationRestriction!= null)
 return false;
-} else if (!locations.equals(other.locations))
-return false;
-if (textMention == null) {
-if (other.textMention!= null)
-return false;
-} else if (!textMention.equals(other.textMention))
-return false;
-if (characterOffset == null) {
-if (other.characterOffset!= null)
-return false;
-} else if (!characterOffset.equals(other.characterOffset))
+} else if (!investigationRestriction.equals(other.investigationRestriction))
 return false;
 if (duration == null) {
 if (other.duration!= null)
@@ -169,6 +172,21 @@ if (characterOnset == null) {
 if (other.characterOnset!= null)
 return false;
 } else if (!characterOnset.equals(other.characterOnset))
+return false;
+if (characterOffset == null) {
+if (other.characterOffset!= null)
+return false;
+} else if (!characterOffset.equals(other.characterOffset))
+return false;
+if (locations == null) {
+if (other.locations!= null)
+return false;
+} else if (!locations.equals(other.locations))
+return false;
+if (textMention == null) {
+if (other.textMention!= null)
+return false;
+} else if (!textMention.equals(other.textMention))
 return false;
 return true;
 }
@@ -239,15 +257,20 @@ return ISCIOThing.RDF_MODEL_NAMESPACE + resourceName;}
 		return textMention;}
 	/***/
 @Override
+	public IOBIEThing getThis(){
+		return this;}
+	/***/
+@Override
 	public int hashCode(){
 		final int prime = 31;
 int result = 1;
 result = prime * result + ((this.individual == null) ? 0 : this.individual.hashCode());
-result = prime * result + ((this.locations == null) ? 0 : this.locations.hashCode());
-result = prime * result + ((this.textMention == null) ? 0 : this.textMention.hashCode());
-result = prime * result + ((this.characterOffset == null) ? 0 : this.characterOffset.hashCode());
+result = prime * result + ((this.investigationRestriction == null) ? 0 : this.investigationRestriction.hashCode());
 result = prime * result + ((this.duration == null) ? 0 : this.duration.hashCode());
 result = prime * result + ((this.characterOnset == null) ? 0 : this.characterOnset.hashCode());
+result = prime * result + ((this.characterOffset == null) ? 0 : this.characterOffset.hashCode());
+result = prime * result + ((this.locations == null) ? 0 : this.locations.hashCode());
+result = prime * result + ((this.textMention == null) ? 0 : this.textMention.hashCode());
 return result;}
 	/***/
 @Override
@@ -296,7 +319,7 @@ return this;}
 
 @Override
 public String toString(){
-return "InfusionDelivery [individual="+individual+",characterOffset="+characterOffset+",characterOnset="+characterOnset+",duration="+duration+",locations="+locations+",serialVersionUID="+serialVersionUID+",textMention="+textMention+"]";}
+return "InfusionDelivery [individual="+individual+",investigationRestriction="+investigationRestriction.summarize()+",characterOffset="+characterOffset+",characterOnset="+characterOnset+",duration="+duration+",locations="+locations+",serialVersionUID="+serialVersionUID+",textMention="+textMention+"]";}
 
 
 }

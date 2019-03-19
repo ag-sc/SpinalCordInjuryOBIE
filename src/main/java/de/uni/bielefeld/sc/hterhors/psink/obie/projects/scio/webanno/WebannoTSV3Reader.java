@@ -11,8 +11,8 @@ import java.util.List;
 import java.util.Map;
 
 import de.hterhors.obie.core.tools.JavaClassNamingTools;
-import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.SCIOOntologyEnvironment;
-import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.SCIOProjectEnvironment;
+import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.environments.OntologyEnvironment;
+import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.environments.SlotFillingProjectEnvironment;
 import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ontology.interfaces.ISCIOThing;
 
 /**
@@ -393,7 +393,7 @@ public class WebannoTSV3Reader {
 			className = JavaClassNamingTools.normalizeClassName(className);
 
 			return (Class<ISCIOThing>) Class
-					.forName(SCIOOntologyEnvironment.getInstance().getBasePackage() + "classes." + className);
+					.forName(OntologyEnvironment.getInstance().getBasePackage() + "classes." + className);
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 			missing = true;
