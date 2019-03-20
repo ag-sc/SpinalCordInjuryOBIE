@@ -1,8 +1,13 @@
 package de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.run;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintStream;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
@@ -14,6 +19,10 @@ import de.hterhors.obie.ml.run.AbstractOBIERunner;
 import de.hterhors.obie.ml.run.DefaultEntityRecognitionRunner;
 import de.hterhors.obie.ml.run.param.RunParameter;
 import de.hterhors.obie.ml.templates.AbstractOBIETemplate;
+import de.hterhors.obie.ml.templates.InterTokenTemplate;
+import de.hterhors.obie.ml.templates.TokenContextTemplate;
+import de.hterhors.obie.ml.variables.IETmplateAnnotation;
+import de.hterhors.obie.ml.variables.OBIEState;
 import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.environments.OntologyEnvironment;
 import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.run.parameter.EntityRecognitionParameter;
 import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.templates.nerl.ExampleTemplate;
@@ -46,7 +55,7 @@ public class ExecuteEntityRecognition {
 	private void run() throws Exception {
 
 		log.info("Start entity recognition...");
-		
+
 		/**
 		 * Store total training time.
 		 */
@@ -69,8 +78,8 @@ public class ExecuteEntityRecognition {
 		/*
 		 * TODO: add these templates and observe the score.
 		 */
-//		templates.add(TokenContextTemplate.class);
-//		templates.add(InterTokenTemplate.class);
+		templates.add(TokenContextTemplate.class);
+		templates.add(InterTokenTemplate.class);
 
 		/*
 		 * Add templates and build parameter.
@@ -119,14 +128,57 @@ public class ExecuteEntityRecognition {
 		 */
 		final PRF1 overallPRF1 = runner.evaluateNERLOnTest();
 
+		List<OBIEState> predictions = runner.predictInstancesBatch(
+				runner.corpusProvider.getFullCorpus().getInternalInstances(), Collections.emptySet());
+
 		final long tet = (System.currentTimeMillis() - testTime);
 
+		
 		log.info("--------" + runner.getParameter().runID + "--------");
 		log.info("Evaluation results on test data:\n" + overallPRF1);
 		log.info("Total training time: " + trt + " ms.");
 		log.info("Total test time: " + tet + " ms.");
 		log.info("Total time: "
 				+ Duration.between(Instant.now(), Instant.ofEpochMilli(System.currentTimeMillis() + (trt + tet))));
+
+		log.info("Write predictions to file...");
+
+		File outputDir = new File("nerl/annotations/");
+		writePredictions(outputDir, predictions);
+
+	}
+
+	private void writePredictions(File outputDir, List<OBIEState> predictions) throws IOException {
+
+		for (OBIEState sampledInstance : predictions) {
+			int globalAnnotationID = 0;
+			PrintStream ps = new PrintStream(
+					outputDir + "/" + sampledInstance.getInstance().getName() + "_system_annotations.annodb");
+			ps.println("# AnnotationID, ClassType, DocCharOnset(incl), DocCharOffset(excl), Text, Meta, Instances");
+			for (IETmplateAnnotation annotation : sampledInstance.getCurrentIETemplateAnnotations().getAnnotations()) {
+				ps.println(toAnnotDBFormat(globalAnnotationID, annotation));
+				globalAnnotationID++;
+			}
+			ps.close();
+		}
+
+	}
+
+	private String toAnnotDBFormat(int globalAnnotationID, IETmplateAnnotation annotation) {
+		StringBuilder b = new StringBuilder();
+		b.append(globalAnnotationID);
+		b.append(", ");
+		b.append(annotation.getThing().getLabel());
+		b.append(", ");
+		b.append(annotation.getThing().getCharacterOnset());
+		b.append(", ");
+		b.append(annotation.getThing().getCharacterOffset());
+		b.append(", ");
+		b.append("\"" + annotation.getThing().getTextMention() + "\"");
+		b.append(", ");
+		b.append("\"\"");
+		b.append(", ");
+		return b.toString();
 	}
 
 }

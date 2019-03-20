@@ -1,7 +1,5 @@
 package de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.annodb;
 
-import de.hterhors.obie.core.ontology.interfaces.IOBIEThing;
-
 public class RDFRelatedAnnotation {
 
 	final public String textMention;
@@ -9,22 +7,15 @@ public class RDFRelatedAnnotation {
 	final public int offset;
 	final public String annotationID;
 	final public Triple linkID;
-//	final public Class<? extends IOBIEThing> classType;
 
-	public RDFRelatedAnnotation(String textMention, int onset, int offset, String annotationID, Triple linkID
-			) {
+	public RDFRelatedAnnotation(String textMention, int onset, int offset, String annotationID, Triple linkID) {
 		super();
 		this.textMention = textMention;
 		this.onset = onset;
 		this.offset = offset;
 		this.annotationID = annotationID;
 		this.linkID = linkID;
-//		this.classType = classType;
 	}
-
-	
-
-	
 
 	@Override
 	public int hashCode() {
@@ -68,10 +59,6 @@ public class RDFRelatedAnnotation {
 			return false;
 		return true;
 	}
-
-
-
-
 
 	@Override
 	public String toString() {

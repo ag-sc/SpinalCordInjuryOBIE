@@ -29,7 +29,7 @@ public class SlotFillingProjectEnvironment extends AbstractProjectEnvironment<IS
 //	final public File rawCorpusFile = new File("annodb/corpus/export_10012019_injury_v64.bin");
 //	final public File rawCorpusFile = new File("annodb/corpus/export_10012019_treatment_v64.bin");
 
-	final public File bigramCorpusFileDirectory = new File("bigram/corpus/");
+	final public File bigramCorpusFileDirectory = new File("bigram/corpus/slotfilling");
 
 	public static SlotFillingProjectEnvironment getInstance() {
 		log.info("Return instance of " + SlotFillingProjectEnvironment.class.getName());
