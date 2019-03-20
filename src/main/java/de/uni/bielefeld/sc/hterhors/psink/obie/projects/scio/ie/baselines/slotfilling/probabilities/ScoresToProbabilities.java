@@ -1,4 +1,4 @@
-package de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.baselines.probabilities;
+package de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.baselines.slotfilling.probabilities;
 
 import java.io.BufferedReader;
 import java.io.File;
