@@ -153,7 +153,7 @@ public class ExecuteEntityRecognition {
 		for (OBIEState sampledInstance : predictions) {
 			int globalAnnotationID = 0;
 			PrintStream ps = new PrintStream(
-					outputDir + "/" + sampledInstance.getInstance().getName() + "_system_annotations.annodb");
+					outputDir + "/" + sampledInstance.getInstance().getName() + "_system.annodb");
 			ps.println("# AnnotationID, ClassType, DocCharOnset(incl), DocCharOffset(excl), Text, Meta, Instances");
 			for (IETmplateAnnotation annotation : sampledInstance.getCurrentIETemplateAnnotations().getAnnotations()) {
 				ps.println(toAnnotDBFormat(globalAnnotationID, annotation));
