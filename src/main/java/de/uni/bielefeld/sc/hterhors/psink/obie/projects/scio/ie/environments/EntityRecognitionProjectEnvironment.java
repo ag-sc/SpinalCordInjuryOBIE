@@ -52,7 +52,7 @@ public class EntityRecognitionProjectEnvironment extends AbstractProjectEnvironm
 	}
 
 	@Override
-	public String getCorpusPrefix() {
+	public String getCorpusName() {
 		return "org_model_nerl_v_10012019";
 	}
 

@@ -116,7 +116,7 @@ public class CorpusInvestigation {
 			System.out.println(doc.getContent());
 
 			doc.getGoldAnnotation().getAnnotations()
-					.forEach(s -> System.out.println(OBIEClassFormatter.format(s.getThing(), true)));
+					.forEach(s -> System.out.println(OBIEClassFormatter.format(s.getThing())));
 
 			for (Class<? extends IOBIEThing> availableClass : doc.getEntityAnnotations()
 					.getAvailableClassTypes()) {

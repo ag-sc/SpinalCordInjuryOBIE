@@ -181,8 +181,8 @@ public class GroupNamesOBIECorpus {
 			long onset = 0;
 			long offset = 0;
 			for (int i = 0; i < tokens.size(); i++) {
-				onset = tokens.get(i).getFromCharPosition();
-				offset = tokens.get(i).getToCharPosition();
+				onset = tokens.get(i).getOnsetCharPosition();
+				offset = tokens.get(i).getOffsetCharPosition();
 				IOBEnum iobTag = IOBEnum.O;
 				if (!prevIOBTag.equals(IOBEnum.B) && annotationLength == 0) {
 					for (String[] annotation : sortedAnn) {

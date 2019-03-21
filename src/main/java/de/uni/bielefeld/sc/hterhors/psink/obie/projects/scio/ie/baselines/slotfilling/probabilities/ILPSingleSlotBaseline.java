@@ -73,9 +73,9 @@ public class ILPSingleSlotBaseline {
 
 			List<IOBIEThing> predictions = exhaustiveSearchFindBestSingleSlot(singleSlotProbs.get(doc.getName()));
 			doc.getGoldAnnotation().getAnnotations()
-					.forEach(s -> System.out.println(OBIEClassFormatter.format(s.getThing(), false)));
+					.forEach(s -> System.out.println(OBIEClassFormatter.format(s.getThing())));
 			System.out.println("____________________________");
-			predictions.forEach(f -> System.out.println(OBIEClassFormatter.format(f, false)));
+			predictions.forEach(f -> System.out.println(OBIEClassFormatter.format(f)));
 
 			final double precision = param.evaluator.precision(gold, predictions);
 			final double recall = param.evaluator.recall(gold, predictions);

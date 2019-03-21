@@ -199,7 +199,7 @@ public class ExcelCleaner {
 
 			for (IResult r : dp.getValue()) {
 
-				System.out.println(OBIEClassFormatter.format(r, true));
+				System.out.println(OBIEClassFormatter.format(r));
 
 				Set<Props> list = new HashSet<>();
 				getRec(list, null, r, "");

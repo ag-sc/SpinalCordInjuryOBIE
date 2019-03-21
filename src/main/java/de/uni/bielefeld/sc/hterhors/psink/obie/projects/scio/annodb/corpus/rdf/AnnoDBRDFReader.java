@@ -116,7 +116,7 @@ public class AnnoDBRDFReader<R extends ISCIOThing> {
 		// File("knowtator/gen/brigitte_full25_v62.n-triples");
 
 		for (IInjury x : new AnnoDBRDFReader<IInjury>(IInjury.class, rdfFile, annotationFile).get()) {
-			System.out.println(OBIEClassFormatter.format(x, true));
+			System.out.println(OBIEClassFormatter.format(x));
 		}
 		// for (IOrganismModel x : new
 		// AnnoDBRDFSCIOReader<IOrganismModel>(IOrganismModel.class, rdfFile,

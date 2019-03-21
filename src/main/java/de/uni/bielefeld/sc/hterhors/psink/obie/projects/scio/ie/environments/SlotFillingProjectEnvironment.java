@@ -52,8 +52,10 @@ public class SlotFillingProjectEnvironment extends AbstractProjectEnvironment<IS
 	}
 
 	@Override
-	public String getCorpusPrefix() {
-		return "regex_export_10012019";
+	public String getCorpusName() {
+		return "simple_nerl_export_10012019";
+//		return "nerl_export_10012019";
+//		return "regex_export_10012019";
 	}
 
 }

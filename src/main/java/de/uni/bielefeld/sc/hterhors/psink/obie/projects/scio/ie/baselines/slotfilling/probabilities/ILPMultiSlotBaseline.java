@@ -74,9 +74,9 @@ public class ILPMultiSlotBaseline {
 
 			List<IOBIEThing> predictions = exhaustiveSearchFindBestDoubleSlot();
 			doc.getGoldAnnotation().getAnnotations()
-					.forEach(s -> System.out.println(OBIEClassFormatter.format(s.getThing(), false)));
+					.forEach(s -> System.out.println(OBIEClassFormatter.format(s.getThing())));
 			System.out.println("____________________________");
-			predictions.forEach(f -> System.out.println(OBIEClassFormatter.format(f, false)));
+			predictions.forEach(f -> System.out.println(OBIEClassFormatter.format(f)));
 
 			/**
 			 * TODO: ADD HERE slot evaluation.

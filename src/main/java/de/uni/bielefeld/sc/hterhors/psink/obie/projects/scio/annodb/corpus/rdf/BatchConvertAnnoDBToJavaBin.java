@@ -39,12 +39,12 @@ public class BatchConvertAnnoDBToJavaBin {
 					annotationFile);
 			dataCollection.addAll(reader.get());
 			for (ISCIOThing iscioThing : reader.get()) {
-				System.out.println(OBIEClassFormatter.format(iscioThing, true));
+				System.out.println(OBIEClassFormatter.format(iscioThing));
 			}
 		}
 
 		System.out.println(dataCollection.size());
-		dataCollection.forEach(l -> System.out.println(OBIEClassFormatter.format(l, true)));
+		dataCollection.forEach(l -> System.out.println(OBIEClassFormatter.format(l)));
 	}
 
 }

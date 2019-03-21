@@ -86,7 +86,7 @@ public class EntityRecognitionParameter {
 		/**
 		 * Whether to train in multi-threading. Turn off only for debugging.
 		 */
-		final boolean multiThreading = true;
+		final boolean multiThreading = false;
 
 		/**
 		 * Random seed generation for sampling procedure. Fix seed for deterministic

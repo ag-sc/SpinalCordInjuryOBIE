@@ -68,7 +68,7 @@ public class ExternalAnnotationsNEL<T extends IOBIEThing> implements INamedEntit
 
 			Map<Class<? extends IOBIEThing>, Set<NERLClassAnnotation>> annotations = new HashMap<>();
 
-			File annotationFile = new File(externalResourceDir + instanceName + "_" + annotator + ".annodb");
+			File annotationFile = new File(externalResourceDir + "/" + instanceName + "_" + annotator + ".annodb");
 
 			for (RDFRelatedAnnotation rdfRelatedAnnotation : readAnnotations(annotationFile)) {
 
@@ -119,7 +119,7 @@ public class ExternalAnnotationsNEL<T extends IOBIEThing> implements INamedEntit
 			String content) {
 		try {
 			Map<AbstractIndividual, Set<NERLIndividualAnnotation>> annotations = new HashMap<>();
-			File annotationFile = new File(externalResourceDir + instanceName + "_" + annotator + ".annodb");
+			File annotationFile = new File(externalResourceDir + "/" + instanceName + "_" + annotator + ".annodb");
 
 			for (RDFRelatedAnnotation rdfRelatedAnnotation : readAnnotations(annotationFile)) {
 
@@ -160,6 +160,7 @@ public class ExternalAnnotationsNEL<T extends IOBIEThing> implements INamedEntit
 				}
 
 			}
+
 			return annotations;
 		} catch (Exception e) {
 			e.printStackTrace();

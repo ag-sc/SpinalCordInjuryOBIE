@@ -141,7 +141,7 @@ public class SlotFillingParameter {
 			restrictFields.add(new RestrictedField("ageCategory", true));
 			restrictFields.add(new RestrictedField("weight", true));
 			restrictFields.add(new RestrictedField("organismSpecies", true));
-			restrictions = new InvestigationRestriction(restrictFields, true);
+			restrictions = new InvestigationRestriction(restrictFields, false);
 		}
 
 		if (IInjury.class.isAssignableFrom(corpusType)) {
@@ -284,7 +284,7 @@ public class SlotFillingParameter {
 				.setMaxNumberOfDataTypeElements(maxNumberOfDataTypeElements).setRandomForSampling(rndForSampling)
 				.setManualExploreClassesWithoutEvidence(exploreClassesWithoutEvidence);
 	}
-	
+
 //	public static Builder getParameterBuilder(String runID_param, boolean singleSlot,
 //			Class<? extends ISCIOThing> corpusType, boolean full) {
 //		final String personalNote = "UNDER DEVELOPMENT";
@@ -498,8 +498,8 @@ public class SlotFillingParameter {
 //	}
 
 	public static AbstractCorpusDistributor shuffleDist() {
-		return new ShuffleCorpusDistributor.Builder().setTrainingProportion(80).setDevelopmentProportion(0)
-				.setTestProportion(20).build();
+		return new ShuffleCorpusDistributor.Builder().setSeed(100L).setTrainingProportion(80)
+				.setDevelopmentProportion(0).setTestProportion(20).build();
 	}
 
 	public static AbstractCorpusDistributor foldCrossDist() {

@@ -5,7 +5,8 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.Collections;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -15,17 +16,24 @@ import org.apache.logging.log4j.Logger;
 
 import de.hterhors.obie.core.evaluation.PRF1;
 import de.hterhors.obie.core.ontology.OntologyInitializer;
+import de.hterhors.obie.ml.ner.INamedEntitityLinker;
 import de.hterhors.obie.ml.run.AbstractOBIERunner;
 import de.hterhors.obie.ml.run.DefaultEntityRecognitionRunner;
 import de.hterhors.obie.ml.run.param.RunParameter;
 import de.hterhors.obie.ml.templates.AbstractOBIETemplate;
 import de.hterhors.obie.ml.templates.InterTokenTemplate;
 import de.hterhors.obie.ml.templates.TokenContextTemplate;
+import de.hterhors.obie.ml.utils.OBIEClassFormatter;
 import de.hterhors.obie.ml.variables.IETmplateAnnotation;
+import de.hterhors.obie.ml.variables.InstanceTemplateAnnotations;
+import de.hterhors.obie.ml.variables.OBIEInstance;
 import de.hterhors.obie.ml.variables.OBIEState;
+import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.annotation.regex.SCIORegExNEL;
 import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.environments.OntologyEnvironment;
 import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.run.parameter.EntityRecognitionParameter;
 import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.templates.nerl.ExampleTemplate;
+import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ontology.interfaces.IAge;
+import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ontology.interfaces.IWeight;
 
 /**
  *
@@ -48,7 +56,14 @@ public class ExecuteEntityRecognition {
 		{
 			OntologyInitializer.initializeOntology(OntologyEnvironment.getInstance());
 		}
+		/*
+		 * Detailed printing includes char-on and offset.
+		 */
+		OBIEClassFormatter.printDetailed = true;
 
+		/*
+		 * Start extraction procedure
+		 */
 		run();
 	}
 
@@ -78,8 +93,8 @@ public class ExecuteEntityRecognition {
 		/*
 		 * TODO: add these templates and observe the score.
 		 */
-		templates.add(TokenContextTemplate.class);
-		templates.add(InterTokenTemplate.class);
+//		templates.add(TokenContextTemplate.class);
+//		templates.add(InterTokenTemplate.class);
 
 		/*
 		 * Add templates and build parameter.
@@ -93,7 +108,7 @@ public class ExecuteEntityRecognition {
 		final AbstractOBIERunner runner = new DefaultEntityRecognitionRunner(parameter);
 
 		/*
-		 * Check if the model exists. If so, load the model, if not train the model.
+		 * Check if the model exists. If so, load , if not train the model.
 		 */
 		if (runner.modelExists()) {
 			/*
@@ -128,12 +143,20 @@ public class ExecuteEntityRecognition {
 		 */
 		final PRF1 overallPRF1 = runner.evaluateNERLOnTest();
 
-		List<OBIEState> predictions = runner.predictInstancesBatch(
-				runner.corpusProvider.getFullCorpus().getInternalInstances(), Collections.emptySet());
+		Set<INamedEntitityLinker> linker = new HashSet<>();
+		linker.add(new SCIORegExNEL(new HashSet<>(Arrays.asList(IAge.class, IWeight.class))));
+
+		List<OBIEInstance> cleanInstance = new ArrayList<>();
+
+		for (OBIEInstance oi : runner.corpusProvider.getFullCorpus().getInternalInstances()) {
+			cleanInstance.add(new OBIEInstance(oi.getName(), oi.getContent(), new InstanceTemplateAnnotations(),
+					oi.rootClassTypes));
+		}
+
+		List<OBIEState> predictions = runner.predictInstancesBatch(cleanInstance, linker);
 
 		final long tet = (System.currentTimeMillis() - testTime);
 
-		
 		log.info("--------" + runner.getParameter().runID + "--------");
 		log.info("Evaluation results on test data:\n" + overallPRF1);
 		log.info("Total training time: " + trt + " ms.");

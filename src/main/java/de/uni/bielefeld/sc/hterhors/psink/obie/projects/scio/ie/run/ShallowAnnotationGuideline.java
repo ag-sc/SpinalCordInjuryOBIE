@@ -7,8 +7,6 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.apache.jena.sparql.function.library.leviathan.root;
-
 import de.hterhors.obie.core.OntologyAnalyzer;
 import de.hterhors.obie.core.ontology.AbstractIndividual;
 import de.hterhors.obie.core.ontology.InvestigationRestriction;
@@ -16,6 +14,7 @@ import de.hterhors.obie.core.ontology.InvestigationRestriction.RestrictedField;
 import de.hterhors.obie.core.ontology.OntologyInitializer;
 import de.hterhors.obie.core.ontology.ReflectionUtils;
 import de.hterhors.obie.core.ontology.annotations.AssignableSubClasses;
+import de.hterhors.obie.core.ontology.annotations.AssignableSubInterfaces;
 import de.hterhors.obie.core.ontology.interfaces.IOBIEThing;
 import de.hterhors.obie.core.tools.corpus.OBIECorpus;
 import de.hterhors.obie.ml.corpus.BigramCorpusProvider;
@@ -104,12 +103,12 @@ public class ShallowAnnotationGuideline {
 			try {
 				final String instanceContent = instance.content;
 
-				NamedEntityLinkingAnnotations.Builder annotationbuilder = new NamedEntityLinkingAnnotations.Builder();
+				NamedEntityLinkingAnnotations.Collector annotationbuilder = new NamedEntityLinkingAnnotations.Collector();
 
 				annotationbuilder.addClassAnnotations(linker.annotateClasses(instance.name, instanceContent));
 				annotationbuilder.addIndividualAnnotations(linker.annotateIndividuals(instance.name, instanceContent));
 
-				NamedEntityLinkingAnnotations nerl = annotationbuilder.build();
+				NamedEntityLinkingAnnotations nerl = annotationbuilder.collect();
 
 				for (Class<? extends IOBIEThing> clazz : nerl.getAvailableClassTypes()) {
 					if (shallowClasses.contains(clazz))
@@ -215,7 +214,6 @@ public class ShallowAnnotationGuideline {
 	public static Set<Class<? extends IOBIEThing>> getClassRestrictions(Class<? extends ISCIOThing> corpusType) {
 
 		if (corpusType == IOrganismModel.class) {
-
 			return OntologyAnalyzer.getRelatedClassTypesUnderRoot(IOrganismModel.class).stream()
 					.map(c -> ReflectionUtils.getDirectInterfaces(c)).collect(Collectors.toSet());
 		}

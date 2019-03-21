@@ -85,6 +85,9 @@ public class ExecuteSlotFilling {
 		{
 			OntologyInitializer.initializeOntology(OntologyEnvironment.getInstance());
 		}
+
+		OBIEClassFormatter.printDetailed = false;
+
 		log.info(
 				"2) argument: mode of active learning, \"random\"(default), \"entropy\", \"entropyAtomic\", \"objective\", \"model\", \"margin\", \"length\" or \"variance\"");
 		acMode = "model";
