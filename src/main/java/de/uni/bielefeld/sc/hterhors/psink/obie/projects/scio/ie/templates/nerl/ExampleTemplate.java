@@ -180,6 +180,7 @@ public class ExampleTemplate extends AbstractOBIETemplate<ExampleScope> {
 		for (String token : surfaceForm.split("\\W")) {
 			featureVector.set(classLabel + token, true);
 		}
+		
 
 	}
 

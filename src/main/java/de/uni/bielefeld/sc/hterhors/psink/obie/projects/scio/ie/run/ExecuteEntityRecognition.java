@@ -21,8 +21,6 @@ import de.hterhors.obie.ml.run.AbstractOBIERunner;
 import de.hterhors.obie.ml.run.DefaultEntityRecognitionRunner;
 import de.hterhors.obie.ml.run.param.RunParameter;
 import de.hterhors.obie.ml.templates.AbstractOBIETemplate;
-import de.hterhors.obie.ml.templates.InterTokenTemplate;
-import de.hterhors.obie.ml.templates.TokenContextTemplate;
 import de.hterhors.obie.ml.utils.OBIEClassFormatter;
 import de.hterhors.obie.ml.variables.IETmplateAnnotation;
 import de.hterhors.obie.ml.variables.InstanceTemplateAnnotations;
@@ -143,6 +141,17 @@ public class ExecuteEntityRecognition {
 		 */
 		final PRF1 overallPRF1 = runner.evaluateNERLOnTest();
 
+		final long tet = (System.currentTimeMillis() - testTime);
+
+		log.info("--------" + runner.getParameter().runID + "--------");
+		log.info("Evaluation results on test data:\n" + overallPRF1);
+		log.info("Total training time: " + trt + " ms.");
+		log.info("Total test time: " + tet + " ms.");
+		log.info("Total time: "
+				+ Duration.between(Instant.now(), Instant.ofEpochMilli(System.currentTimeMillis() + (trt + tet))));
+
+		log.info("Write predictions to file...");
+
 		Set<INamedEntitityLinker> linker = new HashSet<>();
 		linker.add(new SCIORegExNEL(new HashSet<>(Arrays.asList(IAge.class, IWeight.class))));
 
@@ -154,17 +163,6 @@ public class ExecuteEntityRecognition {
 		}
 
 		List<OBIEState> predictions = runner.predictInstancesBatch(cleanInstance, linker);
-
-		final long tet = (System.currentTimeMillis() - testTime);
-
-		log.info("--------" + runner.getParameter().runID + "--------");
-		log.info("Evaluation results on test data:\n" + overallPRF1);
-		log.info("Total training time: " + trt + " ms.");
-		log.info("Total test time: " + tet + " ms.");
-		log.info("Total time: "
-				+ Duration.between(Instant.now(), Instant.ofEpochMilli(System.currentTimeMillis() + (trt + tet))));
-
-		log.info("Write predictions to file...");
 
 		File outputDir = new File("nerl/annotations/");
 		writePredictions(outputDir, predictions);

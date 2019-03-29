@@ -125,13 +125,13 @@ public class EntityRecognitionParameter {
 		 *
 		 * TODO: Might be changed to 10 fold cross validation later on.
 		 */
-		final AbstractCorpusDistributor datasetDistributor = new ShuffleCorpusDistributor.Builder()
+		final AbstractCorpusDistributor datasetDistributor = new ShuffleCorpusDistributor.Builder().setSeed(100L)
 				/**
 				 * Set corpus size fraction. Set to 1 to use the full corpus. During development
 				 * and debugging this can be much lower in order to speed up the systems
 				 * runtime.
 				 */
-				.setCorpusSizeFraction(1F)
+				.setCorpusSizeFraction(0.1F)
 
 				/**
 				 * Set the proportions. Usually 60/20/20 or 80/0/20 is a good distribution

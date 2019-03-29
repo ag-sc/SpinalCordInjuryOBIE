@@ -32,41 +32,55 @@ import org.apache.jena.rdf.model.ModelFactory;
 import de.hterhors.obie.core.ontology.AbstractIndividual;
 
 /**
-<p><b>skos:closeMatch</b>
-<p>http://purl.bioontology.org/ontology/MEDDRA/10047890
-<p>
-<p><b>scio:descriptionSource</b>
-<p>http://purl.obolibrary.org/obo/PATO_0000128
-<p>
-<p><b>scio:example</b>
-<p>After laminectomy, the vertebral column was stabilized with clamps and a 10 g rod was dropped from a 12.5 mm height over the exposed spinal cord and the compression maintained for 5 seconds.
-<p>
-<p><b>rdfs:label</b>
-<p>weight
-<p>
-<p><b>rdfs:description</b>
-<p>Weight is a physical quality inhering in a bearer that has mass near a gravitational body.
-Any weight measured in µg, g or other units.
-<p>
-<p><b>scio:exampleSource</b>
-<p>PMID: 26896212
-<p>
-*
-* @author hterhors
-*
-*
-*Mar 19, 2019
-*/
+ * <p>
+ * <b>skos:closeMatch</b>
+ * <p>
+ * http://purl.bioontology.org/ontology/MEDDRA/10047890
+ * <p>
+ * <p>
+ * <b>scio:descriptionSource</b>
+ * <p>
+ * http://purl.obolibrary.org/obo/PATO_0000128
+ * <p>
+ * <p>
+ * <b>scio:example</b>
+ * <p>
+ * After laminectomy, the vertebral column was stabilized with clamps and a 10 g
+ * rod was dropped from a 12.5 mm height over the exposed spinal cord and the
+ * compression maintained for 5 seconds.
+ * <p>
+ * <p>
+ * <b>rdfs:label</b>
+ * <p>
+ * weight
+ * <p>
+ * <p>
+ * <b>rdfs:description</b>
+ * <p>
+ * Weight is a physical quality inhering in a bearer that has mass near a
+ * gravitational body. Any weight measured in µg, g or other units.
+ * <p>
+ * <p>
+ * <b>scio:exampleSource</b>
+ * <p>
+ * PMID: 26896212
+ * <p>
+ *
+ * @author hterhors
+ *
+ *
+ *         Mar 19, 2019
+ */
 
 @DatatypeProperty
-@DirectInterface(get=IWeight.class)
+@DirectInterface(get = IWeight.class)
 
-@AssignableSubClasses(get={})
+@AssignableSubClasses(get = {})
 
-@SuperRootClasses(get={Weight.class, })
+@SuperRootClasses(get = { Weight.class, })
 
-@DirectSiblings(get={})
- public class Weight implements IWeight{
+@DirectSiblings(get = {})
+public class Weight implements IWeight {
 
 	final static public String ONTOLOGY_NAME = "http://psink.de/scio/Weight";
 	private Integer characterOffset;
@@ -75,128 +89,151 @@ Any weight measured in µg, g or other units.
 	final static private Map<IOBIEThing, String> resourceFactory = new HashMap<>();
 	final static private long serialVersionUID = 64L;
 	@TextMention
-final private String textMention;
+	final private String textMention;
 
+	public Weight() {
+		this.interpretedValue = null;
+		this.textMention = null;
+	}
 
-	public Weight(){
-this.interpretedValue = null;
-this.textMention = null;
-}
-	public Weight(Weight weight){
-this.characterOffset = weight.getCharacterOffset();
-this.characterOnset = weight.getCharacterOnset();
-this.interpretedValue = weight.getInterpretedValue();
-this.textMention = weight.getTextMention();
-}
-	public Weight(String interpretedValue, String textMention){
-this.interpretedValue = interpretedValue;
-this.textMention = textMention;
-}
-	public Weight(String interpretedValue){
-this.interpretedValue = interpretedValue;
-this.textMention = null;
-}
+	public Weight(Weight weight) {
+		this.characterOffset = weight.getCharacterOffset();
+		this.characterOnset = weight.getCharacterOnset();
+		this.interpretedValue = weight.getInterpretedValue();
+		this.textMention = weight.getTextMention();
+	}
 
+	public Weight(String interpretedValue, String textMention) {
+		this.interpretedValue = interpretedValue;
+		this.textMention = textMention;
+	}
+
+	public Weight(String interpretedValue) {
+		this.interpretedValue = interpretedValue;
+		this.textMention = null;
+	}
 
 	/***/
-@Override
-	public boolean equals(Object obj){
+	@Override
+	public boolean equals(Object obj) {
 		if (this == obj)
-return true;
-if (obj == null)
-return false;
-if (getClass() != obj.getClass())
-return false;
-Weight other = (Weight) obj;
-if (characterOnset == null) {
-if (other.characterOnset!= null)
-return false;
-} else if (!characterOnset.equals(other.characterOnset))
-return false;
-if (characterOffset == null) {
-if (other.characterOffset!= null)
-return false;
-} else if (!characterOffset.equals(other.characterOffset))
-return false;
-if (textMention == null) {
-if (other.textMention!= null)
-return false;
-} else if (!textMention.equals(other.textMention))
-return false;
-if (interpretedValue == null) {
-if (other.interpretedValue!= null)
-return false;
-} else if (!interpretedValue.equals(other.interpretedValue))
-return false;
-return true;
-}
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Weight other = (Weight) obj;
+		if (characterOnset == null) {
+			if (other.characterOnset != null)
+				return false;
+		} else if (!characterOnset.equals(other.characterOnset))
+			return false;
+		if (characterOffset == null) {
+			if (other.characterOffset != null)
+				return false;
+		} else if (!characterOffset.equals(other.characterOffset))
+			return false;
+		if (textMention == null) {
+			if (other.textMention != null)
+				return false;
+		} else if (!textMention.equals(other.textMention))
+			return false;
+		if (interpretedValue == null) {
+			if (other.interpretedValue != null)
+				return false;
+		} else if (!interpretedValue.equals(other.interpretedValue))
+			return false;
+		return true;
+	}
+
 	/***/
-@Override
-	public Integer getCharacterOffset(){
-		return characterOffset;}
+	@Override
+	public Integer getCharacterOffset() {
+		return characterOffset;
+	}
+
 	/***/
-@Override
-	public Integer getCharacterOnset(){
-		return characterOnset;}
+	@Override
+	public Integer getCharacterOnset() {
+		return characterOnset;
+	}
+
 	/***/
-@Override
-	public String getInterpretedValue(){
-		return interpretedValue;}
+	@Override
+	public String getInterpretedValue() {
+		return interpretedValue;
+	}
+
 	/***/
-@Override
-	public String getONTOLOGY_NAME(){
-		return ONTOLOGY_NAME;}
+	@Override
+	public String getONTOLOGY_NAME() {
+		return ONTOLOGY_NAME;
+	}
+
 	/***/
-@Override
-	public Model getRDFModel(String resourceIDPrefix){
+	@Override
+	public Model getRDFModel(String resourceIDPrefix) {
 		Model model = ModelFactory.createDefaultModel();
-Resource group = model.createResource(getResourceName());
-model.add(group, model.createProperty("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),model.createResource(ONTOLOGY_NAME));
-return model;
-}
+		Resource group = model.createResource(getResourceName());
+		model.add(group, model.createProperty("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
+				model.createResource(ONTOLOGY_NAME));
+		return model;
+	}
+
 	/***/
-@Override
-	public String getResourceName(){
+	@Override
+	public String getResourceName() {
 		if (resourceFactory.containsKey(this)) {
-return ISCIOThing.RDF_MODEL_NAMESPACE + resourceFactory.get(this);
-} else {
-final String resourceName = getClass().getSimpleName() + "_" + resourceFactory.size();
-resourceFactory.put(this, resourceName);
-return ISCIOThing.RDF_MODEL_NAMESPACE + resourceName;}
-}
+			return ISCIOThing.RDF_MODEL_NAMESPACE + resourceFactory.get(this);
+		} else {
+			final String resourceName = getClass().getSimpleName() + "_" + resourceFactory.size();
+			resourceFactory.put(this, resourceName);
+			return ISCIOThing.RDF_MODEL_NAMESPACE + resourceName;
+		}
+	}
+
 	/***/
-@Override
-	public String getTextMention(){
-		return textMention;}
+	@Override
+	public String getTextMention() {
+		return textMention;
+	}
+
 	/***/
-@Override
-	public IOBIEThing getThis(){
-		return this;}
+	@Override
+	public IOBIEThing getThis() {
+		return this;
+	}
+
 	/***/
-@Override
-	public int hashCode(){
+	@Override
+	public int hashCode() {
 		final int prime = 31;
-int result = 1;
-result = prime * result + ((this.characterOnset == null) ? 0 : this.characterOnset.hashCode());
-result = prime * result + ((this.characterOffset == null) ? 0 : this.characterOffset.hashCode());
-result = prime * result + ((this.textMention == null) ? 0 : this.textMention.hashCode());
-result = prime * result + ((this.interpretedValue == null) ? 0 : this.interpretedValue.hashCode());
-return result;}
+		int result = 1;
+		result = prime * result + ((this.characterOnset == null) ? 0 : this.characterOnset.hashCode());
+		result = prime * result + ((this.characterOffset == null) ? 0 : this.characterOffset.hashCode());
+		result = prime * result + ((this.textMention == null) ? 0 : this.textMention.hashCode());
+		result = prime * result + ((this.interpretedValue == null) ? 0 : this.interpretedValue.hashCode());
+		return result;
+	}
+
 	/***/
-@Override
-	public boolean isEmpty(){
+	@Override
+	public boolean isEmpty() {
 		boolean isEmpty = true;
-return false;}
+		return false;
+	}
+
 	/***/
-@Override
-	public void setCharacterOnset(Integer onset){
+	@Override
+	public void setCharacterOnset(Integer onset) {
 		this.characterOnset = onset;
- this.characterOffset = onset + textMention.length();}
+		this.characterOffset = onset + textMention.length();
+	}
 
-
-@Override
-public String toString(){
-return "Weight [characterOffset="+characterOffset+",characterOnset="+characterOnset+",interpretedValue="+interpretedValue+",serialVersionUID="+serialVersionUID+",textMention="+textMention+"]";}
-
+	@Override
+	public String toString() {
+		return "Weight [characterOffset=" + characterOffset + ",characterOnset=" + characterOnset + ",interpretedValue="
+				+ interpretedValue + ",serialVersionUID=" + serialVersionUID + ",textMention=" + textMention + "]";
+	}
 
 }
