@@ -246,7 +246,7 @@ public class SCIOParameterQuickAccess {
 
 		final int epochs = 10;
 
-		final boolean penalizeCardinality = false;
+		final boolean penalizeCardinality = true;
 
 		final Optimizer optimizer = new SGD(0.001, 0, 0.0001, false);
 		final EScorerType scorerType = EScorerType.EXP;
@@ -257,7 +257,7 @@ public class SCIOParameterQuickAccess {
 
 		final boolean exploreOnOntologyLevel = true;
 
-		final boolean restrictExplorationToFoundConcepts = false;
+		final boolean restrictExplorationToFoundConcepts = true;
 
 		final boolean enableDiscourseProgression = false;
 
@@ -318,9 +318,9 @@ public class SCIOParameterQuickAccess {
 		 * HACK: REMOVE THIS HACK With the correct number of entities!
 		 */
 		IInitializeNumberOfObjects numberOfInitializedObjects;
-//		if (full)
-//			numberOfInitializedObjects = instance -> instance.getGoldAnnotation().getTemplateAnnotations().size();
-//		else
+		if (full)
+			numberOfInitializedObjects = instance -> instance.getGoldAnnotation().getAnnotations().size();
+		else
 		numberOfInitializedObjects = instance -> 1;
 
 		int numberOfMaxSamplingSteps = 100;
@@ -421,8 +421,8 @@ public class SCIOParameterQuickAccess {
 			templates.add(RootClassCardinalityTemplate.class);
 			templates.add(MainSlotVarietyTemplate.class);
 		}
-//		AbstractCorpusDistributor corpusConfiguration = foldCrossDist();
-		AbstractCorpusDistributor corpusConfiguration = shuffleDist();
+		AbstractCorpusDistributor corpusConfiguration = foldCrossDist();
+//		AbstractCorpusDistributor corpusConfiguration = shuffleDist();
 
 		Class<? extends IOBIEThing>[] exploreClassesWithoutEvidence = new Class[] { VertebralArea.class };
 

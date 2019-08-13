@@ -16,6 +16,7 @@ import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.environments.Slo
 import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.semantics.SCIOSemanticInterpreter;
 import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ontology.interfaces.IAge;
 import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ontology.interfaces.IOrganismModel;
+import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ontology.interfaces.ITreatment;
 import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ontology.interfaces.IWeight;
 
 public class BigramCorpusCreator {
@@ -29,8 +30,8 @@ public class BigramCorpusCreator {
 		BigramCorpusBuilder.overrideCorpusFileIfExists = true;
 
 //		nerl();
-//		slotWithRegex();
-		slotWithNerl();
+		slotWithRegex();
+//		slotWithNerl();
 	}
 
 	private static void nerl() throws Exception {
@@ -48,9 +49,18 @@ public class BigramCorpusCreator {
 	}
 
 	private static void slotWithRegex() throws Exception {
+//		Set<INamedEntitityLinker> linker = new HashSet<>();
+//		linker.add(new SCIORegExNEL(IInjury.class));
+//		new BigramCorpusBuilder(SlotFillingProjectEnvironment.getInstance(), OntologyEnvironment.getInstance(), linker);
+//		Set<INamedEntitityLinker> linker = new HashSet<>();
+//		linker.add(new SCIORegExNEL(IOrganismModel.class));
+//		new BigramCorpusBuilder(SlotFillingProjectEnvironment.getInstance(), OntologyEnvironment.getInstance(), linker);
 		Set<INamedEntitityLinker> linker = new HashSet<>();
-		linker.add(new SCIORegExNEL(IOrganismModel.class));
+		linker.add(new SCIORegExNEL(ITreatment.class));
 		new BigramCorpusBuilder(SlotFillingProjectEnvironment.getInstance(), OntologyEnvironment.getInstance(), linker);
+//		Set<INamedEntitityLinker> linker = new HashSet<>();
+//		linker.add(new SCIORegExNEL(IOrganismModel.class));
+//		new BigramCorpusBuilder(SlotFillingProjectEnvironment.getInstance(), OntologyEnvironment.getInstance(), linker);
 
 	}
 

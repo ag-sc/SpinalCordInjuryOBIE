@@ -121,7 +121,7 @@ public class SlotFillingParameter {
 
 		final boolean exploreExistingTemplates = false;
 
-		final boolean exploreOnOntologyLevel = false;
+		final boolean exploreOnOntologyLevel = true;
 
 		final boolean restrictExplorationToFoundConcepts = true;
 
@@ -179,8 +179,8 @@ public class SlotFillingParameter {
 		 * HACK: REMOVE THIS HACK With the correct number of entities!
 		 */
 		IInitializeNumberOfObjects numberOfInitializedObjects;
-		numberOfInitializedObjects = instance -> instance.getGoldAnnotation().getAnnotations().size();
-//		numberOfInitializedObjects = instance -> 1;
+//		numberOfInitializedObjects = instance -> instance.getGoldAnnotation().getAnnotations().size();
+		numberOfInitializedObjects = instance -> 1;
 
 		Regularizer regularizer = new L2(0.01);
 		AbstractProjectEnvironment<?> scioEnvironment = SlotFillingProjectEnvironment.getInstance();

@@ -241,7 +241,7 @@ public class TestSemanticInterpretations {
 		String sampleText = "Eighty-one adult Sprague Dawley rats (300–400 gm; Taconic Farms, Germantown, NY) were used in this stu Sprague-Dawley rats (200–250 gm) were us blubble 200–240 grams Adult males (285330 g) and females 3031 mg/kg asdfghj"
 				+ "kldfghjkl 40lbs hello world 100 g x cm   bjdsbg"
 				+ "vohdsago 20 g 20kilo tlongabcd 210 and 310 g jbsfkbjsf -term balb, 0.5 g between 0.05, 4mg deli"
-				+ "ver along /100g promote functiona Adult female Sprague Dawley rats (~200 kg; Harlan Laboratories"
+				+ "ver along /100g promote functiona sasddf~300 g Adult female Sprague Dawley rats (~200 kg; Harlan Laboratories"
 				+ ") adult female weighing 30 g Long Evans,0.1 mg rats (280g to 300 g) Hsp27 gene expression 250 g ± 30 mg SO4 given minocycline in a rat "
 				+ "model of SCI signi®cantly preserves axonal young weighing between 210 and 310 g "
 				+ "were used s (220280g; n=88; The rats weighing 200+-10g,"

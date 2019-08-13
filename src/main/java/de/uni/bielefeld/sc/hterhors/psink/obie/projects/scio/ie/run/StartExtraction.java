@@ -52,13 +52,13 @@ import de.hterhors.obie.ml.run.eval.EvaluatePrediction;
 import de.hterhors.obie.ml.run.param.RunParameter;
 import de.hterhors.obie.ml.run.param.RunParameter.Builder;
 import de.hterhors.obie.ml.utils.OBIEClassFormatter;
+import de.hterhors.obie.ml.variables.IETmplateAnnotation;
 import de.hterhors.obie.ml.variables.InstanceTemplateAnnotations;
 import de.hterhors.obie.ml.variables.OBIEInstance;
 import de.hterhors.obie.ml.variables.OBIEState;
-import de.hterhors.obie.ml.variables.IETmplateAnnotation;
 import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.environments.OntologyEnvironment;
 import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.run.parameter.SCIOParameterQuickAccess;
-import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ontology.interfaces.IOrganismModel;
+import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ontology.interfaces.IInjury;
 import learning.Trainer;
 import sampling.Explorer;
 
@@ -139,9 +139,9 @@ public class StartExtraction {
 
 		List<Class<? extends IOBIEThing>> searchTypes = Arrays.asList(
 //				
-				IOrganismModel.class
+//				IOrganismModel.class
 //				,
-//				IInjury.class
+				IInjury.class
 //				,
 //				IInvestigationMethod.class
 //				, 

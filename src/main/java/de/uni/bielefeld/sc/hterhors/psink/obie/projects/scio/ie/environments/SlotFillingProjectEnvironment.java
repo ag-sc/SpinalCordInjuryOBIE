@@ -25,9 +25,9 @@ public class SlotFillingProjectEnvironment extends AbstractProjectEnvironment<IS
 
 //	final public File rawCorpusFile = new File("annodb/corpus/export_10012019_investigationmethod_v64.bin");
 //	final public File rawCorpusFile = new File("annodb/corpus/export_10012019_result_v64.bin");
-	final public File rawCorpusFile = new File("annodb/corpus/export_10012019_organismmodel_v64.bin");
+//	final public File rawCorpusFile = new File("annodb/corpus/export_10012019_organismmodel_v64.bin");
 //	final public File rawCorpusFile = new File("annodb/corpus/export_10012019_injury_v64.bin");
-//	final public File rawCorpusFile = new File("annodb/corpus/export_10012019_treatment_v64.bin");
+	final public File rawCorpusFile = new File("annodb/corpus/export_10012019_treatment_v64.bin");
 
 	final public File bigramCorpusFileDirectory = new File("bigram/corpus/slotfilling");
 
@@ -53,9 +53,9 @@ public class SlotFillingProjectEnvironment extends AbstractProjectEnvironment<IS
 
 	@Override
 	public String getCorpusName() {
-		return "simple_nerl_export_10012019";
+//		return "simple_nerl_export_10012019";
 //		return "nerl_export_10012019";
-//		return "regex_export_10012019";
+		return "regex_export_10012019";
 	}
 
 }

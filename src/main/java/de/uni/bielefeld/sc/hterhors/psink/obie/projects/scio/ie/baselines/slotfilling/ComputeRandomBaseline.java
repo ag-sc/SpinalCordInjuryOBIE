@@ -13,10 +13,7 @@ import de.hterhors.obie.ml.tools.baseline.RandomBaseline;
 import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.environments.OntologyEnvironment;
 import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ie.run.parameter.SCIOParameterQuickAccess;
 import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ontology.interfaces.IInjury;
-import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ontology.interfaces.IInvestigationMethod;
-import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ontology.interfaces.IOrganismModel;
 import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ontology.interfaces.ISCIOThing;
-import de.uni.bielefeld.sc.hterhors.psink.obie.projects.scio.ontology.interfaces.ITreatment;
 
 public class ComputeRandomBaseline {
 
@@ -24,8 +21,17 @@ public class ComputeRandomBaseline {
 
 		OntologyInitializer.initializeOntology(OntologyEnvironment.getInstance());
 
-		List<Class<? extends ISCIOThing>> searchTypes = Arrays.asList(IOrganismModel.class, IInjury.class,
-				IInvestigationMethod.class, ITreatment.class);
+		List<Class<? extends ISCIOThing>> searchTypes = Arrays.asList(
+				
+//				IOrganismModel.class
+//				,
+				IInjury.class
+//				,
+//				
+//				IInvestigationMethod.class
+//				,
+//				ITreatment.class
+				);
 
 		for (Class<? extends ISCIOThing> class1 : searchTypes) {
 			nTimesValidation(class1, 100);
